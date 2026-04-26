@@ -5,135 +5,155 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sporty-Us | 취미 운동 매칭</title>
     <style>
-        /* [1. 기본 스타일 & 스포티 배경] */
+        /* [1. 기본 스타일 & 다이내믹 배경] */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&family=Pretendard:wght@400;600;700&display=swap');
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
         
         body { 
-            /* 스포티하고 깔끔한 미세 도트 패턴 배경 */
             background-color: #ffffff;
-            background-image: radial-gradient(#e5e5e7 0.8px, transparent 0.8px);
-            background-size: 24px 24px;
+            /* 스포츠 브랜드의 속도감이 느껴지는 사선 패턴 배경 */
+            background-image: 
+                linear-gradient(135deg, #f8f9fa 25%, transparent 25%), 
+                linear-gradient(225deg, #f8f9fa 25%, transparent 25%), 
+                linear-gradient(45deg, #f8f9fa 25%, transparent 25%), 
+                linear-gradient(315deg, #f8f9fa 25%, #ffffff 25%);
+            background-position: 40px 0, 40px 0, 0 0, 0 0;
+            background-size: 80px 80px;
+            background-repeat: repeat;
             color: #1d1d1f; 
-            line-height: 1.5; 
+            overflow-x: hidden;
         }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px 100px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px 100px; position: relative; }
 
         /* [2. 화면 전환 애니메이션] */
         .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .page.active { display: block; animation: fadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-        /* [3. 메인 페이지 - 슬림 히어로] */
+        /* [3. 메인 페이지 - 에너지 히어로 섹션] */
         .hero {
-            background-color: rgba(252, 252, 253, 0.9); /* 배경 패턴이 살짝 비침 */
-            backdrop-filter: blur(10px);
-            height: 25vh; 
+            height: 30vh; 
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            border-bottom: 1px solid #f2f2f7;
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            border-bottom: 2px solid #007bff;
+        }
+
+        /* 로고 뒤에 은은한 에너지 광원 효과 추가 */
+        .hero::after {
+            content: ''; position: absolute; width: 300px; height: 100px;
+            background: radial-gradient(circle, rgba(0,123,255,0.1) 0%, transparent 70%);
+            z-index: -1;
         }
 
         .logo-large {
             font-family: 'Poppins', sans-serif;
-            font-size: 3.5rem; 
+            font-size: 4rem; 
             font-weight: 800;
-            letter-spacing: -1.5px;
-            margin-bottom: 5px;
+            letter-spacing: -2px;
             color: #1d1d1f;
+            line-height: 1;
+            margin-bottom: 10px;
         }
-        .logo-large span { color: #007bff; }
-        .hero-tagline { font-size: 1rem; color: #86868b; font-weight: 600; letter-spacing: -0.2px; }
+        .logo-large span { color: #007bff; text-shadow: 0 0 20px rgba(0,123,255,0.2); }
+        .hero-tagline { font-size: 1.1rem; color: #444; font-weight: 700; letter-spacing: -0.5px; }
 
-        /* [4. 2x2 카테고리 그리드 - 간격 대폭 확대] */
+        /* [4. 2x2 카테고리 그리드] */
         .category-grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
-            gap: 50px; /* 카드 사이 간격을 50px로 넓힘 */
+            gap: 60px; 
             margin-top: 60px; 
         }
-        .category-item { position: relative; }
         
         .item-card { 
-            background: #ffffff; 
-            padding: 60px 20px; /* 내부 여백도 확대 */
-            border-radius: 24px; 
+            background: rgba(255, 255, 255, 0.95);
+            padding: 70px 20px; 
+            border-radius: 30px; 
             text-align: center; 
             cursor: pointer; 
-            border: 1px solid #e5e5e7; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 2px solid #eee; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
-        .item-card:hover, .category-item.is-open .item-card { 
-            border-color: #007bff;
-            box-shadow: 0 15px 35px rgba(0, 123, 255, 0.12);
-            transform: translateY(-8px);
-        }
-        .item-card span.icon { font-size: 3.5rem; display: block; margin-bottom: 15px; }
-        .item-card strong { font-size: 1.2rem; font-weight: 700; color: #1d1d1f; }
 
-        /* [5. 드롭다운 메뉴 - 겹침 방지 및 여백 최적화] */
+        /* 카드 호버 시 사선 포인트 디자인 */
+        .item-card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,123,255,0.05), transparent);
+            transition: 0.5s;
+        }
+
+        .item-card:hover { 
+            border-color: #007bff;
+            box-shadow: 0 20px 40px rgba(0, 123, 255, 0.15);
+            transform: translateY(-10px) rotate(1deg); /* 약간의 회전으로 역동성 부여 */
+        }
+        .item-card:hover::before { left: 100%; }
+
+        .item-card span.icon { font-size: 4rem; display: block; margin-bottom: 20px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
+        .item-card strong { font-size: 1.4rem; font-weight: 800; color: #1d1d1f; }
+
+        /* [5. 드롭다운 메뉴 - 스포티 다크 모드 포인트] */
         .sports-dropdown {
             display: none; 
             position: absolute; 
-            top: 105%; /* 카드와 약간 더 떨어뜨림 */
-            left: 0; 
-            width: 100%; 
-            background: #ffffff;
-            border-radius: 20px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
-            padding: 12px 0; 
+            top: 105%; left: 0; width: 100%; 
+            background: #1d1d1f; /* 메뉴는 다크하게 하여 대비 강조 */
+            border-radius: 24px; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3); 
+            padding: 15px 0; 
             z-index: 100; 
-            border: 1px solid #eee;
-        }
-
-        /* 브릿지 영역 확대 (마우스 이동 편의성) */
-        .sports-dropdown::before {
-            content: ''; position: absolute; top: -25px; left: 0; width: 100%; height: 25px; background: transparent;
+            border: none;
         }
 
         .category-item:hover .sports-dropdown,
-        .category-item.is-open .sports-dropdown { display: block; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .category-item.is-open .sports-dropdown { display: block; animation: powerIn 0.3s cubic-bezier(0.19, 1, 0.22, 1); }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes powerIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
         .sports-dropdown a { 
-            display: block; padding: 16px 30px; text-decoration: none; color: #424245; font-size: 1.05rem; 
-            transition: all 0.2s; border-bottom: 1px solid #f5f5f7;
+            display: block; padding: 18px 35px; text-decoration: none; 
+            color: #ffffff; font-size: 1.1rem; font-weight: 600;
+            transition: 0.2s; border-bottom: 1px solid #333;
         }
-        .sports-dropdown a:hover { background: #f0f7ff; color: #007bff; font-weight: 600; padding-left: 40px; }
+        .sports-dropdown a:hover { background: #007bff; color: #fff; padding-left: 45px; }
         .sports-dropdown a:last-child { border-bottom: none; }
 
         /* [6. 필터 페이지 스타일] */
-        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .logo-small { font-family: 'Poppins', sans-serif; font-size: 1.4rem; font-weight: 800; color: #1d1d1f; }
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
+        .logo-small { font-family: 'Poppins', sans-serif; font-size: 1.8rem; font-weight: 800; color: #1d1d1f; }
         .logo-small span { color: #007bff; }
         
-        .back-btn { background: #f5f5f7; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; }
+        .back-btn { background: #1d1d1f; color: #fff; border: none; padding: 12px 25px; border-radius: 15px; cursor: pointer; font-weight: 700; }
         
-        .filter-bar { background: #ffffff; padding: 35px; border-radius: 24px; border: 1px solid #e5e5e7; display: flex; gap: 30px; margin-bottom: 50px; align-items: flex-end; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .filter-group { display: flex; flex-direction: column; gap: 12px; flex: 1; }
-        .filter-group label { font-size: 0.9rem; font-weight: 700; color: #86868b; letter-spacing: 1px; }
+        .filter-bar { 
+            background: #ffffff; padding: 40px; border-radius: 30px; border: 3px solid #1d1d1f; 
+            display: flex; gap: 30px; margin-bottom: 60px; align-items: flex-end; 
+            box-shadow: 10px 10px 0px #007bff; /* 스포티한 팝아트 느낌의 그림자 */
+        }
+        .filter-group label { font-size: 1rem; font-weight: 900; color: #1d1d1f; text-transform: uppercase; display: block; margin-bottom: 10px; }
         .filter-group select { 
-            padding: 15px; border-radius: 14px; border: 1px solid #d2d2d7; font-size: 1.1rem;
-            appearance: none; background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2386868b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>') no-repeat right 15px center;
-            background-color: #fff;
+            width: 100%; padding: 18px; border-radius: 15px; border: 2px solid #ddd; font-size: 1.1rem; font-weight: 600;
+            appearance: none; background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>') no-repeat right 20px center;
+            background-color: #f8f9fa;
         }
         
-        .search-btn { background: #007bff; color: #fff; border: none; padding: 0 40px; border-radius: 14px; font-weight: 700; cursor: pointer; height: 56px; font-size: 1.1rem; transition: 0.2s; }
-        .search-btn:hover { background: #0056b3; transform: scale(1.02); }
+        .search-btn { background: #007bff; color: #fff; border: none; padding: 0 50px; border-radius: 15px; font-weight: 800; cursor: pointer; height: 62px; font-size: 1.2rem; }
 
-        .result-section { text-align: center; padding: 120px; border: 1px solid #e5e5e7; border-radius: 30px; color: #86868b; background-color: rgba(251, 251, 253, 0.8); }
+        .result-section { text-align: center; padding: 150px; border: 3px dashed #ddd; border-radius: 40px; color: #aaa; font-weight: 700; background: #fff; }
 
-        @media (max-width: 768px) {
-            .category-grid { gap: 20px; }
-            .item-card { padding: 40px 15px; }
-            .logo-large { font-size: 3rem; }
+        @media (max-width: 800px) {
+            .category-grid { grid-template-columns: 1fr; gap: 30px; }
+            .logo-large { font-size: 3.5rem; }
         }
     </style>
 </head>
@@ -190,32 +210,32 @@
     <main id="filter-page" class="page">
         <div class="container">
             <div class="header-bar">
-                <button class="back-btn" onclick="goToMainPage()">← 카테고리</button>
+                <button class="back-btn" onclick="goToMainPage()">← BACK</button>
                 <div class="logo-small">Sporty<span>-Us</span></div>
-                <h2 id="selected-sport-title" style="font-weight: 700; color: #1d1d1f;">종목명</h2>
+                <h2 id="selected-sport-title">종목명</h2>
             </div>
 
             <section class="filter-bar">
-                <div class="filter-group">
-                    <label>Age</label>
+                <div class="filter-group" style="flex:1">
+                    <label>Age Limit</label>
                     <select>
                         <option>전체</option><option>무관</option><option>10대</option>
                         <option>20대</option><option>30대</option><option>40대+</option>
                     </select>
                 </div>
-                <div class="filter-group">
-                    <label>Region</label>
+                <div class="filter-group" style="flex:1">
+                    <label>Location</label>
                     <select>
                         <option>서울</option><option>경기</option><option>인천</option>
                         <option>강원도</option><option>충청도</option><option>전라도</option>
                         <option>경상도</option><option>제주도</option>
                     </select>
                 </div>
-                <button class="search-btn">팀 검색</button>
+                <button class="search-btn">FIND TEAM</button>
             </section>
 
             <div class="result-section">
-                <p id="result-text-display">해당 종목의 활성화된 팀을 찾는 중입니다...</p>
+                <p id="result-text-display">새로운 팀원이 기다리고 있습니다!</p>
             </div>
         </div>
     </main>
@@ -229,8 +249,7 @@
 
         function goToFilterPage(sportName) {
             event.stopPropagation();
-            document.getElementById('selected-sport-title').innerText = sportName;
-            document.getElementById('result-text-display').innerText = sportName + " 종목의 조건에 맞는 검색 결과가 아직 없습니다.";
+            document.getElementById('selected-sport-title').innerText = sportName.toUpperCase();
             document.getElementById('main-page').classList.remove('active');
             document.getElementById('filter-page').classList.add('active');
             window.scrollTo(0, 0);
