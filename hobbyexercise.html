@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sporty-Us | 취미 운동 매칭</title>
     <style>
-        /* [기존 스타일 유지] */
+        /* [스타일 설정] */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&family=Pretendard:wght@400;600;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
         body { 
@@ -62,11 +62,11 @@
         .recruiting-badge { position: absolute; top: 15px; left: 15px; background: #007bff; color: #fff; padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; }
         
         .card-body { padding: 25px; }
-        .card-body h3 { font-size: 1.3rem; margin-bottom: 10px; color: #1d1d1f; }
-        .info-row { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #666; margin-bottom: 6px; }
+        .card-body h3 { font-size: 1.2rem; margin-bottom: 12px; color: #1d1d1f; min-height: 2.8rem; display: flex; align-items: center; }
+        .info-row { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #666; margin-bottom: 6px; }
         
-        .tag-group { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag { background: #f2f2f7; color: #555; padding: 4px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
+        .tag-group { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 6px; }
+        .tag { background: #f2f2f7; color: #555; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
         .tag.skill { background: #eefbff; color: #007bff; }
 
         .no-result { grid-column: 1 / -1; text-align: center; padding: 100px; color: #86868b; font-size: 1.1rem; }
@@ -157,16 +157,28 @@
     </main>
 
     <script>
-        // [수정된 데이터베이스: 지역명 및 연령대 기준 반영]
+        // [KAHL 팀 명단을 바탕으로 업데이트된 데이터베이스]
         const allTeams = [
+            // --- 기존 데이터 유지 ---
             { id: 1, sport: '풋살', name: '강남 슛돌이 크루', region: '서울', age: '20대', skill: '입문/초보', personnel: '8/12명', time: '매주 토 14:00', img: '⚽' },
-            { id: 2, sport: '아이스하키', name: '성북 썬더스', region: '서울', age: '30대', skill: '중급 이상', personnel: '15/20명', time: '매주 일 21:00', img: '🏒' },
             { id: 3, sport: '테니스', name: '테린이 탈출회', region: '경기', age: '20대', skill: '초보 환영', personnel: '4/4명', time: '매주 수 19:00', img: '🎾' },
-            { id: 4, sport: '러닝', name: '한강 달리기 메이트', region: '서울', age: '20대', skill: '무관', personnel: '12/30명', time: '매주 금 20:00', img: '🏃' },
-            { id: 5, sport: '클라이밍', name: '볼더링 파티', region: '인천', age: '20대', skill: '입문/초보', personnel: '5/10명', time: '격주 토 13:00', img: '🧗' },
-            { id: 6, sport: '축구', name: '드림 일레븐', region: '수도권 외', age: '40대+', skill: '중급', personnel: '20/22명', time: '매주 일 08:00', img: '⚽' },
-            { id: 7, sport: '아이스하키', name: '링크 마스터즈', region: '경기', age: '30대', skill: '전체', personnel: '10/15명', time: '매주 목 22:30', img: '⛸️' },
-            { id: 8, sport: '농구', name: '바스켓 올스타', region: '서울', age: '20대', skill: '중급', personnel: '8/15명', time: '매주 월 19:30', img: '🏀' }
+            { id: 4, sport: '러닝', name: '한강 달리기 메이트', region: '서울', age: '전체', skill: '무관', personnel: '12/30명', time: '매주 금 20:00', img: '🏃' },
+            
+            // --- 아이스하키 (KAHL 명단 기반 추가) ---
+            { id: 101, sport: '아이스하키', name: '레드이글스 A', region: '경기', age: '전체', skill: '상급', personnel: '상담 후 결정', time: '수원 아이스하우스', img: '🏒' },
+            { id: 102, sport: '아이스하키', name: '바이킹스 A', region: '경기', age: '30대', skill: '상급', personnel: '모집 중', time: '안양 빙상장', img: '🏒' },
+            { id: 103, sport: '아이스하키', name: '블랙머신', region: '서울', age: '20대', skill: '상급', personnel: '모집 중', time: '목동/제니스', img: '🏒' },
+            { id: 104, sport: '아이스하키', name: '어벤져스 HIGH', region: '서울', age: '전체', skill: '상급', personnel: '상담 후 결정', time: '제니스 빙상장', img: '🏒' },
+            { id: 105, sport: '아이스하키', name: '터뷸런스 A', region: '경기', age: '30대', skill: '상급', personnel: '모집 중', time: '고양 어울림누리', img: '🏒' },
+            { id: 106, sport: '아이스하키', name: '톨피도즈 A', region: '서울', age: '전체', skill: '상급', personnel: '모집 중', time: '목동 빙상장', img: '🏒' },
+            { id: 107, sport: '아이스하키', name: '재거스 블랙', region: '경기', age: '전체', skill: '상급', personnel: '상담 후 결정', time: '분당 올림픽센터', img: '🏒' },
+            { id: 108, sport: '아이스하키', name: '레푸스', region: '경기', age: '30대', skill: '중상급', personnel: '모집 중', time: '고양 어울림누리', img: '⛸️' },
+            { id: 109, sport: '아이스하키', name: '로켓츠 러너스 A', region: '서울', age: '20대', skill: '중상급', personnel: '상담 후 결정', time: '제니스/목동', img: '⛸️' },
+            { id: 110, sport: '아이스하키', name: '조이플스 하우스', region: '서울', age: '전체', skill: '중상급', personnel: '모집 중', time: '제니스 빙상장', img: '⛸️' },
+            { id: 111, sport: '아이스하키', name: '스킬즈 A', region: '서울', age: '20대', skill: '초중급', personnel: '초보 환영', time: '제니스 빙상장', img: '🏒' },
+            { id: 112, sport: '아이스하키', name: '웨어울브즈 A', region: '경기', age: '40대+', skill: '초중급', personnel: '모집 중', time: '고양 어울림누리', img: '🏒' },
+            { id: 113, sport: '아이스하키', name: '하이퍽스', region: '서울', age: '전체', skill: '초중급', personnel: '모집 중', time: '목동/고양', img: '🏒' },
+            { id: 114, sport: '아이스하키', name: '성북 썬더스', region: '서울', age: '30대', skill: '중급', personnel: '15/20명', time: '매주 일 21:00', img: '🏒' }
         ];
 
         let currentSport = '';
@@ -178,14 +190,13 @@
         }
 
         function goToFilterPage(sportName) {
-            if (event) event.stopPropagation();
+            if (window.event) window.event.stopPropagation();
             currentSport = sportName;
             document.getElementById('selected-sport-title').innerText = sportName;
             
             document.getElementById('main-page').classList.remove('active');
             document.getElementById('filter-page').classList.add('active');
             
-            // 초기 진입 시 필터를 '전체'로 초기화하고 검색
             document.getElementById('age-select').value = '전체';
             document.getElementById('region-select').value = '전체';
             
@@ -199,7 +210,6 @@
             document.querySelectorAll('.category-item').forEach(item => item.classList.remove('is-open'));
         }
 
-        // [수정된 필터링 로직]
         function filterTeams() {
             const selectedAge = document.getElementById('age-select').value;
             const selectedRegion = document.getElementById('region-select').value;
@@ -207,8 +217,7 @@
 
             const filtered = allTeams.filter(team => {
                 const sportMatch = team.sport === currentSport;
-                // '전체'일 경우 모든 연령/지역 통과
-                const ageMatch = selectedAge === '전체' || team.age === selectedAge;
+                const ageMatch = selectedAge === '전체' || team.age === selectedAge || team.age === '전체';
                 const regionMatch = selectedRegion === '전체' || team.region === selectedRegion;
                 return sportMatch && ageMatch && regionMatch;
             });
@@ -224,18 +233,17 @@
                 const card = `
                     <div class="team-card">
                         <div class="card-header">
-                            <span class="recruiting-badge">모집 중</span>
+                            <span class="recruiting-badge">KAHL 리그팀</span>
                             <div style="font-size: 4rem; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.2;">${team.img}</div>
                         </div>
                         <div class="card-body">
                             <h3>${team.name}</h3>
-                            <div class="info-row">📍 <span>${team.region}</span></div>
-                            <div class="info-row">⏰ <span>${team.time}</span></div>
-                            <div class="info-row">👥 <span>${team.personnel} 모집</span></div>
+                            <div class="info-row">📍 <span>${team.region} (${team.time})</span></div>
+                            <div class="info-row">👥 <span>${team.personnel}</span></div>
                             <div class="tag-group">
                                 <span class="tag skill">#${team.skill}</span>
                                 <span class="tag">#${team.age}</span>
-                                <span class="tag">#취미반</span>
+                                <span class="tag">#KAHL리그</span>
                             </div>
                         </div>
                     </div>
