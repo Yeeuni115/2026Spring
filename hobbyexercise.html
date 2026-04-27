@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sporty-Us | 취미 운동 매칭</title>
     <style>
-        /* [스타일 설정] */
+        /* [스타일 설정: 기존 디자인 유지] */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&family=Pretendard:wght@400;600;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
         body { 
@@ -58,11 +58,11 @@
         .team-card { background: #fff; border-radius: 24px; border: 1px solid #eee; overflow: hidden; transition: 0.3s; position: relative; }
         .team-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); border-color: #007bff; }
         
-        .card-header { height: 160px; background-color: #f8f9fa; position: relative; }
+        .card-header { height: 140px; background-color: #f8f9fa; position: relative; display: flex; justify-content: center; align-items: center; }
         .recruiting-badge { position: absolute; top: 15px; left: 15px; background: #007bff; color: #fff; padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; }
         
         .card-body { padding: 25px; }
-        .card-body h3 { font-size: 1.2rem; margin-bottom: 12px; color: #1d1d1f; min-height: 2.8rem; display: flex; align-items: center; }
+        .card-body h3 { font-size: 1.25rem; margin-bottom: 12px; color: #1d1d1f; height: 2.8rem; display: flex; align-items: center; line-height: 1.4; }
         .info-row { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #666; margin-bottom: 6px; }
         
         .tag-group { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 6px; }
@@ -108,7 +108,7 @@
                     </div>
                 </div>
                 <div class="category-item" onclick="toggleMenu(this)">
-                    <div class="item-card"><span class="icon">❄️</span><strong>이색 및 계절</strong></div>
+                    <div class="item-card"><span class="icon">🏒</span><strong>이색 및 계절</strong></div>
                     <div class="sports-dropdown">
                         <a href="javascript:void(0)" onclick="goToFilterPage('아이스하키')">아이스하키</a>
                         <a href="javascript:void(0)" onclick="goToFilterPage('피겨')">피겨</a>
@@ -157,28 +157,68 @@
     </main>
 
     <script>
-        // [KAHL 팀 명단을 바탕으로 업데이트된 데이터베이스]
+        // [파일 데이터를 기반으로 성북 썬더스를 제외한 모든 팀 반영]
         const allTeams = [
-            // --- 기존 데이터 유지 ---
-            { id: 1, sport: '풋살', name: '강남 슛돌이 크루', region: '서울', age: '20대', skill: '입문/초보', personnel: '8/12명', time: '매주 토 14:00', img: '⚽' },
-            { id: 3, sport: '테니스', name: '테린이 탈출회', region: '경기', age: '20대', skill: '초보 환영', personnel: '4/4명', time: '매주 수 19:00', img: '🎾' },
-            { id: 4, sport: '러닝', name: '한강 달리기 메이트', region: '서울', age: '전체', skill: '무관', personnel: '12/30명', time: '매주 금 20:00', img: '🏃' },
+            { id: 1, sport: '풋살', name: '강남 슛돌이 크루', region: '서울', age: '20대', skill: '입문/초보', personnel: '모집 중', time: '매주 토 14:00', img: '⚽' },
+            { id: 2, sport: '테니스', name: '테린이 탈출회', region: '경기', age: '20대', skill: '초보 환영', personnel: '모집 중', time: '매주 수 19:00', img: '🎾' },
+            { id: 3, sport: '러닝', name: '한강 달리기 메이트', region: '서울', age: '전체', skill: '무관', personnel: '모집 중', time: '매주 금 20:00', img: '🏃' },
             
-            // --- 아이스하키 (KAHL 명단 기반 추가) ---
-            { id: 101, sport: '아이스하키', name: '레드이글스 A', region: '경기', age: '전체', skill: '상급', personnel: '상담 후 결정', time: '수원 아이스하우스', img: '🏒' },
-            { id: 102, sport: '아이스하키', name: '바이킹스 A', region: '경기', age: '30대', skill: '상급', personnel: '모집 중', time: '안양 빙상장', img: '🏒' },
-            { id: 103, sport: '아이스하키', name: '블랙머신', region: '서울', age: '20대', skill: '상급', personnel: '모집 중', time: '목동/제니스', img: '🏒' },
-            { id: 104, sport: '아이스하키', name: '어벤져스 HIGH', region: '서울', age: '전체', skill: '상급', personnel: '상담 후 결정', time: '제니스 빙상장', img: '🏒' },
-            { id: 105, sport: '아이스하키', name: '터뷸런스 A', region: '경기', age: '30대', skill: '상급', personnel: '모집 중', time: '고양 어울림누리', img: '🏒' },
-            { id: 106, sport: '아이스하키', name: '톨피도즈 A', region: '서울', age: '전체', skill: '상급', personnel: '모집 중', time: '목동 빙상장', img: '🏒' },
-            { id: 107, sport: '아이스하키', name: '재거스 블랙', region: '경기', age: '전체', skill: '상급', personnel: '상담 후 결정', time: '분당 올림픽센터', img: '🏒' },
-            { id: 108, sport: '아이스하키', name: '레푸스', region: '경기', age: '30대', skill: '중상급', personnel: '모집 중', time: '고양 어울림누리', img: '⛸️' },
-            { id: 109, sport: '아이스하키', name: '로켓츠 러너스 A', region: '서울', age: '20대', skill: '중상급', personnel: '상담 후 결정', time: '제니스/목동', img: '⛸️' },
-            { id: 110, sport: '아이스하키', name: '조이플스 하우스', region: '서울', age: '전체', skill: '중상급', personnel: '모집 중', time: '제니스 빙상장', img: '⛸️' },
-            { id: 111, sport: '아이스하키', name: '스킬즈 A', region: '서울', age: '20대', skill: '초중급', personnel: '초보 환영', time: '제니스 빙상장', img: '🏒' },
-            { id: 112, sport: '아이스하키', name: '웨어울브즈 A', region: '경기', age: '40대+', skill: '초중급', personnel: '모집 중', time: '고양 어울림누리', img: '🏒' },
-            { id: 113, sport: '아이스하키', name: '하이퍽스', region: '서울', age: '전체', skill: '초중급', personnel: '모집 중', time: '목동/고양', img: '🏒' },
-            { id: 114, sport: '아이스하키', name: '성북 썬더스', region: '서울', age: '30대', skill: '중급', personnel: '15/20명', time: '매주 일 21:00', img: '🏒' }
+            // --- 아이스하키 팀 (KAHL 2026 명단 전체 반영) ---
+            { id: 100, sport: "아이스하키", name: "레드이글스 A", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
+            { id: 101, sport: "아이스하키", name: "바이킹스 A", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "안양빙상장", img: "🏒" },
+            { id: 102, sport: "아이스하키", name: "블랙머신", region: "서울", age: "전체", skill: "상급", personnel: "모집 중", time: "서울 (목동/제니스)", img: "🏒" },
+            { id: 103, sport: "아이스하키", name: "어벤져스 HIGH", region: "서울", age: "전체", skill: "상급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
+            { id: 104, sport: "아이스하키", name: "조이플스 렙", region: "서울", age: "전체", skill: "상급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
+            { id: 105, sport: "아이스하키", name: "터뷸런스 A", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
+            { id: 106, sport: "아이스하키", name: "톨피도즈 A", region: "서울", age: "전체", skill: "상급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
+            { id: 107, sport: "아이스하키", name: "매버릭스", region: "서울", age: "전체", skill: "상급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
+            { id: 108, sport: "아이스하키", name: "바이킹스 V", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "안양빙상장", img: "🏒" },
+            { id: 109, sport: "아이스하키", name: "수원이글스 A", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
+            { id: 110, sport: "아이스하키", name: "재거스 블랙", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "분당 올림픽스포츠센터", img: "🏒" },
+            { id: 111, sport: "아이스하키", name: "레푸스", region: "경기", age: "전체", skill: "중상급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
+            { id: 112, sport: "아이스하키", name: "로켓츠 러너스 A", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (제니스/목동)", img: "🏒" },
+            { id: 113, sport: "아이스하키", name: "톨피도즈 B", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
+            { id: 114, sport: "아이스하키", name: "조이플스 하우스", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
+            { id: 115, sport: "아이스하키", name: "플렉스", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
+            { id: 116, sport: "아이스하키", name: "빙신스", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울", img: "🏒" },
+            { id: 117, sport: "아이스하키", name: "아수라", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
+            { id: 118, sport: "아이스하키", name: "알브이디 블랙", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
+            { id: 119, sport: "아이스하키", name: "레인저스 화이트", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울", img: "🏒" },
+            { id: 120, sport: "아이스하키", name: "아레스", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울", img: "🏒" },
+            { id: 121, sport: "아이스하키", name: "레드이글스 B", region: "경기", age: "전체", skill: "중상급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
+            { id: 122, sport: "아이스하키", name: "스킬즈 A", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
+            { id: 123, sport: "아이스하키", name: "웨어울브즈 A", region: "경기", age: "전체", skill: "초중급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
+            { id: 124, sport: "아이스하키", name: "하이퍽스", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (목동/고양)", img: "🏒" },
+            { id: 125, sport: "아이스하키", name: "의정부위니아", region: "경기", age: "전체", skill: "초중급", personnel: "모집 중", time: "의정부 빙상장", img: "🏒" },
+            { id: 126, sport: "아이스하키", name: "MGIs", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울", img: "🏒" },
+            { id: 127, sport: "아이스하키", name: "앤틀러스", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
+            { id: 128, sport: "아이스하키", name: "블랙머신 B", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (목동/제니스)", img: "🏒" },
+            { id: 129, sport: "아이스하키", name: "킹콩스타", region: "경기", age: "전체", skill: "초중급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
+            { id: 130, sport: "아이스하키", name: "플라이어스", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울", img: "🏒" },
+            { id: 131, sport: "아이스하키", name: "로켓츠 러너스 B", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (제니스/목동)", img: "🏒" },
+            { id: 132, sport: "아이스하키", name: "스킬즈 B", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
+            { id: 133, sport: "아이스하키", name: "조이플스 루키", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
+            { id: 134, sport: "아이스하키", name: "수원이글스 B", region: "경기", age: "전체", skill: "초중급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
+            { id: 135, sport: "아이스하키", name: "알브이디 블루", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
+            { id: 136, sport: "아이스하키", name: "오르카", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
+            { id: 137, sport: "아이스하키", name: "크랙", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울", img: "🏒" },
+            { id: 138, sport: "아이스하키", name: "레푸스 프렌즈", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
+            { id: 139, sport: "아이스하키", name: "파파이즈", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
+            { id: 140, sport: "아이스하키", name: "로닌스", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
+            { id: 141, sport: "아이스하키", name: "재거스 화이트", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "분당 올림픽스포츠센터", img: "🏒" },
+            { id: 142, sport: "아이스하키", name: "터뷸런스 B", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
+            { id: 143, sport: "아이스하키", name: "레인저스 블루", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울", img: "🏒" },
+            { id: 144, sport: "아이스하키", name: "웨어울브즈 B", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
+            { id: 145, sport: "아이스하키", name: "타이탄스 Y", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울", img: "🏒" },
+            { id: 146, sport: "아이스하키", name: "블랙나이츠", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
+            { id: 147, sport: "아이스하키", name: "블랙머신 D", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (목동/제니스)", img: "🏒" },
+            { id: 148, sport: "아이스하키", name: "에픽원", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
+            { id: 149, sport: "아이스하키", name: "수원이글스 루키", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
+            { id: 150, sport: "아이스하키", name: "호네츠", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울", img: "🏒" },
+            { id: 151, sport: "아이스하키", name: "피키스", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
+            { id: 152, sport: "아이스하키", name: "수원 썬더스", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
+            { id: 153, sport: "아이스하키", name: "탑건", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
+            { id: 154, sport: "아이스하키", name: "킹콩스타 루키", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" }
         ];
 
         let currentSport = '';
@@ -193,13 +233,10 @@
             if (window.event) window.event.stopPropagation();
             currentSport = sportName;
             document.getElementById('selected-sport-title').innerText = sportName;
-            
             document.getElementById('main-page').classList.remove('active');
             document.getElementById('filter-page').classList.add('active');
-            
             document.getElementById('age-select').value = '전체';
             document.getElementById('region-select').value = '전체';
-            
             filterTeams(); 
             window.scrollTo(0, 0);
         }
@@ -233,8 +270,8 @@
                 const card = `
                     <div class="team-card">
                         <div class="card-header">
-                            <span class="recruiting-badge">KAHL 리그팀</span>
-                            <div style="font-size: 4rem; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.2;">${team.img}</div>
+                            <span class="recruiting-badge">모집 중</span>
+                            <div style="font-size: 3.5rem; opacity: 0.15;">${team.img}</div>
                         </div>
                         <div class="card-body">
                             <h3>${team.name}</h3>
@@ -243,7 +280,7 @@
                             <div class="tag-group">
                                 <span class="tag skill">#${team.skill}</span>
                                 <span class="tag">#${team.age}</span>
-                                <span class="tag">#KAHL리그</span>
+                                <span class="tag">#KAHL2026</span>
                             </div>
                         </div>
                     </div>
@@ -252,6 +289,5 @@
             });
         }
     </script>
-
 </body>
 </html>
