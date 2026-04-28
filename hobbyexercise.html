@@ -131,25 +131,37 @@
 
             <section class="filter-bar">
                 <div class="filter-group">
-                    <label>Age</label>
-                    <select id="age-select">
-                        <option value="전체">전체</option>
-                        <option value="20대">20대</option>
-                        <option value="30대">30대</option>
-                        <option value="40대+">40대+</option>
+                    <label>Sport</label>
+                    <select id="sport-select">
+                        <option value="풋살">풋살</option>
+                        <option value="축구">축구</option>
+                        <option value="농구">농구</option>
+                        <option value="야구">야구</option>
+                        <option value="배구">배구</option>
+                        <option value="테니스">테니스</option>
+                        <option value="배드민턴">배드민턴</option>
+                        <option value="스쿼시">스쿼시</option>
+                        <option value="러닝">러닝</option>
+                        <option value="클라이밍">클라이밍</option>
+                        <option value="사이클">사이클</option>
+                        <option value="아이스하키">아이스하키</option>
+                        <option value="피겨">피겨</option>
+                        <option value="서핑">서핑</option>
+                        <option value="복싱">복싱</option>
+                        <option value="주짓수">주짓수</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <label>Region</label>
                     <select id="region-select">
-                        <option value="전체">전체</option>
+                        <option value="전체">전체 지역</option>
                         <option value="서울">서울</option>
                         <option value="경기">경기</option>
                         <option value="인천">인천</option>
                         <option value="수도권 외">수도권 외</option>
                     </select>
                 </div>
-                <button class="search-btn" onclick="filterTeams()">팀 검색</button>
+                <button class="search-btn" onclick="filterTeams()">검색하기</button>
             </section>
 
             <div class="team-grid" id="team-results"></div>
@@ -157,13 +169,13 @@
     </main>
 
     <script>
-        // [파일 데이터를 기반으로 성북 썬더스를 제외한 모든 팀 반영]
+        // [팀 데이터 데이터셋]
         const allTeams = [
             { id: 1, sport: '풋살', name: '강남 슛돌이 크루', region: '서울', age: '20대', skill: '입문/초보', personnel: '모집 중', time: '매주 토 14:00', img: '⚽' },
             { id: 2, sport: '테니스', name: '테린이 탈출회', region: '경기', age: '20대', skill: '초보 환영', personnel: '모집 중', time: '매주 수 19:00', img: '🎾' },
             { id: 3, sport: '러닝', name: '한강 달리기 메이트', region: '서울', age: '전체', skill: '무관', personnel: '모집 중', time: '매주 금 20:00', img: '🏃' },
             
-            // --- 아이스하키 팀 (KAHL 2026 명단 전체 반영) ---
+            // --- 아이스하키 팀 (KAHL 2026 명단) ---
             { id: 100, sport: "아이스하키", name: "레드이글스 A", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
             { id: 101, sport: "아이스하키", name: "바이킹스 A", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "안양빙상장", img: "🏒" },
             { id: 102, sport: "아이스하키", name: "블랙머신", region: "서울", age: "전체", skill: "상급", personnel: "모집 중", time: "서울 (목동/제니스)", img: "🏒" },
@@ -232,11 +244,16 @@
         function goToFilterPage(sportName) {
             if (window.event) window.event.stopPropagation();
             currentSport = sportName;
+            
+            // UI 업데이트
             document.getElementById('selected-sport-title').innerText = sportName;
+            document.getElementById('sport-select').value = sportName; // 드롭다운 값 동기화
+            document.getElementById('region-select').value = '전체';
+            
+            // 페이지 전환
             document.getElementById('main-page').classList.remove('active');
             document.getElementById('filter-page').classList.add('active');
-            document.getElementById('age-select').value = '전체';
-            document.getElementById('region-select').value = '전체';
+            
             filterTeams(); 
             window.scrollTo(0, 0);
         }
@@ -248,21 +265,23 @@
         }
 
         function filterTeams() {
-            const selectedAge = document.getElementById('age-select').value;
+            const selectedSport = document.getElementById('sport-select').value;
             const selectedRegion = document.getElementById('region-select').value;
             const resultsContainer = document.getElementById('team-results');
 
+            // 상단 타이틀도 선택된 종목으로 업데이트
+            document.getElementById('selected-sport-title').innerText = selectedSport;
+
             const filtered = allTeams.filter(team => {
-                const sportMatch = team.sport === currentSport;
-                const ageMatch = selectedAge === '전체' || team.age === selectedAge || team.age === '전체';
+                const sportMatch = team.sport === selectedSport;
                 const regionMatch = selectedRegion === '전체' || team.region === selectedRegion;
-                return sportMatch && ageMatch && regionMatch;
+                return sportMatch && regionMatch;
             });
 
             resultsContainer.innerHTML = '';
 
             if (filtered.length === 0) {
-                resultsContainer.innerHTML = `<div class="no-result">해당 조건의 ${currentSport} 팀이 아직 없습니다. <br> 다른 지역이나 연령대를 선택해 보세요!</div>`;
+                resultsContainer.innerHTML = `<div class="no-result">해당 조건의 ${selectedSport} 팀이 아직 없습니다. <br> 다른 지역을 선택해 보세요!</div>`;
                 return;
             }
 
