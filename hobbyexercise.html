@@ -62,7 +62,7 @@
         .recruiting-badge { position: absolute; top: 15px; left: 15px; background: #007bff; color: #fff; padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; }
         
         .card-body { padding: 25px; }
-        .card-body h3 { font-size: 1.25rem; margin-bottom: 12px; color: #1d1d1f; height: 2.8rem; display: flex; align-items: center; line-height: 1.4; }
+        .card-body h3 { font-size: 1.25rem; margin-bottom: 12px; color: #1d1d1f; height: 2.8rem; display: flex; align-items: center; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; }
         .info-row { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #666; margin-bottom: 6px; }
         
         .tag-group { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 6px; }
@@ -88,7 +88,6 @@
                         <a href="javascript:void(0)" onclick="goToFilterPage('축구')">축구</a>
                         <a href="javascript:void(0)" onclick="goToFilterPage('농구')">농구</a>
                         <a href="javascript:void(0)" onclick="goToFilterPage('야구')">야구</a>
-                        <a href="javascript:void(0)" onclick="goToFilterPage('배구')">배구</a>
                     </div>
                 </div>
                 <div class="category-item" onclick="toggleMenu(this)">
@@ -96,7 +95,6 @@
                     <div class="sports-dropdown">
                         <a href="javascript:void(0)" onclick="goToFilterPage('테니스')">테니스</a>
                         <a href="javascript:void(0)" onclick="goToFilterPage('배드민턴')">배드민턴</a>
-                        <a href="javascript:void(0)" onclick="goToFilterPage('스쿼시')">스쿼시</a>
                     </div>
                 </div>
                 <div class="category-item" onclick="toggleMenu(this)">
@@ -104,17 +102,12 @@
                     <div class="sports-dropdown">
                         <a href="javascript:void(0)" onclick="goToFilterPage('러닝')">러닝</a>
                         <a href="javascript:void(0)" onclick="goToFilterPage('클라이밍')">클라이밍</a>
-                        <a href="javascript:void(0)" onclick="goToFilterPage('사이클')">사이클</a>
                     </div>
                 </div>
                 <div class="category-item" onclick="toggleMenu(this)">
                     <div class="item-card"><span class="icon">🏒</span><strong>이색 및 계절</strong></div>
                     <div class="sports-dropdown">
                         <a href="javascript:void(0)" onclick="goToFilterPage('아이스하키')">아이스하키</a>
-                        <a href="javascript:void(0)" onclick="goToFilterPage('피겨')">피겨</a>
-                        <a href="javascript:void(0)" onclick="goToFilterPage('서핑')">서핑</a>
-                        <a href="javascript:void(0)" onclick="goToFilterPage('복싱')">복싱</a>
-                        <a href="javascript:void(0)" onclick="goToFilterPage('주짓수')">주짓수</a>
                     </div>
                 </div>
             </div>
@@ -137,18 +130,11 @@
                         <option value="축구">축구</option>
                         <option value="농구">농구</option>
                         <option value="야구">야구</option>
-                        <option value="배구">배구</option>
                         <option value="테니스">테니스</option>
                         <option value="배드민턴">배드민턴</option>
-                        <option value="스쿼시">스쿼시</option>
                         <option value="러닝">러닝</option>
                         <option value="클라이밍">클라이밍</option>
-                        <option value="사이클">사이클</option>
                         <option value="아이스하키">아이스하키</option>
-                        <option value="피겨">피겨</option>
-                        <option value="서핑">서핑</option>
-                        <option value="복싱">복싱</option>
-                        <option value="주짓수">주짓수</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -169,68 +155,110 @@
     </main>
 
     <script>
-        // [팀 데이터 데이터셋]
         const allTeams = [
-            { id: 1, sport: '풋살', name: '강남 슛돌이 크루', region: '서울', age: '20대', skill: '입문/초보', personnel: '모집 중', time: '매주 토 14:00', img: '⚽' },
-            { id: 2, sport: '테니스', name: '테린이 탈출회', region: '경기', age: '20대', skill: '초보 환영', personnel: '모집 중', time: '매주 수 19:00', img: '🎾' },
-            { id: 3, sport: '러닝', name: '한강 달리기 메이트', region: '서울', age: '전체', skill: '무관', personnel: '모집 중', time: '매주 금 20:00', img: '🏃' },
-            
-            // --- 아이스하키 팀 (KAHL 2026 명단) ---
-            { id: 100, sport: "아이스하키", name: "레드이글스 A", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
-            { id: 101, sport: "아이스하키", name: "바이킹스 A", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "안양빙상장", img: "🏒" },
-            { id: 102, sport: "아이스하키", name: "블랙머신", region: "서울", age: "전체", skill: "상급", personnel: "모집 중", time: "서울 (목동/제니스)", img: "🏒" },
-            { id: 103, sport: "아이스하키", name: "어벤져스 HIGH", region: "서울", age: "전체", skill: "상급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
-            { id: 104, sport: "아이스하키", name: "조이플스 렙", region: "서울", age: "전체", skill: "상급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
-            { id: 105, sport: "아이스하키", name: "터뷸런스 A", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
-            { id: 106, sport: "아이스하키", name: "톨피도즈 A", region: "서울", age: "전체", skill: "상급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
-            { id: 107, sport: "아이스하키", name: "매버릭스", region: "서울", age: "전체", skill: "상급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
-            { id: 108, sport: "아이스하키", name: "바이킹스 V", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "안양빙상장", img: "🏒" },
-            { id: 109, sport: "아이스하키", name: "수원이글스 A", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
-            { id: 110, sport: "아이스하키", name: "재거스 블랙", region: "경기", age: "전체", skill: "상급", personnel: "모집 중", time: "분당 올림픽스포츠센터", img: "🏒" },
-            { id: 111, sport: "아이스하키", name: "레푸스", region: "경기", age: "전체", skill: "중상급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
-            { id: 112, sport: "아이스하키", name: "로켓츠 러너스 A", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (제니스/목동)", img: "🏒" },
-            { id: 113, sport: "아이스하키", name: "톨피도즈 B", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
-            { id: 114, sport: "아이스하키", name: "조이플스 하우스", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
-            { id: 115, sport: "아이스하키", name: "플렉스", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
-            { id: 116, sport: "아이스하키", name: "빙신스", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울", img: "🏒" },
-            { id: 117, sport: "아이스하키", name: "아수라", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
-            { id: 118, sport: "아이스하키", name: "알브이디 블랙", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
-            { id: 119, sport: "아이스하키", name: "레인저스 화이트", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울", img: "🏒" },
-            { id: 120, sport: "아이스하키", name: "아레스", region: "서울", age: "전체", skill: "중상급", personnel: "모집 중", time: "서울", img: "🏒" },
-            { id: 121, sport: "아이스하키", name: "레드이글스 B", region: "경기", age: "전체", skill: "중상급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
-            { id: 122, sport: "아이스하키", name: "스킬즈 A", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
-            { id: 123, sport: "아이스하키", name: "웨어울브즈 A", region: "경기", age: "전체", skill: "초중급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
-            { id: 124, sport: "아이스하키", name: "하이퍽스", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (목동/고양)", img: "🏒" },
-            { id: 125, sport: "아이스하키", name: "의정부위니아", region: "경기", age: "전체", skill: "초중급", personnel: "모집 중", time: "의정부 빙상장", img: "🏒" },
-            { id: 126, sport: "아이스하키", name: "MGIs", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울", img: "🏒" },
-            { id: 127, sport: "아이스하키", name: "앤틀러스", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
-            { id: 128, sport: "아이스하키", name: "블랙머신 B", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (목동/제니스)", img: "🏒" },
-            { id: 129, sport: "아이스하키", name: "킹콩스타", region: "경기", age: "전체", skill: "초중급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
-            { id: 130, sport: "아이스하키", name: "플라이어스", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울", img: "🏒" },
-            { id: 131, sport: "아이스하키", name: "로켓츠 러너스 B", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (제니스/목동)", img: "🏒" },
-            { id: 132, sport: "아이스하키", name: "스킬즈 B", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
-            { id: 133, sport: "아이스하키", name: "조이플스 루키", region: "서울", age: "전체", skill: "초중급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
-            { id: 134, sport: "아이스하키", name: "수원이글스 B", region: "경기", age: "전체", skill: "초중급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
-            { id: 135, sport: "아이스하키", name: "알브이디 블루", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
-            { id: 136, sport: "아이스하키", name: "오르카", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
-            { id: 137, sport: "아이스하키", name: "크랙", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울", img: "🏒" },
-            { id: 138, sport: "아이스하키", name: "레푸스 프렌즈", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
-            { id: 139, sport: "아이스하키", name: "파파이즈", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
-            { id: 140, sport: "아이스하키", name: "로닌스", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (목동)", img: "🏒" },
-            { id: 141, sport: "아이스하키", name: "재거스 화이트", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "분당 올림픽스포츠센터", img: "🏒" },
-            { id: 142, sport: "아이스하키", name: "터뷸런스 B", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
-            { id: 143, sport: "아이스하키", name: "레인저스 블루", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울", img: "🏒" },
-            { id: 144, sport: "아이스하키", name: "웨어울브즈 B", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "고양 어울림누리", img: "🏒" },
-            { id: 145, sport: "아이스하키", name: "타이탄스 Y", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울", img: "🏒" },
-            { id: 146, sport: "아이스하키", name: "블랙나이츠", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
-            { id: 147, sport: "아이스하키", name: "블랙머신 D", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (목동/제니스)", img: "🏒" },
-            { id: 148, sport: "아이스하키", name: "에픽원", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울 (제니스)", img: "🏒" },
-            { id: 149, sport: "아이스하키", name: "수원이글스 루키", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
-            { id: 150, sport: "아이스하키", name: "호네츠", region: "서울", age: "전체", skill: "초급", personnel: "모집 중", time: "서울", img: "🏒" },
-            { id: 151, sport: "아이스하키", name: "피키스", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
-            { id: 152, sport: "아이스하키", name: "수원 썬더스", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
-            { id: 153, sport: "아이스하키", name: "탑건", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" },
-            { id: 154, sport: "아이스하키", name: "킹콩스타 루키", region: "경기", age: "전체", skill: "초급", personnel: "모집 중", time: "수원 아이스하우스", img: "🏒" }
+            // --- 풋살 50팀 ---
+            { sport: '풋살', name: '분당풋살팀', region: '경기', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: 'SUIN FS', region: '경기', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: 'OTP FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '남양주 화도 FCTMT', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: 'EUM FS', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: 'FC THE KING', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: 'Goshen physical', region: '서울', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '샌드박스FC', region: '경기', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '쌈바FC', region: '경기', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: 'FC74', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: 'FC Moon', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: 'One', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '판타지아 ADUN FS', region: '인천', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: 'Ratel FS', region: '인천', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '영차FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '주몽Fc', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '팀프렌즈', region: '서울', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '강남 레전드', region: '서울', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '잠실 킥오프', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '마포 풋살러', region: '서울', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '인천 유나이트', region: '인천', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '수원 월드컵', region: '경기', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '성남 매치', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '부천 삭커스', region: '경기', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '고양 피닉스', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '안양 비전', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '용인 스피드', region: '경기', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '대전 시티', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '대구 달구벌', region: '수도권 외', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '부산 갈매기', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '광주 무등', region: '수도권 외', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '울산 현대', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '제주 탐라', region: '수도권 외', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '강남 스카이', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '서초 다이내믹', region: '서울', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '송파 에이스', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '노원 불암', region: '서울', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '강서 드림', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '양천 메이트', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '구로 테크노', region: '서울', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '금천 가산', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '동작 상도', region: '서울', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '관악 신림', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '영등포 여의도', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '은평 연신내', region: '서울', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '성북 안암', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '종로 경복궁', region: '서울', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '동대문 청량리', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '중랑 망우', region: '서울', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '풋살', name: '강동 천호', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+
+            // --- 축구 50팀 ---
+            { sport: '축구', name: '풋플러 FC', region: '서울', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: 'AMA FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '일레븐 스타즈', region: '서울', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '조기축구회A', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: 'FC 강북', region: '서울', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '용인 FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '수원 유나이티드', region: '경기', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '인천 필드', region: '인천', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '천안 일레븐', region: '수도권 외', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '청주 유나이트', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '전주 한옥 FC', region: '수도권 외', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '목포 바다 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '대구 스타 FC', region: '수도권 외', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '경산 축구단', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '창원 누리 FC', region: '수도권 외', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '진주 강남 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '광산 드림 FC', region: '수도권 외', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '군산 오션 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '춘천 호반 FC', region: '수도권 외', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '강릉 경포 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '원주 치악 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '평택 블루 FC', region: '경기', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '화성 동탄 FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '시흥 배곧 FC', region: '경기', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '김포 한강 FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '남양주 다산 FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '구리 토평 FC', region: '경기', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '하남 미사 FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '의정부 민락 FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '파주 운정 FC', region: '경기', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '포천 아트 FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '양주 옥정 FC', region: '경기', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '안성 공도 FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '이천 증포 FC', region: '경기', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '여주 세종 FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '광주 신현 FC', region: '경기', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '서구 가좌 FC', region: '인천', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '중구 영종 FC', region: '인천', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '연수 송도 FC', region: '인천', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '미추홀 학익 FC', region: '인천', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '동래 온천 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '사하 하단 FC', region: '수도권 외', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '강서 명지 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '수성 범어 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '북구 칠곡 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '서구 둔산 FC', region: '수도권 외', skill: '중상급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '유성 궁동 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '대덕 신탄 FC', region: '수도권 외', skill: '초급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '울주 언양 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' },
+            { sport: '축구', name: '남구 무거 FC', region: '수도권 외', skill: '중급', personnel: '모집 중', time: '정보 없음', img: '⚽' }
         ];
 
         let currentSport = '';
@@ -245,12 +273,10 @@
             if (window.event) window.event.stopPropagation();
             currentSport = sportName;
             
-            // UI 업데이트
             document.getElementById('selected-sport-title').innerText = sportName;
-            document.getElementById('sport-select').value = sportName; // 드롭다운 값 동기화
+            document.getElementById('sport-select').value = sportName;
             document.getElementById('region-select').value = '전체';
             
-            // 페이지 전환
             document.getElementById('main-page').classList.remove('active');
             document.getElementById('filter-page').classList.add('active');
             
@@ -269,7 +295,6 @@
             const selectedRegion = document.getElementById('region-select').value;
             const resultsContainer = document.getElementById('team-results');
 
-            // 상단 타이틀도 선택된 종목으로 업데이트
             document.getElementById('selected-sport-title').innerText = selectedSport;
 
             const filtered = allTeams.filter(team => {
@@ -298,8 +323,8 @@
                             <div class="info-row">👥 <span>${team.personnel}</span></div>
                             <div class="tag-group">
                                 <span class="tag skill">#${team.skill}</span>
-                                <span class="tag">#${team.age}</span>
-                                <span class="tag">#KAHL2026</span>
+                                <span class="tag">#전체연령</span>
+                                <span class="tag">#플랩데이터</span>
                             </div>
                         </div>
                     </div>
