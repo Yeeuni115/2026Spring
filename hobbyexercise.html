@@ -56,7 +56,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase 설정 (유저님의 실제 키 적용)
+        // Firebase 설정
         const firebaseConfig = {
             apiKey: "AIzaSyBUJo-6tWE65nNWOgdRzFxiXRxpimK7NYI",
             authDomain: "sporty-us.firebaseapp.com",
@@ -70,7 +70,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- 전역 변수 및 100개 데이터 ---
+        // --- 전역 변수 및 데이터 ---
         window.userSession = { name: "", phone: "" };
 
         const allTeams = [
@@ -176,7 +176,59 @@
             { sport: '축구', name: '대전 서구FC', region: '수도권 외', skill: '중급', time: '매일 저녁', features: '대전 서구 최강 조직력 지향', img: '⚽' },
             { sport: '축구', name: '대구 달서FC', region: '수도권 외', skill: '중상급', time: '일요일 아침', features: '상쾌한 공기와 함께하는 필드전', img: '⚽' },
             { sport: '축구', name: '광주 남구FC', region: '수도권 외', skill: '중급', time: '목요일 밤', features: '실력과 매너를 겸비한 광주 모임', img: '⚽' },
-            { sport: '축구', name: '부산 사하FC', region: '수도권 외', skill: '초급', time: '토요일 오전', features: '부산 사하 지역 즐거운 축구 모임', img: '⚽' }
+            { sport: '축구', name: '부산 사하FC', region: '수도권 외', skill: '초급', time: '토요일 오전', features: '부산 사하 지역 즐거운 축구 모임', img: '⚽' },
+
+            // --- 야구 50팀 추가 ---
+            { sport: '야구', name: '서울 브라더스', region: '서울', skill: '4부 (초급)', time: '매주 일요일 오전', features: '가족같은 분위기, 매너 야구 지향', img: '⚾' },
+            { sport: '야구', name: '인천 타이거즈', region: '인천', skill: '루키 (비선출)', time: '토요일 야간 경기', features: '유니폼 풀세트 지원 (신입)', img: '⚾' },
+            { sport: '야구', name: '고양 자이언츠', region: '경기', skill: '3부 (중급)', time: '매주 일요일 오후', features: '일요일 오전 리그 참여 중', img: '⚾' },
+            { sport: '야구', name: '수원 라이온즈', region: '경기', skill: '3.5부 (중급하)', time: '토요일 오전', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾' },
+            { sport: '야구', name: '성남 이글스', region: '경기', skill: '4부 (초급)', time: '매주 일요일 아침', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾' },
+            { sport: '야구', name: '부천 다이노스', region: '경기', skill: '루키 (비선출)', time: '주말 상시', features: '선출 환영, 포지션 경쟁 가능', img: '⚾' },
+            { sport: '야구', name: '안산 슬래머', region: '경기', skill: '3부 (중급)', time: '매주 토요일 오후', features: '3040 연령대 위주, 친목 도모 활발', img: '⚾' },
+            { sport: '야구', name: '남양주 홈런왕', region: '경기', skill: '3.5부 (중급하)', time: '일요일 오전', features: '전용 구장 보유, 연습량 많음', img: '⚾' },
+            { sport: '야구', name: '용인 에이스', region: '경기', skill: '4부 (초급)', time: '토요일 야간', features: '승부보다는 즐거운 야구 추구', img: '⚾' },
+            { sport: '야구', name: '안양 다이아몬즈', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오전', features: '체계적인 훈련 및 용병 경기 활발', img: '⚾' },
+            { sport: '야구', name: '강남 워리어스', region: '서울', skill: '3부 (중급)', time: '매주 토요일 오전', features: '매주 간식 및 음료 제공', img: '⚾' },
+            { sport: '야구', name: '송파 히어로즈', region: '서울', skill: '3.5부 (중급하)', time: '일요일 오후', features: '연령 제한 없음, 야구에 미친 사람들 모임', img: '⚾' },
+            { sport: '야구', name: '마포 레이더스', region: '서울', skill: '4부 (초급)', time: '토요일 오전', features: '투수/포수 포지션 우대 모집', img: '⚾' },
+            { sport: '야구', name: '강서 불독스', region: '서울', skill: '루키 (비선출)', time: '매주 일요일 아침', features: '서울/경기권 원정 경기 자주 다님', img: '⚾' },
+            { sport: '야구', name: '노원 베어스', region: '서울', skill: '3부 (중급)', time: '토요일 야간', features: '회식 강요 없음, 운동에만 집중', img: '⚾' },
+            { sport: '야구', name: '과천 유니콘스', region: '경기', skill: '3.5부 (중급하)', time: '매주 일요일 오전', features: '가족같은 분위기, 매너 야구 지향', img: '⚾' },
+            { sport: '야구', name: '의왕 몬스터즈', region: '경기', skill: '4부 (초급)', time: '토요일 오후', features: '유니폼 풀세트 지원 (신입)', img: '⚾' },
+            { sport: '야구', name: '시흥 블랙홀스', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오후', features: '일요일 오전 리그 참여 중', img: '⚾' },
+            { sport: '야구', name: '김포 썬더스', region: '경기', skill: '3부 (중급)', time: '토요일 오전', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾' },
+            { sport: '야구', name: '파주 윙즈', region: '경기', skill: '3.5부 (중급하)', time: '일요일 아침', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾' },
+            { sport: '야구', name: '서울 타이거즈', region: '서울', skill: '4부 (초급)', time: '매주 토요일 오후', features: '선출 환영, 포지션 경쟁 가능', img: '⚾' },
+            { sport: '야구', name: '인천 자이언츠', region: '인천', skill: '루키 (비선출)', time: '일요일 오전', features: '3040 연령대 위주, 친목 도모 활발', img: '⚾' },
+            { sport: '야구', name: '고양 라이온즈', region: '경기', skill: '3부 (중급)', time: '토요일 야간', features: '전용 구장 보유, 연습량 많음', img: '⚾' },
+            { sport: '야구', name: '수원 이글스', region: '경기', skill: '3.5부 (중급하)', time: '매주 일요일 오전', features: '승부보다는 즐거운 야구 추구', img: '⚾' },
+            { sport: '야구', name: '성남 다이노스', region: '경기', skill: '4부 (초급)', time: '토요일 오전', features: '체계적인 훈련 및 용병 경기 활발', img: '⚾' },
+            { sport: '야구', name: '부천 슬래머', region: '경기', skill: '루키 (비선출)', time: '일요일 오후', features: '매주 간식 및 음료 제공', img: '⚾' },
+            { sport: '야구', name: '안산 홈런왕', region: '경기', skill: '3부 (중급)', time: '매주 토요일 오전', features: '연령 제한 없음, 야구에 미친 사람들 모임', img: '⚾' },
+            { sport: '야구', name: '남양주 에이스', region: '경기', skill: '3.5부 (중급하)', time: '일요일 아침', features: '투수/포수 포지션 우대 모집', img: '⚾' },
+            { sport: '야구', name: '용인 다이아몬즈', region: '경기', skill: '4부 (초급)', time: '토요일 야간', features: '서울/경기권 원정 경기 자주 다님', img: '⚾' },
+            { sport: '야구', name: '안양 워리어스', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오전', features: '회식 강요 없음, 운동에만 집중', img: '⚾' },
+            { sport: '야구', name: '강남 히어로즈', region: '서울', skill: '3부 (중급)', time: '토요일 오후', features: '가족같은 분위기, 매너 야구 지향', img: '⚾' },
+            { sport: '야구', name: '송파 레이더스', region: '서울', skill: '3.5부 (중급하)', time: '매주 일요일 오후', features: '유니폼 풀세트 지원 (신입)', img: '⚾' },
+            { sport: '야구', name: '마포 불독스', region: '서울', skill: '4부 (초급)', time: '토요일 오전', features: '일요일 오전 리그 참여 중', img: '⚾' },
+            { sport: '야구', name: '강서 베어스', region: '서울', skill: '루키 (비선출)', time: '일요일 아침', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾' },
+            { sport: '야구', name: '노원 유니콘스', region: '서울', skill: '3부 (중급)', time: '매주 토요일 오후', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾' },
+            { sport: '야구', name: '과천 몬스터즈', region: '경기', skill: '3.5부 (중급하)', time: '일요일 오전', features: '선출 환영, 포지션 경쟁 가능', img: '⚾' },
+            { sport: '야구', name: '의왕 블랙홀스', region: '경기', skill: '4부 (초급)', time: '토요일 야간', features: '3040 연령대 위주, 친목 도모 활발', img: '⚾' },
+            { sport: '야구', name: '시흥 썬더스', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오전', features: '전용 구장 보유, 연습량 많음', img: '⚾' },
+            { sport: '야구', name: '김포 윙즈', region: '경기', skill: '3부 (중급)', time: '토요일 오전', features: '승부보다는 즐거운 야구 추구', img: '⚾' },
+            { sport: '야구', name: '파주 브라더스', region: '경기', skill: '3.5부 (중급하)', time: '일요일 오후', features: '체계적인 훈련 및 용병 경기 활발', img: '⚾' },
+            { sport: '야구', name: '서울 자이언츠', region: '서울', skill: '4부 (초급)', time: '매주 일요일 오전', features: '매주 간식 및 음료 제공', img: '⚾' },
+            { sport: '야구', name: '인천 라이온즈', region: '인천', skill: '루키 (비선출)', time: '토요일 야간', features: '연령 제한 없음, 야구에 미친 사람들 모임', img: '⚾' },
+            { sport: '야구', name: '고양 이글스', region: '경기', skill: '3부 (중급)', time: '일요일 아침', features: '투수/포수 포지션 우대 모집', img: '⚾' },
+            { sport: '야구', name: '수원 다이노스', region: '경기', skill: '3.5부 (중급하)', time: '매주 토요일 오후', features: '서울/경기권 원정 경기 자주 다님', img: '⚾' },
+            { sport: '야구', name: '성남 슬래머', region: '경기', skill: '4부 (초급)', time: '일요일 오전', features: '회식 강요 없음, 운동에만 집중', img: '⚾' },
+            { sport: '야구', name: '부천 홈런왕', region: '경기', skill: '루키 (비선출)', time: '토요일 오전', features: '가족같은 분위기, 매너 야구 지향', img: '⚾' },
+            { sport: '야구', name: '안산 에이스', region: '경기', skill: '3부 (중급)', time: '매주 일요일 오후', features: '유니폼 풀세트 지원 (신입)', img: '⚾' },
+            { sport: '야구', name: '남양주 다이아몬즈', region: '경기', skill: '3.5부 (중급하)', time: '토요일 야간', features: '일요일 오전 리그 참여 중', img: '⚾' },
+            { sport: '야구', name: '용인 워리어스', region: '경기', skill: '4부 (초급)', time: '일요일 아침', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾' },
+            { sport: '야구', name: '안양 히어로즈', region: '경기', skill: '루키 (비선출)', time: '매주 토요일 오후', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾' }
         ];
 
         // 1. 시작하기 함수 (전역 등록)
@@ -215,21 +267,24 @@
             const results = document.getElementById('team-results');
             const filtered = allTeams.filter(t => t.sport === sport);
 
-            results.innerHTML = filtered.map(t => `
-                <div class="team-card" onclick="this.classList.toggle('is-expanded')">
-                    <span class="recruiting-badge">모집 중</span>
-                    <div class="card-body" style="margin-top:35px;">
-                        <h3>${t.name}</h3>
-                        <p style="font-size:0.85rem; color:#666;">📍 ${t.region} | #${t.skill}</p>
-                        <div class="detail-info">
-                            <div class="info-row"><span class="label">시간대</span> <span>${t.time}</span></div>
-                            <div class="info-row"><span class="label">연락처</span> <span>플랩풋볼 플랫폼 내 신청</span></div>
-                            <div class="info-row"><span class="label">특징</span> <span style="color:#007bff; font-weight:600;">✨ ${t.features}</span></div>
-                            <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}')">가입 신청하기</button>
+            if (filtered.length === 0) {
+                results.innerHTML = `<div style="text-align:center; width:100%; padding:50px; color:#888;">준비 중인 종목입니다.</div>`;
+            } else {
+                results.innerHTML = filtered.map(t => `
+                    <div class="team-card" onclick="this.classList.toggle('is-expanded')">
+                        <span class="recruiting-badge">모집 중</span>
+                        <div class="card-body" style="margin-top:35px;">
+                            <h3>${t.name}</h3>
+                            <p style="font-size:0.85rem; color:#666;">📍 ${t.region} | #${t.skill}</p>
+                            <div class="detail-info">
+                                <div class="info-row"><span class="label">시간대</span> <span>${t.time}</span></div>
+                                <div class="info-row"><span class="label">특징</span> <span style="color:#007bff; font-weight:600;">✨ ${t.features}</span></div>
+                                <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}')">가입 신청하기</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
             
             window.showPage('filter-page');
         };
@@ -310,6 +365,7 @@
             <div class="category-grid">
                 <div class="item-card" onclick="window.goToFilterPage('풋살')"><span style="font-size:3rem; display:block;">⚽</span><strong>풋살</strong></div>
                 <div class="item-card" onclick="window.goToFilterPage('축구')"><span style="font-size:3rem; display:block;">🏃‍♂️</span><strong>축구</strong></div>
+                <div class="item-card" onclick="window.goToFilterPage('야구')"><span style="font-size:3rem; display:block;">⚾</span><strong>야구</strong></div>
                 <div class="item-card" onclick="window.goToFilterPage('테니스')"><span style="font-size:3rem; display:block;">🎾</span><strong>테니스</strong></div>
                 <div class="item-card" onclick="window.goToFilterPage('아이스하키')"><span style="font-size:3rem; display:block;">🏒</span><strong>아이스하키</strong></div>
             </div>
