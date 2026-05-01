@@ -11,5 +11,13 @@ https://console.firebase.google.com/u/0/project/sporty-us/firestore/databases/-d
 
 *종목별 데이터 소스*
 풋살 - 플랩풋볼
+축구 - 플랩풋볼
+야구 - 게임원
+농구 - NBS카페
 테니스 - 소모임
+탁구 - 소모임
+배드민턴 - 소모임
+헬스/필라테스 - 소모임
+러닝 - 소모임
 아이스하키 - KAHL사이트
+서핑 - 소모임
