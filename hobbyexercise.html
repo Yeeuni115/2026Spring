@@ -511,7 +511,21 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
             { sport: '아이스하키', name: '피키스', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
             { sport: '아이스하키', name: '썬더스', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
             { sport: '아이스하키', name: '탑건', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '킹콩스타 루키', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' }
+            { sport: '아이스하키', name: '킹콩스타 루키', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
+
+            // --- 헬스/필라테스 팀 ---
+            { sport: '헬스/필라테스', name: '필라테스 & 요가 모임', region: '서울 노원구', skill: '초보 환영', time: '문의 필요', features: '요가/필라테스 자격증 관심자 집중 멘토링 제공', img: '🏋️' },
+            { sport: '헬스/필라테스', name: '피곤한 현대인을 위한 초보 요가', region: '서울 용산구', skill: 'All-Level (초보 가능)', time: '주말', features: '매주 주말 수업, 남성 참여 가능, 인스타그램 운영', img: '🏋️' },
+            { sport: '헬스/필라테스', name: '필라앤피 : 필라테스&바른자세운동', region: '서울 강서구', skill: '미표기 (자기소개 필요)', time: '문의 필요', features: '봉사/기부 활동 병행, 자립준비청년 무료 참여 가능', img: '🏋️' },
+            { sport: '헬스/필라테스', name: '요가하는 친구들', region: '서울 성동구', skill: '초보 ~ 숙련자 모두', time: '문의 필요', features: '해부학적 원리 기반 수련, 인도 수료 모임장 직강', img: '🏋️' },
+            { sport: '헬스/필라테스', name: '오운완!!!', region: '서울 종로구', skill: '명확한 몸 목표 보유자', time: '매일', features: '매일 운동 인증 및 식단 공유, 월 1회 오프라인 모임', img: '🏋️' },
+            { sport: '헬스/필라테스', name: '홍대, 연남 2030 운동 모임', region: '서울 마포구 (연남동)', skill: '초보 및 경력자 (2030세대)', time: '문의 필요', features: '\'더벨류짐 연남점\' 정기 모임, 웨이트+유산소 WOD 진행', img: '🏋️' },
+            { sport: '헬스/필라테스', name: '은평 헬스 크루', region: '서울 은평구 (응암동)', skill: '헬린이 ~ 헬창 모두', time: '문의 필요', features: '관장이 직접 운영, \'언노운짐 응암점\' 이용(참가비 무료)', img: '🏋️' },
+            { sport: '헬스/필라테스', name: '아침을 여는 미라클 모닝 헬스', region: '서울 서초구', skill: '아침 운동 실천자', time: '문의 필요', features: '새벽 6시 정기 운동, 출근 전 오운완 달성', img: '🏋️' },
+            { sport: '헬스/필라테스', name: '강남 요가&명상 스튜디오', region: '서울 강남구', skill: '초급 ~ 중급', time: '문의 필요', features: '정적인 명상과 힐링 요가 위주, 직장인 스트레스 해소', img: '🏋️' },
+            { sport: '헬스/필라테스', name: '필라테스 스터디 그룹', region: '서울 동작구', skill: '필라테스 강사 및 지망생', time: '문의 필요', features: '이론 공부와 실기 연습 병행하는 전문 스터디', img: '🏋️' },
+            { sport: '헬스/필라테스', name: '주말 등산 & 필라테스', region: '경기 과천시 (관악산 인근)', skill: '활동적인 분 누구나', time: '문의 필요', features: '등산 후 하산하여 스트레칭 및 필라테스 진행', img: '🏋️' },
+            { sport: '헬스/필라테스', name: '야간 헬스 파트너 찾기', region: '서울 송파구', skill: '중급 이상 추천', time: '문의 필요', features: '24시 헬스장 이용자 대상, 파트너 운동 및 보조', img: '🏋️' }
 ];
 
      window.showPage = function(pageId) {
@@ -618,7 +632,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
             <p class="section-title">🧘 라이프스타일</p>
             <div class="category-grid">
                 <div class="item-card" onclick="window.goToFilterPage('러닝')">🏃<br><strong>러닝</strong></div>
-                <div class="item-card" onclick="window.goToFilterPage('요가/필라테스')">🤸<br><strong>요가/필라테스</strong></div>
+                <div class="item-card" onclick="window.goToFilterPage('헬스/필라테스')">🤸<br><strong>헬스/필라테스</strong></div>
             </div>
 
             <p class="section-title">🏒 계절 및 이색 스포츠</p>
