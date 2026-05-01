@@ -609,7 +609,6 @@ window.handleSearch = function() {
 
 // ✅ 팀 렌더링
 function renderTeams() {
-    if (!searchKeyword) searchKeyword = "";
     const results = document.getElementById('team-results');
 
     const filteredTeams = allTeams.filter(team => {
