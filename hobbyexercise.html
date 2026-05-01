@@ -590,9 +590,11 @@ window.goToFilterPage = function(sport) {
         btn.classList.toggle('active', btn.innerText === "전체");
     });
 
-    renderTeams();
+
     window.showPage('filter-page');
+    renderTeams();
 };
+
 
 
 // ✅ 지역 필터
