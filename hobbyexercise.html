@@ -36,6 +36,7 @@
         /* 카테고리 섹션 스타일 */
         .section-title { font-size: 1.4rem; font-weight: 700; margin: 30px 0 15px; color: #1d1d1f; }
         .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        #selected-sport-title {   margin-bottom: 24px; }
         .item-card { background: #fff; padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; border: 1px solid #eee; transition: 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .item-card:hover { border-color: #007bff; transform: translateY(-3px); }
 
@@ -46,10 +47,10 @@
         .region-btn.active { background: #007bff; color: #fff; border-color: #007bff; }
 
         /* 팀 리스트 카드 */
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
-        .team-card { background: #fff; border-radius: 24px; border: 1px solid #eee; padding: 26px; position: relative; cursor: pointer; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 24px; }
+        .team-card { background: #fff; border-radius: 28px; border: 1px solid #eee; padding: 32px; position: relative; cursor: pointer; }
         .recruiting-badge { position: absolute; top: 15px; left: 15px; background: #007bff; color: #fff; padding: 4px 12px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; }
-        
+        .team-card h3 {  font-size: 1.3rem; }
         .detail-info { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee; font-size: 0.85rem; }
         .team-card.is-expanded .detail-info { display: block; }
         .info-row { display: flex; margin-bottom: 5px; gap: 8px; }
