@@ -536,10 +536,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
             window.scrollTo(0, 0);
         };
 
-        window.goToFilterPage = function(sport) {
-            currentSport = sport;
-            currentRegion = "전체";
-
+// ✅ 지역 그룹 함수 (밖에 둬야 함)
 function getRegionGroup(region) {
     if (region.includes("서울")) return "서울";
 
@@ -552,58 +549,85 @@ function getRegionGroup(region) {
 
     if (region.includes("인천")) return "인천";
 
-    if (region.includes("강릉") || region.includes("춘천") || region.includes("원주")) return "강원도";
+    if (region.includes("강릉") || region.includes("춘천") || region.includes("원주"))
+        return "강원도";
 
-    if (region.includes("대전") || region.includes("세종") || region.includes("천안") || region.includes("청주")) return "충청도";
+    if (region.includes("대전") || region.includes("세종") || region.includes("천안") || region.includes("청주"))
+        return "충청도";
 
-    if (region.includes("부산") || region.includes("대구") || region.includes("울산") || region.includes("창원") || region.includes("포항")) return "경상도";
+    if (region.includes("부산") || region.includes("대구") || region.includes("울산") || region.includes("창원") || region.includes("포항"))
+        return "경상도";
 
-    if (region.includes("광주") || region.includes("전주") || region.includes("목포")) return "전라도";
+    if (region.includes("광주") || region.includes("전주") || region.includes("목포"))
+        return "전라도";
 
-    if (region.includes("제주")) return "제주도";
+    if (region.includes("제주"))
+        return "제주도";
 
     return "기타";
 }
-            
-            const titleEl = document.getElementById('selected-sport-title');
-            if(titleEl) titleEl.innerText = sport;
-            
-            document.querySelectorAll('.region-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText === "전체");
-            });
 
-            renderTeams();
-            window.showPage('filter-page');
-        };
 
-        window.filterByRegion = function(region, btn) {
-            currentRegion = region;
-            document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderTeams();
-        };
+// ✅ 종목 선택
+window.goToFilterPage = function(sport) {
+    currentSport = sport;
+    currentRegion = "전체";
 
-        function renderTeams() {
-            const results = document.getElementById('team-results');
-            const filtered = allTeams.filter(t => 
-            t.sport === currentSport && 
-            (currentRegion === "전체" || getRegionGroup(t.region) === currentRegion)
-);
+    const titleEl = document.getElementById('selected-sport-title');
+    if(titleEl) titleEl.innerText = sport;
 
-            results.innerHTML = filtered.length ? filtered.map(t => `
-                <div class="team-card" onclick="this.classList.toggle('is-expanded')">
-                    <span class="recruiting-badge">모집 중</span>
-                    <div style="margin-top:35px;">
-                        <h3>${t.name}</h3>
-                        <p style="font-size:0.85rem; color:#666;">📍 ${t.region} | #${t.skill}</p>
-                        <div class="detail-info">
-                            <div class="info-row"><span class="label">특징</span> <span style="color:#007bff; font-weight:600;">✨ ${t.features}</span></div>
-                            <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}')">가입 신청하기</button>
-                        </div>
+    document.querySelectorAll('.region-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText === "전체");
+    });
+
+    renderTeams();
+    window.showPage('filter-page');
+};
+
+
+// ✅ 지역 필터
+window.filterByRegion = function(region, btn) {
+    currentRegion = region;
+    document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTeams();
+};
+
+
+// ✅ 팀 렌더링
+function renderTeams() {
+    const results = document.getElementById('team-results');
+
+    const filtered = allTeams.filter(t => 
+        t.sport === currentSport && 
+        (currentRegion === "전체" || getRegionGroup(t.region) === currentRegion)
+    );
+
+    results.innerHTML = filtered.length ? filtered.map(t => `
+        <div class="team-card" onclick="this.classList.toggle('is-expanded')">
+            <span class="recruiting-badge">모집 중</span>
+            <div style="margin-top:35px;">
+                <h3>${t.name}</h3>
+                <p style="font-size:0.85rem; color:#666;">
+                    📍 ${t.region} | #${t.skill}
+                </p>
+                <div class="detail-info">
+                    <div class="info-row">
+                        <span class="label">특징</span>
+                        <span style="color:#007bff; font-weight:600;">✨ ${t.features}</span>
                     </div>
+                    <button class="join-btn"
+                        onclick="event.stopPropagation(); window.applyToTeam('${t.name}')">
+                        가입 신청하기
+                    </button>
                 </div>
-            `).join('') : `<div style="text-align:center; width:100%; padding:80px; color:#888;">'${currentRegion}' 지역에 데이터가 없습니다.</div>`;
-        }
+            </div>
+        </div>
+    `).join('') 
+    : `<div style="text-align:center; width:100%; padding:80px; color:#888;">
+        '${currentRegion}' 지역에 데이터가 없습니다.
+       </div>`;
+}
 
         function fetchMyGroups() {
             const list = document.getElementById('my-group-list');
