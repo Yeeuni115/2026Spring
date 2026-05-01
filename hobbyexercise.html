@@ -539,6 +539,32 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
         window.goToFilterPage = function(sport) {
             currentSport = sport;
             currentRegion = "전체";
+
+            function getRegionGroup(region) {
+    if (region.includes("서울")) return "서울";
+
+    if (
+        region.includes("수원") || region.includes("성남") || region.includes("분당") ||
+        region.includes("고양") || region.includes("일산") || region.includes("용인") ||
+        region.includes("부천") || region.includes("안양") || region.includes("남양주") ||
+        region.includes("화성") || region.includes("평택") || region.includes("의정부")
+    ) return "경기";
+
+    if (region.includes("인천")) return "인천";
+
+    if (region.includes("강릉") || region.includes("춘천") || region.includes("원주")) return "강원도";
+
+    if (region.includes("대전") || region.includes("세종") || region.includes("천안") || region.includes("청주")) return "충청도";
+
+    if (region.includes("부산") || region.includes("대구") || region.includes("울산") || region.includes("창원") || region.includes("포항")) return "경상도";
+
+    if (region.includes("광주") || region.includes("전주") || region.includes("목포")) return "전라도";
+
+    if (region.includes("제주")) return "제주도";
+
+    return "기타";
+}
+            
             const titleEl = document.getElementById('selected-sport-title');
             if(titleEl) titleEl.innerText = sport;
             
