@@ -586,8 +586,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
         function renderTeams() {
             const results = document.getElementById('team-results');
             const filtered = allTeams.filter(t => 
-    t.sport.trim() === currentSport.trim() && 
-    (currentRegion === "전체" || t.region.includes(currentRegion))
+            t.sport === currentSport && 
+            (currentRegion === "전체" || getRegionGroup(t.region) === currentRegion)
 );
 
             results.innerHTML = filtered.length ? filtered.map(t => `
