@@ -55,7 +55,7 @@
     </style>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -67,12 +67,55 @@
             appId: "1:976740450400:web:af75cb95a42e9cd81b8305"
         };
 
+        // 1. Firebase 초기화
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // 2. 전역 변수 설정
         window.userSession = { name: "", phone: "" };
         let currentSport = "";
         let currentRegion = "전체";
+
+        // 3. 로그인 함수 (전역 등록)
+        window.handleLogin = function() {
+            const name = document.getElementById('user-name').value.trim();
+            const phone = document.getElementById('user-phone').value.trim();
+            if (!name || !phone) return alert("입력 정보를 확인하세요!");
+            
+            window.userSession = { name, phone };
+            document.getElementById('login-overlay').style.display = 'none';
+            window.showPage('main-page');
+            document.querySelector('.bottom-nav').style.display = 'flex';
+        };
+
+        // 4. 취소 함수 (전역 등록)
+        window.cancelApply = async function(docId, teamName) {
+            if (!confirm(`${teamName} 신청을 취소하시겠습니까?`)) return;
+            try {
+                await deleteDoc(doc(db, "applications", docId));
+                alert("취소되었습니다.");
+            } catch (e) {
+                console.error(e);
+                alert("취소 중 오류가 발생했습니다.");
+            }
+        };
+
+        // 5. 신청 함수 (전역 등록)
+        window.applyToTeam = async function(teamName) {
+            try {
+                await addDoc(collection(db, "applications"), {
+                    applicantName: window.userSession.name,
+                    applicantPhone: window.userSession.phone,
+                    teamName: teamName,
+                    status: "승인 대기 중",
+                    timestamp: serverTimestamp()
+                });
+                alert(`${teamName} 신청 완료!`);
+            } catch (e) { 
+                console.error(e);
+                alert("신청 중 오류가 발생했습니다."); 
+            }
+        };
 
         const allTeams = [
             // --- 풋살 50팀 ---
@@ -281,7 +324,7 @@
             { sport: '야구', name: '안산 에이스', region: '경기', skill: '3부 (중급)', time: '매주 일요일 오후', features: '유니폼 풀세트 지원 (신입)', img: '⚾' },
             { sport: '야구', name: '남양주 다이아몬즈', region: '경기', skill: '3.5부 (중급하)', time: '토요일 야간', features: '일요일 오전 리그 참여 중', img: '⚾' },
             { sport: '야구', name: '용인 워리어스', region: '경기', skill: '4부 (초급)', time: '일요일 아침', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾' },
-            { sport: '야구', name: '안양 히어로즈', region: '경기', skill: '루키 (비선출)', time: '매주 토요일 오후', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾' }
+            { sport: '야구', name: '안양 히어로즈', region: '경기', skill: '루키 (비선출)', time: '매주 토요일 오후', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾' },
 
             // --- 배드민턴 50팀 데이터 추가 ---
             { "sport": "배드민턴", "name": "타락파워민턴 <타파민>", "region": "서울 도봉구", "skill": "20~30대 / 남(구력 1년↑), 여(6개월↑)", "time": "토요일 오전 정모, 번개 수시 진행", "features": "토요일 오전 정모, 번개 수시 진행", "img": "🏸" },
@@ -336,17 +379,7 @@
             { "sport": "배드민턴", "name": "S.P.B (송파배드민턴)", "region": "서울 송파구", "skill": "1991~2007년생 / 남(입상자), 여(대회 1승↑)", "time": "송파 2030 대표 모임, 평일·주말 정모", "features": "송파 2030 대표 모임, 평일·주말 정모", "img": "🏸" }   
         ];
 
-      window.handleLogin = function() {
-            const name = document.getElementById('user-name').value.trim();
-            const phone = document.getElementById('user-phone').value.trim();
-            if (!name || !phone) return alert("입력 정보를 확인하세요!");
-            window.userSession = { name, phone };
-            document.getElementById('login-overlay').style.display = 'none';
-            window.showPage('main-page');
-            document.querySelector('.bottom-nav').style.display = 'flex';
-        };
-
-        window.showPage = function(pageId) {
+     window.showPage = function(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(pageId);
             if (target) target.classList.add('active');
@@ -357,9 +390,9 @@
         window.goToFilterPage = function(sport) {
             currentSport = sport;
             currentRegion = "전체";
-            document.getElementById('selected-sport-title').innerText = sport;
+            const titleEl = document.getElementById('selected-sport-title');
+            if(titleEl) titleEl.innerText = sport;
             
-            // 지역 버튼 초기화
             document.querySelectorAll('.region-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.innerText === "전체");
             });
@@ -396,19 +429,6 @@
                 </div>
             `).join('') : `<div style="text-align:center; width:100%; padding:80px; color:#888;">'${currentRegion}' 지역에 데이터가 없습니다.</div>`;
         }
-
-        window.applyToTeam = async function(teamName) {
-            try {
-                await addDoc(collection(db, "applications"), {
-                    applicantName: window.userSession.name,
-                    applicantPhone: window.userSession.phone,
-                    teamName: teamName,
-                    status: "승인 대기 중",
-                    timestamp: serverTimestamp()
-                });
-                alert(`${teamName} 신청 완료!`);
-            } catch (e) { alert("신청 중 오류가 발생했습니다."); }
-        };
 
         function fetchMyGroups() {
             const list = document.getElementById('my-group-list');
