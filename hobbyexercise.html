@@ -546,9 +546,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
         function renderTeams() {
             const results = document.getElementById('team-results');
             const filtered = allTeams.filter(t => 
-                t.sport === currentSport && 
-                (currentRegion === "전체" || t.region === currentRegion)
-            );
+    t.sport.trim() === currentSport.trim() && 
+    (currentRegion === "전체" || t.region.includes(currentRegion))
+);
 
             results.innerHTML = filtered.length ? filtered.map(t => `
                 <div class="team-card" onclick="this.classList.toggle('is-expanded')">
