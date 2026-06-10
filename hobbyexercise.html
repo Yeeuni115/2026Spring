@@ -66,7 +66,7 @@
 
     <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, doc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBUJo-6tWE65nNWOgdRzFxiXRxpimK7NYI",
@@ -127,6 +127,47 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                 alert("신청 중 오류가 발생했습니다."); 
             }
         };
+
+window.createTeam = async function () {
+
+    const teamData = {
+        sport: document.getElementById("new-sport").value,
+        name: document.getElementById("new-name").value,
+        region: document.getElementById("new-region").value,
+        skill: document.getElementById("new-skill").value,
+        features: document.getElementById("new-features").value,
+
+        ownerName: window.userSession.name,
+        ownerPhone: window.userSession.phone,
+
+        createdAt: serverTimestamp()
+    };
+
+    try {
+
+        await addDoc(
+            collection(db, "teams"),
+            teamData
+        );
+
+        alert("동호회 등록 완료!");
+
+        document.getElementById("new-name").value = "";
+        document.getElementById("new-region").value = "";
+        document.getElementById("new-skill").value = "";
+        document.getElementById("new-features").value = "";
+
+	window.userSession = { name, phone };
+        loadCustomTeams();
+	document.getElementById('login-overlay').style.display = 'none';
+
+    } catch (e) {
+
+        console.error(e);
+        alert("등록 실패");
+
+    }
+};
 
         const allTeams = [
             // --- 풋살 50팀 ---
@@ -539,6 +580,23 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
             { sport: '헬스/필라테스', name: '야간 헬스 파트너 찾기', region: '서울 송파구', skill: '중급 이상 추천', time: '문의 필요', features: '24시 헬스장 이용자 대상, 파트너 운동 및 보조', img: '🏋️' }
 ];
 
+let customTeams = [];
+
+async function loadCustomTeams() {
+
+    const snapshot = await getDocs(
+        collection(db, "teams")
+    );
+
+    customTeams = [];
+
+    snapshot.forEach(doc => {
+        customTeams.push(doc.data());
+    });
+
+    renderTeams();
+}
+
      window.showPage = function(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(pageId);
@@ -613,6 +671,11 @@ window.handleSearch = function() {
 // ✅ 팀 렌더링
 function renderTeams() {
     const results = document.getElementById('team-results');
+
+const mergedTeams = [
+    ...allTeams,
+    ...customTeams
+];
 
     const filteredTeams = allTeams.filter(team => {
         return (
@@ -737,6 +800,41 @@ function renderTeams() {
         </div>
     </main>
 
+
+<main id="create-page" class="page">
+  <div class="container">
+
+    <h2>동호회 등록</h2>
+
+    <input id="new-name"
+      class="login-input"
+      placeholder="팀 이름">
+
+    <input id="new-sport"
+      class="login-input"
+      placeholder="종목">
+
+    <input id="new-region"
+      class="login-input"
+      placeholder="지역">
+
+    <input id="new-skill"
+      class="login-input"
+      placeholder="실력 수준">
+
+    <input id="new-features"
+      class="login-input"
+      placeholder="팀 소개">
+
+    <button
+      class="login-btn"
+      onclick="createTeam()">
+      등록하기
+    </button>
+
+  </div>
+</main>
+
     <!-- 신청 현황 -->
     <main id="my-group-page" class="page">
         <div class="container">
@@ -747,8 +845,10 @@ function renderTeams() {
 
     <nav class="bottom-nav">
         <button class="nav-item" onclick="window.showPage('main-page')">🏠<span>탐색</span></button>
+        <button class="nav-item" onclick="window.showPage('create-page')">➕<span>등록</span></button>
         <button class="nav-item" onclick="window.showPage('my-group-page')">👥<span>내 모임</span></button>
         <button class="nav-item" onclick="location.reload()">👤<span>로그아웃</span></button>
+
     </nav>
 
 </body>
