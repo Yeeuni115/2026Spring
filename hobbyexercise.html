@@ -66,7 +66,7 @@
 
     <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, doc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, doc, deleteDoc, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBUJo-6tWE65nNWOgdRzFxiXRxpimK7NYI",
@@ -111,13 +111,69 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
             }
         };
 
+window.approveApplication =
+async function(id){
+
+    try{
+
+        await updateDoc(doc(db, "applications", id ), { status:"승인 완료" }
+  );
+
+        alert("승인 완료");
+
+    }catch(e){
+
+        console.error(e);
+
+    }
+};
+
         // 5. 신청 함수 (전역 등록)
-        window.applyToTeam = async function(teamName) {
+        window.applyToTeam = async function(teamName, ownerPhone, ownerName) {
+
+    try {
+
+        await addDoc( collection(db, "applications"),
+            {
+                applicantName:
+                    window.userSession.name,
+
+                applicantPhone:
+                    window.userSession.phone,
+
+                teamName:
+                    teamName,
+
+                ownerPhone:
+                    ownerPhone,
+
+                ownerName:
+                    ownerName,
+
+                status:
+                    "승인 대기 중",
+
+                timestamp:
+                    serverTimestamp()
+            }
+        );
+
+        alert(`${teamName} 신청 완료!`);
+
+    } catch(e){
+
+        console.error(e);
+
+        alert("신청 실패");
+
+    }
+
             try {
                 await addDoc(collection(db, "applications"), {
                     applicantName: window.userSession.name,
                     applicantPhone: window.userSession.phone,
                     teamName: teamName,
+		    ownerPhone: "01012341234",
                     status: "승인 대기 중",
                     timestamp: serverTimestamp()
                 });
@@ -170,415 +226,415 @@ window.createTeam = async function () {
 };
 
         const allTeams = [
-            // --- 풋살 50팀 ---
-            { sport: '풋살', name: '분당풋살팀', region: '경기', skill: '초급', time: '매주 목, 토 아침', features: '2030 남자, 에너지 넘치는 팀', img: '⚽' },
-            { sport: '풋살', name: 'SUIN FS', region: '경기', skill: '중상급', time: '매일 저녁', features: '남녀 모두 가능, 실전 위주 경기', img: '⚽' },
-            { sport: '풋살', name: 'OTP FC', region: '경기', skill: '중급', time: '일요일 아침', features: '2030 아침형 운동 선호', img: '⚽' },
-            { sport: '풋살', name: '남양주 화도 FCTMT', region: '경기', skill: '중급', time: '금요일 저녁', features: '3040 남자, 매너 플레이 중심', img: '⚽' },
-            { sport: '풋살', name: 'EUM FS', region: '경기', skill: '중급', time: '금요일 저녁', features: '다양한 연령층 혼합 팀', img: '⚽' },
-            { sport: '풋살', name: 'FC THE KING', region: '경기', skill: '중급', time: '화, 토 아침', features: '2040 남자, 실전 위주 경기', img: '⚽' },
-            { sport: '풋살', name: 'Goshen physical', region: '서울', skill: '중상급', time: '매일 저녁', features: '20대 위주, 고강도 훈련 지향', img: '⚽' },
-            { sport: '풋살', name: '샌드박스FC', region: '경기', skill: '중상급', time: '평일 저녁', features: '체계적인 팀 운영 및 친목', img: '⚽' },
-            { sport: '풋살', name: '쌈바FC', region: '경기', skill: '초급', time: '주말 낮', features: '가족같은 분위기, 누구나 환영', img: '⚽' },
-            { sport: '풋살', name: 'FC Moon', region: '서울', skill: '중급', time: '평일 낮', features: '2030 낮 시간대 전용 매치', img: '⚽' },
-            { sport: '풋살', name: 'Ratel FS', region: '인천', skill: '중급', time: '일요일 낮', features: '2030 남자, 열정 가득한 팀원', img: '⚽' },
-            { sport: '풋살', name: '풋린fs', region: '서울', skill: '중급', time: '토요일 저녁', features: '여성 풋살 전용, 2030 중심', img: '⚽' },
-            { sport: '풋살', name: '주몽Fc', region: '경기', skill: '중급', time: '화요일 저녁', features: '20대 위주, 정기전 위주 활동', img: '⚽' },
-            { sport: '풋살', name: '팀프렌즈', region: '서울', skill: '초급', time: '금요일 저녁', features: '초보 환영, 기초부터 즐겁게', img: '⚽' },
-            { sport: '풋살', name: '판타지아 ADUN FS', region: '인천', skill: '중급', time: '월, 목, 일 저녁', features: '인천 서구 기반 꾸준한 모임', img: '⚽' },
-            { sport: '풋살', name: '구로 디지털 풋살', region: '서울', skill: '중급', time: '목요일 저녁', features: 'IT 직장인 위주 야간 매치', img: '⚽' },
-            { sport: '풋살', name: '서초 다이나믹', region: '서울', skill: '중상급', time: '매일 밤', features: '빠른 템포 경기와 실력 향상', img: '⚽' },
-            { sport: '풋살', name: '관악 드림팀', region: '서울', skill: '초급', time: '토요일 오후', features: '대학생 중심의 활발한 분위기', img: '⚽' },
-            { sport: '풋살', name: '노원 불암FS', region: '서울', skill: '중급', time: '일요일 아침', features: '체력 중심 훈련과 정기전', img: '⚽' },
-            { sport: '풋살', name: '양천 메이트', region: '서울', skill: '초급', time: '수요일 저녁', features: '동네 친구 감성, 편안한 모임', img: '⚽' },
-            { sport: '풋살', name: '일산 호수FS', region: '경기', skill: '중급', time: '금요일 밤', features: '지역 기반 야간 경기 선호', img: '⚽' },
-            { sport: '풋살', name: '부천 원미크루', region: '경기', skill: '초급', time: '화요일 저녁', features: '입문자 위주, 친절한 분위기', img: '⚽' },
-            { sport: '풋살', name: '수원 영통FS', region: '경기', skill: '중상급', time: '토요일 아침', features: '젊은 실력자 위주 정기 모임', img: '⚽' },
-            { sport: '풋살', name: '안산 상록FC', region: '경기', skill: '중급', time: '월요일 저녁', features: '매너 플레이와 조직력 강조', img: '⚽' },
-            { sport: '풋살', name: '안양 만안FS', region: '경기', skill: '초급', time: '목요일 저녁', features: '즐기는 풋살 지향 팀', img: '⚽' },
-            { sport: '풋살', name: '인천 연수FS', region: '인천', skill: '중급', time: '일요일 저녁', features: '연수구 기반 일요일 마무리', img: '⚽' },
-            { sport: '풋살', name: '인천 부평FS', region: '인천', skill: '중상급', time: '수요일 밤', features: '빠른 전개와 팀워크 중시', img: '⚽' },
-            { sport: '풋살', name: '성남 분당FS', region: '경기', skill: '중급', time: '매일 저녁', features: '직장인 퇴근 후 운동 팀', img: '⚽' },
-            { sport: '풋살', name: '용인 수지FS', region: '경기', skill: '초급', time: '토요일 낮', features: '2030 친목 및 체력 증진', img: '⚽' },
-            { sport: '풋살', name: '화성 동탄FS', region: '경기', skill: '중급', time: '목요일 밤', features: '동탄 지역 기반 매너 모임', img: '⚽' },
-            { sport: '풋살', name: '남양주 별내FS', region: '경기', skill: '초급', time: '일요일 오후', features: '신도시 주민 기반 신규 팀', img: '⚽' },
-            { sport: '풋살', name: '의정부 호원FS', region: '경기', skill: '중급', time: '월요일 저녁', features: '열정 가득한 의정부 지역 팀', img: '⚽' },
-            { sport: '풋살', name: '광명 철산FS', region: '경기', skill: '중상급', time: '금요일 저녁', features: '실전 감각 유지 및 경기력 위주', img: '⚽' },
-            { sport: '풋살', name: '김포 한강FS', region: '경기', skill: '중급', time: '화요일 밤', features: '선후배 중심 끈끈한 유대감', img: '⚽' },
-            { sport: '풋살', name: '시흥 배곧FS', region: '경기', skill: '초급', time: '수요일 저녁', features: '풋린이 맞춤 운영과 기본기', img: '⚽' },
-            { sport: '풋살', name: '파주 운정FS', region: '경기', skill: '중급', time: '토요일 아침', features: '상쾌한 주말 아침 운동 모임', img: '⚽' },
-            { sport: '풋살', name: '평택 고덕FS', region: '경기', skill: '중상급', time: '일요일 저녁', features: '단합력 좋은 신도시 기반 팀', img: '⚽' },
-            { sport: '풋살', name: '안성 공도FS', region: '경기', skill: '중급', time: '목요일 저녁', features: '기본기에 충실한 매너 플레이', img: '⚽' },
-            { sport: '풋살', name: '오산 세교FS', region: '경기', skill: '초급', time: '월요일 저녁', features: '부담 없이 즐기는 힐링 풋살', img: '⚽' },
-            { sport: '풋살', name: '이천 증포FS', region: '경기', skill: '중급', time: '수요일 저녁', features: '주중 스트레스 해소 및 친목', img: '⚽' },
-            { sport: '풋살', name: '여주 중앙FS', region: '경기', skill: '초급', time: '토요일 낮', features: '지역 기반 누구나 환영 팀', img: '⚽' },
-            { sport: '풋살', name: '동작 흑석FS', region: '서울', skill: '중급', time: '화요일 밤', features: '원활한 소통과 즐거운 경기', img: '⚽' },
-            { sport: '풋살', name: '금천 가산FS', region: '서울', skill: '중상급', time: '매일 저녁', features: '활발한 교류와 높은 활동량', img: '⚽' },
-            { sport: '풋살', name: '종로 혜화FS', region: '서울', skill: '중급', time: '금요일 저녁', features: '역사 있는 팀원들의 끈끈함', img: '⚽' },
-            { sport: '풋살', name: '중구 명동FS', region: '서울', skill: '초급', time: '토요일 오전', features: '다양한 직종의 활기찬 멤버들', img: '⚽' },
-            { sport: '풋살', name: '강남 스카이', region: '서울', skill: '중급', time: '수요일 저녁', features: '강남 중심 세련된 매너 플레이', img: '⚽' },
-            { sport: '풋살', name: '송파 에이스', region: '서울', skill: '중급', time: '일요일 아침', features: '송파 지역 주말 루틴 축구', img: '⚽' },
-            { sport: '풋살', name: '노원 불암', region: '서울', skill: '초급', time: '목요일 저녁', features: '성별 무관 편안한 팀 운영', img: '⚽' },
-            { sport: '풋살', name: '동대문 청량리', region: '서울', skill: '중급', time: '금요일 저녁', features: '청량리 기반 정기 매치', img: '⚽' },
-            { sport: '풋살', name: '중랑 망우', region: '서울', skill: '초급', time: '수요일 오후', features: '누구나 쉽게 적응 가능한 팀', img: '⚽' },
+// --- 풋살 50팀 ---
+            { sport: '풋살', name: '분당풋살팀', region: '경기', skill: '초급', time: '매주 목, 토 아침', features: '2030 남자, 에너지 넘치는 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: 'SUIN FS', region: '경기', skill: '중상급', time: '매일 저녁', features: '남녀 모두 가능, 실전 위주 경기', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: 'OTP FC', region: '경기', skill: '중급', time: '일요일 아침', features: '2030 아침형 운동 선호', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '남양주 화도 FCTMT', region: '경기', skill: '중급', time: '금요일 저녁', features: '3040 남자, 매너 플레이 중심', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: 'EUM FS', region: '경기', skill: '중급', time: '금요일 저녁', features: '다양한 연령층 혼합 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: 'FC THE KING', region: '경기', skill: '중급', time: '화, 토 아침', features: '2040 남자, 실전 위주 경기', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: 'Goshen physical', region: '서울', skill: '중상급', time: '매일 저녁', features: '20대 위주, 고강도 훈련 지향', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '샌드박스FC', region: '경기', skill: '중상급', time: '평일 저녁', features: '체계적인 팀 운영 및 친목', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '쌈바FC', region: '경기', skill: '초급', time: '주말 낮', features: '가족같은 분위기, 누구나 환영', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: 'FC Moon', region: '서울', skill: '중급', time: '평일 낮', features: '2030 낮 시간대 전용 매치', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: 'Ratel FS', region: '인천', skill: '중급', time: '일요일 낮', features: '2030 남자, 열정 가득한 팀원', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '풋린fs', region: '서울', skill: '중급', time: '토요일 저녁', features: '여성 풋살 전용, 2030 중심', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '주몽Fc', region: '경기', skill: '중급', time: '화요일 저녁', features: '20대 위주, 정기전 위주 활동', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '팀프렌즈', region: '서울', skill: '초급', time: '금요일 저녁', features: '초보 환영, 기초부터 즐겁게', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '판타지아 ADUN FS', region: '인천', skill: '중급', time: '월, 목, 일 저녁', features: '인천 서구 기반 꾸준한 모임', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '구로 디지털 풋살', region: '서울', skill: '중급', time: '목요일 저녁', features: 'IT 직장인 위주 야간 매치', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '서초 다이나믹', region: '서울', skill: '중상급', time: '매일 밤', features: '빠른 템포 경기와 실력 향상', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '관악 드림팀', region: '서울', skill: '초급', time: '토요일 오후', features: '대학생 중심의 활발한 분위기', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '노원 불암FS', region: '서울', skill: '중급', time: '일요일 아침', features: '체력 중심 훈련과 정기전', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '양천 메이트', region: '서울', skill: '초급', time: '수요일 저녁', features: '동네 친구 감성, 편안한 모임', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '일산 호수FS', region: '경기', skill: '중급', time: '금요일 밤', features: '지역 기반 야간 경기 선호', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '부천 원미크루', region: '경기', skill: '초급', time: '화요일 저녁', features: '입문자 위주, 친절한 분위기', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '수원 영통FS', region: '경기', skill: '중상급', time: '토요일 아침', features: '젊은 실력자 위주 정기 모임', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '안산 상록FC', region: '경기', skill: '중급', time: '월요일 저녁', features: '매너 플레이와 조직력 강조', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '안양 만안FS', region: '경기', skill: '초급', time: '목요일 저녁', features: '즐기는 풋살 지향 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '인천 연수FS', region: '인천', skill: '중급', time: '일요일 저녁', features: '연수구 기반 일요일 마무리', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '인천 부평FS', region: '인천', skill: '중상급', time: '수요일 밤', features: '빠른 전개와 팀워크 중시', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '성남 분당FS', region: '경기', skill: '중급', time: '매일 저녁', features: '직장인 퇴근 후 운동 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '용인 수지FS', region: '경기', skill: '초급', time: '토요일 낮', features: '2030 친목 및 체력 증진', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '화성 동탄FS', region: '경기', skill: '중급', time: '목요일 밤', features: '동탄 지역 기반 매너 모임', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '남양주 별내FS', region: '경기', skill: '초급', time: '일요일 오후', features: '신도시 주민 기반 신규 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '의정부 호원FS', region: '경기', skill: '중급', time: '월요일 저녁', features: '열정 가득한 의정부 지역 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '광명 철산FS', region: '경기', skill: '중상급', time: '금요일 저녁', features: '실전 감각 유지 및 경기력 위주', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '김포 한강FS', region: '경기', skill: '중급', time: '화요일 밤', features: '선후배 중심 끈끈한 유대감', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '시흥 배곧FS', region: '경기', skill: '초급', time: '수요일 저녁', features: '풋린이 맞춤 운영과 기본기', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '파주 운정FS', region: '경기', skill: '중급', time: '토요일 아침', features: '상쾌한 주말 아침 운동 모임', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '평택 고덕FS', region: '경기', skill: '중상급', time: '일요일 저녁', features: '단합력 좋은 신도시 기반 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '안성 공도FS', region: '경기', skill: '중급', time: '목요일 저녁', features: '기본기에 충실한 매너 플레이', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '오산 세교FS', region: '경기', skill: '초급', time: '월요일 저녁', features: '부담 없이 즐기는 힐링 풋살', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '이천 증포FS', region: '경기', skill: '중급', time: '수요일 저녁', features: '주중 스트레스 해소 및 친목', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '여주 중앙FS', region: '경기', skill: '초급', time: '토요일 낮', features: '지역 기반 누구나 환영 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '동작 흑석FS', region: '서울', skill: '중급', time: '화요일 밤', features: '원활한 소통과 즐거운 경기', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '금천 가산FS', region: '서울', skill: '중상급', time: '매일 저녁', features: '활발한 교류와 높은 활동량', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '종로 혜화FS', region: '서울', skill: '중급', time: '금요일 저녁', features: '역사 있는 팀원들의 끈끈함', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '중구 명동FS', region: '서울', skill: '초급', time: '토요일 오전', features: '다양한 직종의 활기찬 멤버들', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '강남 스카이', region: '서울', skill: '중급', time: '수요일 저녁', features: '강남 중심 세련된 매너 플레이', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '송파 에이스', region: '서울', skill: '중급', time: '일요일 아침', features: '송파 지역 주말 루틴 축구', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '노원 불암', region: '서울', skill: '초급', time: '목요일 저녁', features: '성별 무관 편안한 팀 운영', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '동대문 청량리', region: '서울', skill: '중급', time: '금요일 저녁', features: '청량리 기반 정기 매치', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '풋살', name: '중랑 망우', region: '서울', skill: '초급', time: '수요일 오후', features: '누구나 쉽게 적응 가능한 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
 
             // --- 축구 50팀 ---
-            { sport: '축구', name: '풋플러 FC', region: '서울', skill: '중급', time: '일요일 저녁', features: '정통 필드 축구 전문 매치', img: '⚽' },
-            { sport: '축구', name: 'AMA FC', region: '경기', skill: '중급', time: '토요일 저녁', features: '30대 직장인 위주 매너 팀', img: '⚽' },
-            { sport: '축구', name: '영차FC', region: '경기', skill: '중급', time: '매일 저녁', features: '축구와 풋살을 넘나드는 열정', img: '⚽' },
-            { sport: '축구', name: 'One', region: '경기', skill: '중급', time: '매일 저녁', features: '다양한 연령층과 탄탄한 유대', img: '⚽' },
-            { sport: '축구', name: '일레븐 스타즈', region: '서울', skill: '중상급', time: '일요일 오전', features: '대회 준비 등 실전 감각 위주', img: '⚽' },
-            { sport: '축구', name: '강북 유나이티드', region: '서울', skill: '중급', time: '토요일 아침', features: '지역 기반 끈끈한 친목 축구', img: '⚽' },
-            { sport: '축구', name: '서초 일레븐', region: '서울', skill: '중상급', time: '수요일 저녁', features: '전술 훈련과 고퀄리티 매치', img: '⚽' },
-            { sport: '축구', name: '인천 필드FC', region: '인천', skill: '중급', time: '일요일 오후', features: '대규격 정규 필드 선호 모임', img: '⚽' },
-            { sport: '축구', name: '수원 월드컵FC', region: '경기', skill: '중상급', time: '목요일 저녁', features: '기술적인 플레이와 조직력 지향', img: '⚽' },
-            { sport: '축구', name: '용인 수지일레븐', region: '경기', skill: '중급', time: '토요일 오전', features: '체력 증진 및 실전 중심 운동', img: '⚽' },
-            { sport: '축구', name: '안산 단원FC', region: '경기', skill: '초급', time: '일요일 아침', features: '입문자도 적응하기 쉬운 분위기', img: '⚽' },
-            { sport: '축구', name: '대구 영남FC', region: '수도권 외', skill: '중급', time: '토요일 오후', features: '대구 지역 명문 조기축구 감성', img: '⚽' },
-            { sport: '축구', name: '부산 해운대FC', region: '수도권 외', skill: '중상급', time: '매일 새벽', features: '열정적인 새벽 축구 매니아들', img: '⚽' },
-            { sport: '축구', name: '대전 둔산일레븐', region: '수도권 외', skill: '중급', time: '수요일 밤', features: '정교한 팀워크와 빠른 역습', img: '⚽' },
-            { sport: '축구', name: '광주 무등FC', region: '수도권 외', skill: '초급', time: '일요일 오전', features: '광주 지역 정 넘치는 축구회', img: '⚽' },
-            { sport: '축구', name: '울산 현대인', region: '수도권 외', skill: '중급', time: '금요일 저녁', features: '직장인 단합과 스트레스 해소', img: '⚽' },
-            { sport: '축구', name: '강릉 경포FC', region: '수도권 외', skill: '중급', time: '토요일 낮', features: '강원도의 열정이 담긴 경기력', img: '⚽' },
-            { sport: '축구', name: '제주 한라FC', region: '수도권 외', skill: '초급', time: '일요일 저녁', features: '제주 지역 친목 기반 도민 팀', img: '⚽' },
-            { sport: '축구', name: '천안 신당FC', region: '수도권 외', skill: '중급', time: '목요일 밤', features: '에너지 넘치는 천안 지역 강호', img: '⚽' },
-            { sport: '축구', name: '청주 흥덕FC', region: '수도권 외', skill: '중상급', time: '토요일 저녁', features: '경기력 향상을 위한 진지한 매치', img: '⚽' },
-            { sport: '축구', name: '전주 완산FC', region: '수도권 외', skill: '중급', time: '일요일 오전', features: '전주 비빔밥처럼 조화로운 팀웍', img: '⚽' },
-            { sport: '축구', name: '포항 영일FC', region: '수도권 외', skill: '중상급', time: '화요일 저녁', features: '전술 중심의 지능적인 플레이', img: '⚽' },
-            { sport: '축구', name: '창원 의창FC', region: '수도권 외', skill: '중급', time: '수요일 밤', features: '창원 지역 기반 화기애애한 팀', img: '⚽' },
-            { sport: '축구', name: '김포 풍무FC', region: '경기', skill: '초급', time: '일요일 낮', features: '가족같은 편안함과 즐거운 축구', img: '⚽' },
-            { sport: '축구', name: '남양주 다산FC', region: '경기', skill: '중급', time: '토요일 오전', features: '다산 신도시 주민 중심 모임', img: '⚽' },
-            { sport: '축구', name: '의정부 신곡FC', region: '경기', skill: '초급', time: '월요일 저녁', features: '기본기부터 차근차근 배우는 팀', img: '⚽' },
-            { sport: '축구', name: '구리 인창FC', region: '경기', skill: '중급', time: '목요일 밤', features: '실력파 멤버들이 모인 구리 팀', img: '⚽' },
-            { sport: '축구', name: '하남 미사일레븐', region: '경기', skill: '중급', time: '금요일 저녁', features: '젊은 에너지와 활기찬 전개', img: '⚽' },
-            { sport: '축구', name: '파주 금촌FC', region: '경기', skill: '중상급', time: '토요일 낮', features: '파주 지역 정예 멤버 활동 중', img: '⚽' },
-            { sport: '축구', name: '시흥 정왕FC', region: '경기', skill: '초급', time: '일요일 오후', features: '웃음과 매너가 끊이지 않는 곳', img: '⚽' },
-            { sport: '축구', name: '안성 공도FC', region: '경기', skill: '중급', time: '수요일 저녁', features: '지역 친목 도모 최우선 지향', img: '⚽' },
-            { sport: '축구', name: '평택 비전FC', region: '경기', skill: '중상급', time: '목요일 밤', features: '조직적인 움직임과 높은 승률', img: '⚽' },
-            { sport: '축구', name: '아산 탕정FC', region: '수도권 외', skill: '중급', time: '화요일 저녁', features: '삼성 직장인 등 다양한 사회인', img: '⚽' },
-            { sport: '축구', name: '원주 단계FC', region: '수도권 외', skill: '초급', time: '일요일 오전', features: '활력 넘치는 원주 주말 축구', img: '⚽' },
-            { sport: '축구', name: '춘천 효자FC', region: '수도권 외', skill: '중급', time: '토요일 저녁', features: '대학생과 사회인의 조화로운 구성', img: '⚽' },
-            { sport: '축구', name: '목포 하당FC', region: '수도권 외', skill: '중급', time: '수요일 밤', features: '항구 도시 특유의 끈끈한 유대감', img: '⚽' },
-            { sport: '축구', name: '여수 돌산FC', region: '수도권 외', skill: '중상급', time: '일요일 저녁', features: '강한 체력을 바탕으로 한 경기력', img: '⚽' },
-            { sport: '축구', name: '순천 조례FC', region: '수도권 외', skill: '중급', time: '금요일 저녁', features: '매너 중심의 정기 매치 위주', img: '⚽' },
-            { sport: '축구', name: '익산 영등FC', region: '수도권 외', skill: '초급', time: '토요일 오후', features: '기본기 연습과 경기를 동시에', img: '⚽' },
-            { sport: '축구', name: '군산 수송FC', region: '수도권 외', skill: '중급', time: '월요일 밤', features: '야간 라이트 시설 좋은 필드 활용', img: '⚽' },
-            { sport: '축구', name: '양주 옥정FC', region: '경기', skill: '초급', time: '일요일 오전', features: '함께 성장하는 즐거운 분위기', img: '⚽' },
-            { sport: '축구', name: '포천 소흘FC', region: '경기', skill: '중급', time: '화요일 저녁', features: '열정만큼은 국가대표급인 팀', img: '⚽' },
-            { sport: '축구', name: '동두천 지행FC', region: '경기', skill: '중급', time: '목요일 밤', features: '파이팅 넘치는 동두천 최강 모임', img: '⚽' },
-            { sport: '축구', name: '강화 강화FC', region: '인천', skill: '초급', time: '일요일 낮', features: '전원 공격 전원 수비의 화끈함', img: '⚽' },
-            { sport: '축구', name: '계양 효성FC', region: '인천', skill: '중급', time: '수요일 저녁', features: '계양구 기반 꾸준함이 무기인 팀', img: '⚽' },
-            { sport: '축구', name: '남구 주안FC', region: '인천', skill: '중상급', time: '토요일 밤', features: '기술적인 플레이를 선호하는 팀', img: '⚽' },
-            { sport: '축구', name: '대전 서구FC', region: '수도권 외', skill: '중급', time: '매일 저녁', features: '대전 서구 최강 조직력 지향', img: '⚽' },
-            { sport: '축구', name: '대구 달서FC', region: '수도권 외', skill: '중상급', time: '일요일 아침', features: '상쾌한 공기와 함께하는 필드전', img: '⚽' },
-            { sport: '축구', name: '광주 남구FC', region: '수도권 외', skill: '중급', time: '목요일 밤', features: '실력과 매너를 겸비한 광주 모임', img: '⚽' },
-            { sport: '축구', name: '부산 사하FC', region: '수도권 외', skill: '초급', time: '토요일 오전', features: '부산 사하 지역 즐거운 축구 모임', img: '⚽' },
-         
-            // --- 농구 50팀 추가 ---
-            {"sport": "농구", "name": "리버스", "region": "서울 성북구", "skill": "중급", "time": "매주 일요일", "features": "열정넘치시는 분 환영", "img": "🏀"}, 
-            {"sport": "농구", "name": "WINGS", "region": "경기 화성", "skill": "초중급", "time": "매주 수요일", "features": "가족같은 팀, 24세 이상", "img": "🏀"}, 
-            {"sport": "농구", "name": "비사이드", "region": "경기 시흥", "skill": "초급", "time": "매주 화요일", "features": "즐농&빡농", "img": "🏀"}, 
-            {"sport": "농구", "name": "SHOWTIME", "region": "경기 부천", "skill": "초중급", "time": "매주 일요일 오전", "features": "20~30대, 즐농", "img": "🏀"}, 
-            {"sport": "농구", "name": "디백", "region": "용인 수지", "skill": "중급", "time": "상시", "features": "즐거운 분위기, 7부 도전중", "img": "🏀"}, 
-            {"sport": "농구", "name": "턴오버", "region": "서울 성북구", "skill": "초급", "time": "매주 일요일", "features": "실력보다 인성, 즐농", "img": "🏀"}, 
-            {"sport": "농구", "name": "JNB", "region": "경기 광주", "skill": "초급", "time": "매주 일요일", "features": "즐농, 초보위주", "img": "🏀"}, 
-            {"sport": "농구", "name": "팀포커스", "region": "인천 남동구", "skill": "무관", "time": "매주 월요일", "features": "20대부터 50대", "img": "🏀"}, 
-            {"sport": "농구", "name": "DBOX", "region": "대구", "skill": "무관", "time": "상시", "features": "열정만이 조건, 즐농, 나이무관", "img": "🏀"}, 
-            {"sport": "농구", "name": "플루크", "region": "서울 송파구", "skill": "무관", "time": "상시", "features": "30대부터 50대, 최첨단 장비", "img": "🏀"}, 
-            {"sport": "농구", "name": "Team block", "region": "경기 하남", "skill": "중급", "time": "매주 목요일", "features": "20~30대, 샤워가능", "img": "🏀"}, 
-            {"sport": "농구", "name": "스위치", "region": "경기 남부", "skill": "무관", "time": "매주 일요일", "features": "다양한 대회 참여", "img": "🏀"}, 
-            {"sport": "농구", "name": "브레멘농구단", "region": "광명, 서울 서부", "skill": "무관", "time": "매주 금요일", "features": "30대, 즐농", "img": "🏀"}, 
-            {"sport": "농구", "name": "컴페니언", "region": "인천 서구", "skill": "무관", "time": "매주 금요일", "features": "20~40대, 적극친목", "img": "🏀"}, 
-            {"sport": "농구", "name": "AIRBALL", "region": "경기 안양", "skill": "무관", "time": "주중", "features": "21~42세, 실력 밸런스", "img": "🏀"}, 
-            {"sport": "농구", "name": "르볼", "region": "서울 은평", "skill": "무관", "time": "매주 일요일", "features": "20~40대, 즐농", "img": "🏀"}, 
-            {"sport": "농구", "name": "트리플더블", "region": "인천 송도", "skill": "무관", "time": "매주 토요일", "features": "30~40대, 인성 중요", "img": "🏀"}, 
-            {"sport": "농구", "name": "정글", "region": "경기 용인", "skill": "초급", "time": "매주 토요일", "features": "20~30대, 디비전6우승", "img": "🏀"}, 
-            {"sport": "농구", "name": "JE서울", "region": "서울 잠실", "skill": "초급", "time": "매주 목요일", "features": "30~40대, 초보모집", "img": "🏀"}, 
-            {"sport": "농구", "name": "성광", "region": "서울 용산구", "skill": "초급", "time": "매주 토요일", "features": "40~50대, 즐농", "img": "🏀"}, 
-            {"sport": "농구", "name": "언더독", "region": "경기 광구", "skill": "초중급", "time": "매주 금요일", "features": "맞춤형 레슨, 매너농구", "img": "🏀"}, 
-            {"sport": "농구", "name": "어시스트", "region": "인천 남동구", "skill": "초급", "time": "매주 화요일", "features": "30~40대, 대회참가", "img": "🏀"}, 
-            {"sport": "농구", "name": "프렌즈", "region": "서울 관악구", "skill": "중상급", "time": "매주 일요일", "features": "86년생~, 자체전 위주", "img": "🏀"}, 
-            {"sport": "농구", "name": "디포이", "region": "대구 경산", "skill": "초급", "time": "매주 일요일", "features": "20~30대, 열정농구", "img": "🏀"}, 
-            {"sport": "농구", "name": "지역방어", "region": "경기 시흥", "skill": "초급", "time": "매주 일요일", "features": "20~50대, 즐농", "img": "🏀"}, 
-            {"sport": "농구", "name": "THE TOP", "region": "서울 중랑구", "skill": "초중급", "time": "매주 토요일", "features": "30~50대, 팀워크 중심", "img": "🏀"}, 
-            {"sport": "농구", "name": "1st", "region": "경기 군포", "skill": "초중급", "time": "매주 목요일", "features": "20~40대, 매너, 소통", "img": "🏀"}, 
-            {"sport": "농구", "name": "야미", "region": "경기 용인", "skill": "초급", "time": "매주 일요일", "features": "30대, 부담없이 오래 농구", "img": "🏀"}, 
-            {"sport": "농구", "name": "라스트", "region": "경기 수원", "skill": "초중급", "time": "매주 수요일", "features": "자유로운 플레이, 20~50대", "img": "🏀"}, 
-            {"sport": "농구", "name": "하이어", "region": "인천 서구", "skill": "초급", "time": "매주 토요일", "features": "20~40대, 3파전 위주", "img": "🏀"}, 
-            {"sport": "농구", "name": "바스키움", "region": "서울, 경기", "skill": "초중급", "time": "매주 목요일", "features": "20~40대, 매너 있게 즐농", "img": "🏀"}, 
-            {"sport": "농구", "name": "ILLUSION", "region": "서울 서대문구", "skill": "중상급", "time": "매주 1-2회", "features": "나이 무관, 선출 다수 보유", "img": "🏀"}, 
-            {"sport": "농구", "name": "후퍼스", "region": "경상 창원", "skill": "초급", "time": "매주 일요일", "features": "즐농, 새로 창단", "img": "🏀"}, 
-            {"sport": "농구", "name": "허슬", "region": "인천 서구", "skill": "중급", "time": "매주 일요일", "features": "5-6부대회, 20~40대", "img": "🏀"}, 
-            {"sport": "농구", "name": "팀 포텐션", "region": "인천 서구", "skill": "초중급", "time": "매주 일요일", "features": "즐길 수 있는 분들, 20~40대", "img": "🏀"}, 
-            {"sport": "농구", "name": "D.B.S", "region": "대구 북구", "skill": "무관", "time": "상시", "features": "북구 기점 대구 전지역, 10~40대", "img": "🏀"}, 
-            {"sport": "농구", "name": "JYBA", "region": "경상 김해", "skill": "중급", "time": "격주 토/일", "features": "20~50대", "img": "🏀"}, 
-            {"sport": "농구", "name": "투스텝", "region": "서울 관악구", "skill": "초급", "time": "매주 토요일", "features": "20~30대, 즐농과 빡농사이", "img": "🏀"}, 
-            {"sport": "농구", "name": "AOB", "region": "부산 남구", "skill": "무관", "time": "매주 토요일", "features": "30~40대, 즐농, 자체게임", "img": "🏀"}, 
-            {"sport": "농구", "name": "농구모임미정", "region": "충북 청주", "skill": "무관", "time": "매주 화요일", "features": "20~40대, 즐거운 마음", "img": "🏀"}, 
-            {"sport": "농구", "name": "쿨바스켓", "region": "경기 남양주", "skill": "중급", "time": "매주 토요일", "features": "프로출신코치 레슨", "img": "🏀"}, 
-            {"sport": "농구", "name": "시엘인천", "region": "인천", "skill": "초중급", "time": "매주 일요일", "features": "20~30대, 디비전6준우승", "img": "🏀"}, 
-            {"sport": "농구", "name": "UNTIL", "region": "경상 창원", "skill": "초중급", "time": "매주 수요일", "features": "20~50대, 즐농, 시설최상", "img": "🏀"}, 
-            {"sport": "농구", "name": "슬로우", "region": "충북 청주", "skill": "초중급", "time": "매주 일요일", "features": "즐농, 농구를 사랑하는분", "img": "🏀"}, 
-            {"sport": "농구", "name": "스탭업", "region": "경기 광명", "skill": "무관", "time": "매주 목요일", "features": "20~40대, 시설최상, 즐농", "img": "🏀"}, 
-            {"sport": "농구", "name": "GDB", "region": "서울 마포", "skill": "무관", "time": "매주 화요일", "features": "힐링 농구, 샤워 가능", "img": "🏀"}, 
-            {"sport": "농구", "name": "장림농구클럽", "region": "부산 사하구", "skill": "무관", "time": "매주 금요일", "features": "즐농, 중복가입 가능", "img": "🏀"}, 
-            {"sport": "농구", "name": "케이", "region": "서울 동대문구", "skill": "초중급", "time": "매주 월요일", "features": "30~40대, 맨투맨", "img": "🏀"}, 
-            {"sport": "농구", "name": "빅풋", "region": "서울 김포", "skill": "무관", "time": "매주 금요일", "features": "20~40대, 각종대회, 열정", "img": "🏀"}, 
-            {"sport": "농구", "name": "리턴즈", "region": "서울 영등포구", "skill": "초급", "time": "상시", "features": "20~40대, 대회 입상 목표, 즐농", "img": "🏀"},
+            { sport: '축구', name: '풋플러 FC', region: '서울', skill: '중급', time: '일요일 저녁', features: '정통 필드 축구 전문 매치', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: 'AMA FC', region: '경기', skill: '중급', time: '토요일 저녁', features: '30대 직장인 위주 매너 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '영차FC', region: '경기', skill: '중급', time: '매일 저녁', features: '축구와 풋살을 넘나드는 열정', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: 'One', region: '경기', skill: '중급', time: '매일 저녁', features: '다양한 연령층과 탄탄한 유대', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '일레븐 스타즈', region: '서울', skill: '중상급', time: '일요일 오전', features: '대회 준비 등 실전 감각 위주', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '강북 유나이티드', region: '서울', skill: '중급', time: '토요일 아침', features: '지역 기반 끈끈한 친목 축구', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '서초 일레븐', region: '서울', skill: '중상급', time: '수요일 저녁', features: '전술 훈련과 고퀄리티 매치', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '인천 필드FC', region: '인천', skill: '중급', time: '일요일 오후', features: '대규격 정규 필드 선호 모임', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '수원 월드컵FC', region: '경기', skill: '중상급', time: '목요일 저녁', features: '기술적인 플레이와 조직력 지향', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '용인 수지일레븐', region: '경기', skill: '중급', time: '토요일 오전', features: '체력 증진 및 실전 중심 운동', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '안산 단원FC', region: '경기', skill: '초급', time: '일요일 아침', features: '입문자도 적응하기 쉬운 분위기', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '대구 영남FC', region: '수도권 외', skill: '중급', time: '토요일 오후', features: '대구 지역 명문 조기축구 감성', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '부산 해운대FC', region: '수도권 외', skill: '중상급', time: '매일 새벽', features: '열정적인 새벽 축구 매니아들', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '대전 둔산일레븐', region: '수도권 외', skill: '중급', time: '수요일 밤', features: '정교한 팀워크와 빠른 역습', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '광주 무등FC', region: '수도권 외', skill: '초급', time: '일요일 오전', features: '광주 지역 정 넘치는 축구회', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '울산 현대인', region: '수도권 외', skill: '중급', time: '금요일 저녁', features: '직장인 단합과 스트레스 해소', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '강릉 경포FC', region: '수도권 외', skill: '중급', time: '토요일 낮', features: '강원도의 열정이 담긴 경기력', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '제주 한라FC', region: '수도권 외', skill: '초급', time: '일요일 저녁', features: '제주 지역 친목 기반 도민 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '천안 신당FC', region: '수도권 외', skill: '중급', time: '목요일 밤', features: '에너지 넘치는 천안 지역 강호', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '청주 흥덕FC', region: '수도권 외', skill: '중상급', time: '토요일 저녁', features: '경기력 향상을 위한 진지한 매치', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '전주 완산FC', region: '수도권 외', skill: '중급', time: '일요일 오전', features: '전주 비빔밥처럼 조화로운 팀웍', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '포항 영일FC', region: '수도권 외', skill: '중상급', time: '화요일 저녁', features: '전술 중심의 지능적인 플레이', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '창원 의창FC', region: '수도권 외', skill: '중급', time: '수요일 밤', features: '창원 지역 기반 화기애애한 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '김포 풍무FC', region: '경기', skill: '초급', time: '일요일 낮', features: '가족같은 편안함과 즐거운 축구', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '남양주 다산FC', region: '경기', skill: '중급', time: '토요일 오전', features: '다산 신도시 주민 중심 모임', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '의정부 신곡FC', region: '경기', skill: '초급', time: '월요일 저녁', features: '기본기부터 차근차근 배우는 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '구리 인창FC', region: '경기', skill: '중급', time: '목요일 밤', features: '실력파 멤버들이 모인 구리 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '하남 미사일레븐', region: '경기', skill: '중급', time: '금요일 저녁', features: '젊은 에너지와 활기찬 전개', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '파주 금촌FC', region: '경기', skill: '중상급', time: '토요일 낮', features: '파주 지역 정예 멤버 활동 중', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '시흥 정왕FC', region: '경기', skill: '초급', time: '일요일 오후', features: '웃음과 매너가 끊이지 않는 곳', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '안성 공도FC', region: '경기', skill: '중급', time: '수요일 저녁', features: '지역 친목 도모 최우선 지향', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '평택 비전FC', region: '경기', skill: '중상급', time: '목요일 밤', features: '조직적인 움직임과 높은 승률', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '아산 탕정FC', region: '수도권 외', skill: '중급', time: '화요일 저녁', features: '삼성 직장인 등 다양한 사회인', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '원주 단계FC', region: '수도권 외', skill: '초급', time: '일요일 오전', features: '활력 넘치는 원주 주말 축구', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '춘천 효자FC', region: '수도권 외', skill: '중급', time: '토요일 저녁', features: '대학생과 사회인의 조화로운 구성', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '목포 하당FC', region: '수도권 외', skill: '중급', time: '수요일 밤', features: '항구 도시 특유의 끈끈한 유대감', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '여수 돌산FC', region: '수도권 외', skill: '중상급', time: '일요일 저녁', features: '강한 체력을 바탕으로 한 경기력', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '순천 조례FC', region: '수도권 외', skill: '중급', time: '금요일 저녁', features: '매너 중심의 정기 매치 위주', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '익산 영등FC', region: '수도권 외', skill: '초급', time: '토요일 오후', features: '기본기 연습과 경기를 동시에', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '군산 수송FC', region: '수도권 외', skill: '중급', time: '월요일 밤', features: '야간 라이트 시설 좋은 필드 활용', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '양주 옥정FC', region: '경기', skill: '초급', time: '일요일 오전', features: '함께 성장하는 즐거운 분위기', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '포천 소흘FC', region: '경기', skill: '중급', time: '화요일 저녁', features: '열정만큼은 국가대표급인 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '동두천 지행FC', region: '경기', skill: '중급', time: '목요일 밤', features: '파이팅 넘치는 동두천 최강 모임', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '강화 강화FC', region: '인천', skill: '초급', time: '일요일 낮', features: '전원 공격 전원 수비의 화끈함', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '계양 효성FC', region: '인천', skill: '중급', time: '수요일 저녁', features: '계양구 기반 꾸준함이 무기인 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '남구 주안FC', region: '인천', skill: '중상급', time: '토요일 밤', features: '기술적인 플레이를 선호하는 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '대전 서구FC', region: '수도권 외', skill: '중급', time: '매일 저녁', features: '대전 서구 최강 조직력 지향', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '대구 달서FC', region: '수도권 외', skill: '중상급', time: '일요일 아침', features: '상쾌한 공기와 함께하는 필드전', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '광주 남구FC', region: '수도권 외', skill: '중급', time: '목요일 밤', features: '실력과 매너를 겸비한 광주 모임', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '축구', name: '부산 사하FC', region: '수도권 외', skill: '초급', time: '토요일 오전', features: '부산 사하 지역 즐거운 축구 모임', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+          
+            // --- 농구 50팀 ---
+            { "sport": "농구", "name": "리버스", "region": "서울 성북구", "skill": "중급", "time": "매주 일요일", "features": "열정넘치시는 분 환영", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "WINGS", "region": "경기 화성", "skill": "초중급", "time": "매주 수요일", "features": "가족같은 팀, 24세 이상", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "비사이드", "region": "경기 시흥", "skill": "초급", "time": "매주 화요일", "features": "즐농&빡농", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "SHOWTIME", "region": "경기 부천", "skill": "초중급", "time": "매주 일요일 오전", "features": "20~30대, 즐농", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "디백", "region": "용인 수지", "skill": "중급", "time": "상시", "features": "즐거운 분위기, 7부 도전중", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "턴오버", "region": "서울 성북구", "skill": "초급", "time": "매주 일요일", "features": "실력보다 인성, 즐농", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "JNB", "region": "경기 광주", "skill": "초급", "time": "매주 일요일", "features": "즐농, 초보위주", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "팀포커스", "region": "인천 남동구", "skill": "무관", "time": "매주 월요일", "features": "20대부터 50대", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "DBOX", "region": "대구", "skill": "무관", "time": "상시", "features": "열정만이 조건, 즐농, 나이무관", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "플루크", "region": "서울 송파구", "skill": "무관", "time": "상시", "features": "30대부터 50대, 최첨단 장비", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "Team block", "region": "경기 하남", "skill": "중급", "time": "매주 목요일", "features": "20~30대, 샤워가능", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "스위치", "region": "경기 남부", "skill": "무관", "time": "매주 일요일", "features": "다양한 대회 참여", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "브레멘농구단", "region": "광명, 서울 서부", "skill": "무관", "time": "매주 금요일", "features": "30대, 즐농", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "컴페니언", "region": "인천 서구", "skill": "무관", "time": "매주 금요일", "features": "20~40대, 적극친목", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "AIRBALL", "region": "경기 안양", "skill": "무관", "time": "주중", "features": "21~42세, 실력 밸런스", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "르볼", "region": "서울 은평", "skill": "무관", "time": "매주 일요일", "features": "20~40대, 즐농", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "트리플더블", "region": "인천 송도", "skill": "무관", "time": "매주 토요일", "features": "30~40대, 인성 중요", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "정글", "region": "경기 용인", "skill": "초급", "time": "매주 토요일", "features": "20~30대, 디비전6우승", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "JE서울", "region": "서울 잠실", "skill": "초급", "time": "매주 목요일", "features": "30~40대, 초보모집", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "성광", "region": "서울 용산구", "skill": "초급", "time": "매주 토요일", "features": "40~50대, 즐농", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "언더독", "region": "경기 광구", "skill": "초중급", "time": "매주 금요일", "features": "맞춤형 레슨, 매너농구", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "어시스트", "region": "인천 남동구", "skill": "초급", "time": "매주 화요일", "features": "30~40대, 대회참가", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "프렌즈", "region": "서울 관악구", "skill": "중상급", "time": "매주 일요일", "features": "86년생~, 자체전 위주", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "디포이", "region": "대구 경산", "skill": "초급", "time": "매주 일요일", "features": "20~30대, 열정농구", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "지역방어", "region": "경기 시흥", "skill": "초급", "time": "매주 일요일", "features": "20~50대, 즐농", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "THE TOP", "region": "서울 중랑구", "skill": "초중급", "time": "매주 토요일", "features": "30~50대, 팀워크 중심", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "1st", "region": "경기 군포", "skill": "초중급", "time": "매주 목요일", "features": "20~40대, 매너, 소통", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "야미", "region": "경기 용인", "skill": "초급", "time": "매주 일요일", "features": "30대, 부담없이 오래 농구", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "라스트", "region": "경기 수원", "skill": "초중급", "time": "매주 수요일", "features": "자유로운 플레이, 20~50대", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "하이어", "region": "인천 서구", "skill": "초급", "time": "매주 토요일", "features": "20~40대, 3파전 위주", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "바스키움", "region": "서울, 경기", "skill": "초중급", "time": "매주 목요일", "features": "20~40대, 매너 있게 즐농", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "ILLUSION", "region": "서울 서대문구", "skill": "중상급", "time": "매주 1-2회", "features": "나이 무관, 선출 다수 보유", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "후퍼스", "region": "경상 창원", "skill": "초급", "time": "매주 일요일", "features": "즐농, 새로 창단", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "허슬", "region": "인천 서구", "skill": "중급", "time": "매주 일요일", "features": "5-6부대회, 20~40대", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "팀 포텐션", "region": "인천 서구", "skill": "초중급", "time": "매주 일요일", "features": "즐길 수 있는 분들, 20~40대", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "D.B.S", "region": "대구 북구", "skill": "무관", "time": "상시", "features": "북구 기점 대구 전지역, 10~40대", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "JYBA", "region": "경상 김해", "skill": "중급", "time": "격주 토/일", "features": "20~50대", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "투스텝", "region": "서울 관악구", "skill": "초급", "time": "매주 토요일", "features": "20~30대, 즐농과 빡농사이", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "AOB", "region": "부산 남구", "skill": "무관", "time": "매주 토요일", "features": "30~40대, 즐농, 자체게임", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "농구모임미정", "region": "충북 청주", "skill": "무관", "time": "매주 화요일", "features": "20~40대, 즐거운 마음", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "쿨바스켓", "region": "경기 남양주", "skill": "중급", "time": "매주 토요일", "features": "프로출신코치 레슨", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "시엘인천", "region": "인천", "skill": "초중급", "time": "매주 일요일", "features": "20~30대, 디비전6준우승", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "UNTIL", "region": "경상 창원", "skill": "초중급", "time": "매주 수요일", "features": "20~50대, 즐농, 시설최상", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "슬로우", "region": "충북 청주", "skill": "초중급", "time": "매주 일요일", "features": "즐농, 농구를 사랑하는분", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "스탭업", "region": "경기 광명", "skill": "무관", "time": "매주 목요일", "features": "20~40대, 시설최상, 즐농", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "GDB", "region": "서울 마포", "skill": "무관", "time": "매주 화요일", "features": "힐링 농구, 샤워 가능", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "장림농구클럽", "region": "부산 사하구", "skill": "무관", "time": "매주 금요일", "features": "즐농, 중복가입 가능", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "케이", "region": "서울 동대문구", "skill": "초중급", "time": "매주 월요일", "features": "30~40대, 맨투맨", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "빅풋", "region": "서울 김포", "skill": "무관", "time": "매주 금요일", "features": "20~40대, 각종대회, 열정", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }, 
+            { "sport": "농구", "name": "리턴즈", "region": "서울 영등포구", "skill": "초급", "time": "상시", "features": "20~40대, 대회 입상 목표, 즐농", "img": "🏀", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             
-            // --- 야구 50팀 추가 ---
-            { sport: '야구', name: '서울 브라더스', region: '서울', skill: '4부 (초급)', time: '매주 일요일 오전', features: '가족같은 분위기, 매너 야구 지향', img: '⚾' },
-            { sport: '야구', name: '인천 타이거즈', region: '인천', skill: '루키 (비선출)', time: '토요일 야간 경기', features: '유니폼 풀세트 지원 (신입)', img: '⚾' },
-            { sport: '야구', name: '고양 자이언츠', region: '경기', skill: '3부 (중급)', time: '매주 일요일 오후', features: '일요일 오전 리그 참여 중', img: '⚾' },
-            { sport: '야구', name: '수원 라이온즈', region: '경기', skill: '3.5부 (중급하)', time: '토요일 오전', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾' },
-            { sport: '야구', name: '성남 이글스', region: '경기', skill: '4부 (초급)', time: '매주 일요일 아침', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾' },
-            { sport: '야구', name: '부천 다이노스', region: '경기', skill: '루키 (비선출)', time: '주말 상시', features: '선출 환영, 포지션 경쟁 가능', img: '⚾' },
-            { sport: '야구', name: '안산 슬래머', region: '경기', skill: '3부 (중급)', time: '매주 토요일 오후', features: '3040 연령대 위주, 친목 도모 활발', img: '⚾' },
-            { sport: '야구', name: '남양주 홈런왕', region: '경기', skill: '3.5부 (중급하)', time: '일요일 오전', features: '전용 구장 보유, 연습량 많음', img: '⚾' },
-            { sport: '야구', name: '용인 에이스', region: '경기', skill: '4부 (초급)', time: '토요일 야간', features: '승부보다는 즐거운 야구 추구', img: '⚾' },
-            { sport: '야구', name: '안양 다이아몬즈', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오전', features: '체계적인 훈련 및 용병 경기 활발', img: '⚾' },
-            { sport: '야구', name: '강남 워리어스', region: '서울', skill: '3부 (중급)', time: '매주 토요일 오전', features: '매주 간식 및 음료 제공', img: '⚾' },
-            { sport: '야구', name: '송파 히어로즈', region: '서울', skill: '3.5부 (중급하)', time: '일요일 오후', features: '연령 제한 없음, 야구에 미친 사람들 모임', img: '⚾' },
-            { sport: '야구', name: '마포 레이더스', region: '서울', skill: '4부 (초급)', time: '토요일 오전', features: '투수/포수 포지션 우대 모집', img: '⚾' },
-            { sport: '야구', name: '강서 불독스', region: '서울', skill: '루키 (비선출)', time: '매주 일요일 아침', features: '서울/경기권 원정 경기 자주 다님', img: '⚾' },
-            { sport: '야구', name: '노원 베어스', region: '서울', skill: '3부 (중급)', time: '토요일 야간', features: '회식 강요 없음, 운동에만 집중', img: '⚾' },
-            { sport: '야구', name: '과천 유니콘스', region: '경기', skill: '3.5부 (중급하)', time: '매주 일요일 오전', features: '가족같은 분위기, 매너 야구 지향', img: '⚾' },
-            { sport: '야구', name: '의왕 몬스터즈', region: '경기', skill: '4부 (초급)', time: '토요일 오후', features: '유니폼 풀세트 지원 (신입)', img: '⚾' },
-            { sport: '야구', name: '시흥 블랙홀스', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오후', features: '일요일 오전 리그 참여 중', img: '⚾' },
-            { sport: '야구', name: '김포 썬더스', region: '경기', skill: '3부 (중급)', time: '토요일 오전', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾' },
-            { sport: '야구', name: '파주 윙즈', region: '경기', skill: '3.5부 (중급하)', time: '일요일 아침', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾' },
-            { sport: '야구', name: '서울 타이거즈', region: '서울', skill: '4부 (초급)', time: '매주 토요일 오후', features: '선출 환영, 포지션 경쟁 가능', img: '⚾' },
-            { sport: '야구', name: '인천 자이언츠', region: '인천', skill: '루키 (비선출)', time: '일요일 오전', features: '3040 연령대 위주, 친목 도모 활발', img: '⚾' },
-            { sport: '야구', name: '고양 라이온즈', region: '경기', skill: '3부 (중급)', time: '토요일 야간', features: '전용 구장 보유, 연습량 많음', img: '⚾' },
-            { sport: '야구', name: '수원 이글스', region: '경기', skill: '3.5부 (중급하)', time: '매주 일요일 오전', features: '승부보다는 즐거운 야구 추구', img: '⚾' },
-            { sport: '야구', name: '성남 다이노스', region: '경기', skill: '4부 (초급)', time: '토요일 오전', features: '체계적인 훈련 및 용병 경기 활발', img: '⚾' },
-            { sport: '야구', name: '부천 슬래머', region: '경기', skill: '루키 (비선출)', time: '일요일 오후', features: '매주 간식 및 음료 제공', img: '⚾' },
-            { sport: '야구', name: '안산 홈런왕', region: '경기', skill: '3부 (중급)', time: '매주 토요일 오전', features: '연령 제한 없음, 야구에 미친 사람들 모임', img: '⚾' },
-            { sport: '야구', name: '남양주 에이스', region: '경기', skill: '3.5부 (중급하)', time: '일요일 아침', features: '투수/포수 포지션 우대 모집', img: '⚾' },
-            { sport: '야구', name: '용인 다이아몬즈', region: '경기', skill: '4부 (초급)', time: '토요일 야간', features: '서울/경기권 원정 경기 자주 다님', img: '⚾' },
-            { sport: '야구', name: '안양 워리어스', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오전', features: '회식 강요 없음, 운동에만 집중', img: '⚾' },
-            { sport: '야구', name: '강남 히어로즈', region: '서울', skill: '3부 (중급)', time: '토요일 오후', features: '가족같은 분위기, 매너 야구 지향', img: '⚾' },
-            { sport: '야구', name: '송파 레이더스', region: '서울', skill: '3.5부 (중급하)', time: '매주 일요일 오후', features: '유니폼 풀세트 지원 (신입)', img: '⚾' },
-            { sport: '야구', name: '마포 불독스', region: '서울', skill: '4부 (초급)', time: '토요일 오전', features: '일요일 오전 리그 참여 중', img: '⚾' },
-            { sport: '야구', name: '강서 베어스', region: '서울', skill: '루키 (비선출)', time: '일요일 아침', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾' },
-            { sport: '야구', name: '노원 유니콘스', region: '서울', skill: '3부 (중급)', time: '매주 토요일 오후', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾' },
-            { sport: '야구', name: '과천 몬스터즈', region: '경기', skill: '3.5부 (중급하)', time: '일요일 오전', features: '선출 환영, 포지션 경쟁 가능', img: '⚾' },
-            { sport: '야구', name: '의왕 블랙홀스', region: '경기', skill: '4부 (초급)', time: '토요일 야간', features: '3040 연령대 위주, 친목 도모 활발', img: '⚾' },
-            { sport: '야구', name: '시흥 썬더스', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오전', features: '전용 구장 보유, 연습량 많음', img: '⚾' },
-            { sport: '야구', name: '김포 윙즈', region: '경기', skill: '3부 (중급)', time: '토요일 오전', features: '승부보다는 즐거운 야구 추구', img: '⚾' },
-            { sport: '야구', name: '파주 브라더스', region: '경기', skill: '3.5부 (중급하)', time: '일요일 오후', features: '체계적인 훈련 및 용병 경기 활발', img: '⚾' },
-            { sport: '야구', name: '서울 자이언츠', region: '서울', skill: '4부 (초급)', time: '매주 일요일 오전', features: '매주 간식 및 음료 제공', img: '⚾' },
-            { sport: '야구', name: '인천 라이온즈', region: '인천', skill: '루키 (비선출)', time: '토요일 야간', features: '연령 제한 없음, 야구에 미친 사람들 모임', img: '⚾' },
-            { sport: '야구', name: '고양 이글스', region: '경기', skill: '3부 (중급)', time: '일요일 아침', features: '투수/포수 포지션 우대 모집', img: '⚾' },
-            { sport: '야구', name: '수원 다이노스', region: '경기', skill: '3.5부 (중급하)', time: '매주 토요일 오후', features: '서울/경기권 원정 경기 자주 다님', img: '⚾' },
-            { sport: '야구', name: '성남 슬래머', region: '경기', skill: '4부 (초급)', time: '일요일 오전', features: '회식 강요 없음, 운동에만 집중', img: '⚾' },
-            { sport: '야구', name: '부천 홈런왕', region: '경기', skill: '루키 (비선출)', time: '토요일 오전', features: '가족같은 분위기, 매너 야구 지향', img: '⚾' },
-            { sport: '야구', name: '안산 에이스', region: '경기', skill: '3부 (중급)', time: '매주 일요일 오후', features: '유니폼 풀세트 지원 (신입)', img: '⚾' },
-            { sport: '야구', name: '남양주 다이아몬즈', region: '경기', skill: '3.5부 (중급하)', time: '토요일 야간', features: '일요일 오전 리그 참여 중', img: '⚾' },
-            { sport: '야구', name: '용인 워리어스', region: '경기', skill: '4부 (초급)', time: '일요일 아침', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾' },
-            { sport: '야구', name: '안양 히어로즈', region: '경기', skill: '루키 (비선출)', time: '매주 토요일 오후', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾' },
+            // --- 야구 50팀 ---
+            { sport: '야구', name: '서울 브라더스', region: '서울', skill: '4부 (초급)', time: '매주 일요일 오전', features: '가족같은 분위기, 매너 야구 지향', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '인천 타이거즈', region: '인천', skill: '루키 (비선출)', time: '토요일 야간 경기', features: '유니폼 풀세트 지원 (신입)', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '고양 자이언츠', region: '경기', skill: '3부 (중급)', time: '매주 일요일 오후', features: '일요일 오전 리그 참여 중', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '수원 라이온즈', region: '경기', skill: '3.5부 (중급하)', time: '토요일 오전', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '성남 이글스', region: '경기', skill: '4부 (초급)', time: '매주 일요일 아침', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '부천 다이노스', region: '경기', skill: '루키 (비선출)', time: '주말 상시', features: '선출 환영, 포지션 경쟁 가능', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '안산 슬래머', region: '경기', skill: '3부 (중급)', time: '매주 토요일 오후', features: '3040 연령대 위주, 친목 도모 활발', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '남양주 홈런왕', region: '경기', skill: '3.5부 (중급하)', time: '일요일 오전', features: '전용 구장 보유, 연습량 많음', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '용인 에이스', region: '경기', skill: '4부 (초급)', time: '토요일 야간', features: '승부보다는 즐거운 야구 추구', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '안양 다이아몬즈', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오전', features: '체계적인 훈련 및 용병 경기 활발', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '강남 워리어스', region: '서울', skill: '3부 (중급)', time: '매주 토요일 오전', features: '매주 간식 및 음료 제공', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '송파 히어로즈', region: '서울', skill: '3.5부 (중급하)', time: '일요일 오후', features: '연령 제한 없음, 야구에 미친 사람들 모임', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '마포 레이더스', region: '서울', skill: '4부 (초급)', time: '토요일 오전', features: '투수/포수 포지션 우대 모집', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '강서 불독스', region: '서울', skill: '루키 (비선출)', time: '매주 일요일 아침', features: '서울/경기권 원정 경기 자주 다님', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '노원 베어스', region: '서울', skill: '3부 (중급)', time: '토요일 야간', features: '회식 강요 없음, 운동에만 집중', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '과천 유니콘스', region: '경기', skill: '3.5부 (중급하)', time: '매주 일요일 오전', features: '가족같은 분위기, 매너 야구 지향', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '의왕 몬스터즈', region: '경기', skill: '4부 (초급)', time: '토요일 오후', features: '유니폼 풀세트 지원 (신입)', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '시흥 블랙홀스', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오후', features: '일요일 오전 리그 참여 중', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '김포 썬더스', region: '경기', skill: '3부 (중급)', time: '토요일 오전', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '파주 윙즈', region: '경기', skill: '3.5부 (중급하)', time: '일요일 아침', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '서울 타이거즈', region: '서울', skill: '4부 (초급)', time: '매주 토요일 오후', features: '선출 환영, 포지션 경쟁 가능', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '인천 자이언츠', region: '인천', skill: '루키 (비선출)', time: '일요일 오전', features: '3040 연령대 위주, 친목 도모 활발', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '고양 라이온즈', region: '경기', skill: '3부 (중급)', time: '토요일 야간', features: '전용 구장 보유, 연습량 많음', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '수원 이글스', region: '경기', skill: '3.5부 (중급하)', time: '매주 일요일 오전', features: '승부보다는 즐거운 야구 추구', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '성남 다이노스', region: '경기', skill: '4부 (초급)', time: '토요일 오전', features: '체계적인 훈련 및 용병 경기 활발', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '부천 슬래머', region: '경기', skill: '루키 (비선출)', time: '일요일 오후', features: '매주 간식 및 음료 제공', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '안산 홈런왕', region: '경기', skill: '3부 (중급)', time: '매주 토요일 오전', features: '연령 제한 없음, 야구에 미친 사람들 모임', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '남양주 에이스', region: '경기', skill: '3.5부 (중급하)', time: '일요일 아침', features: '투수/포수 포지션 우대 모집', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '용인 다이아몬즈', region: '경기', skill: '4부 (초급)', time: '토요일 야간', features: '서울/경기권 원정 경기 자주 다님', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '안양 워리어스', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오전', features: '회식 강요 없음, 운동에만 집중', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '강남 히어로즈', region: '서울', skill: '3부 (중급)', time: '토요일 오후', features: '가족같은 분위기, 매너 야구 지향', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '송파 레이더스', region: '서울', skill: '3.5부 (중급하)', time: '매주 일요일 오후', features: '유니폼 풀세트 지원 (신입)', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '마포 불독스', region: '서울', skill: '4부 (초급)', time: '토요일 오전', features: '일요일 오전 리그 참여 중', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '강서 베어스', region: '서울', skill: '루키 (비선출)', time: '일요일 아침', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '노원 유니콘스', region: '서울', skill: '3부 (중급)', time: '매주 토요일 오후', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '과천 몬스터즈', region: '경기', skill: '3.5부 (중급하)', time: '일요일 오전', features: '선출 환영, 포지션 경쟁 가능', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '의왕 블랙홀스', region: '경기', skill: '4부 (초급)', time: '토요일 야간', features: '3040 연령대 위주, 친목 도모 활발', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '시흥 썬더스', region: '경기', skill: '루키 (비선출)', time: '매주 일요일 오전', features: '전용 구장 보유, 연습량 많음', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '김포 윙즈', region: '경기', skill: '3부 (중급)', time: '토요일 오전', features: '승부보다는 즐거운 야구 추구', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '파주 브라더스', region: '경기', skill: '3.5부 (중급하)', time: '일요일 오후', features: '체계적인 훈련 및 용병 경기 활발', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '서울 자이언츠', region: '서울', skill: '4부 (초급)', time: '매주 일요일 오전', features: '매주 간식 및 음료 제공', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '인천 라이온즈', region: '인천', skill: '루키 (비선출)', time: '토요일 야간', features: '연령 제한 없음, 야구에 미친 사람들 모임', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '고양 이글스', region: '경기', skill: '3부 (중급)', time: '일요일 아침', features: '투수/포수 포지션 우대 모집', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '수원 다이노스', region: '경기', skill: '3.5부 (중급하)', time: '매주 토요일 오후', features: '서울/경기권 원정 경기 자주 다님', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '성남 슬래머', region: '경기', skill: '4부 (초급)', time: '일요일 오전', features: '회식 강요 없음, 운동에만 집중', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '부천 홈런왕', region: '경기', skill: '루키 (비선출)', time: '토요일 오전', features: '가족같은 분위기, 매너 야구 지향', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '안산 에이스', region: '경기', skill: '3부 (중급)', time: '매주 일요일 오후', features: '유니폼 풀세트 지원 (신입)', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '남양주 다이아몬즈', region: '경기', skill: '3.5부 (중급하)', time: '토요일 야간', features: '일요일 오전 리그 참여 중', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '용인 워리어스', region: '경기', skill: '4부 (초급)', time: '일요일 아침', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '야구', name: '안양 히어로즈', region: '경기', skill: '루키 (비선출)', time: '매주 토요일 오후', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
 
-            // --- 배드민턴 50팀 데이터 추가 ---
-            { "sport": "배드민턴", "name": "타락파워민턴 <타파민>", "region": "서울 도봉구", "skill": "20~30대 / 남(구력 1년↑), 여(6개월↑)", "time": "토요일 오전 정모, 번개 수시 진행", "features": "토요일 오전 정모, 번개 수시 진행", "img": "🏸" },
-            { "sport": "배드민턴", "name": "광운대학교 팡팡", "region": "서울 노원구", "skill": "광운대 부원 전용 (게스트 가능)", "time": "월·수·금 저녁 정모, 게스트비 7천 원", "features": "월·수·금 저녁 정모, 게스트비 7천 원", "img": "🏸" },
-            { "sport": "배드민턴", "name": "콕끼리콕끼리", "region": "서울 도봉구", "skill": "07~95년생 / 남녀 구력 6개월 이상", "time": "토·일 오전 정모, 월 1회 필참", "features": "토·일 오전 정모, 월 1회 필참", "img": "🏸" },
-            { "sport": "배드민턴", "name": "Team Delighton", "region": "서울 마포구", "skill": "2030 / 전국 D조 또는 구 C조 이상", "time": "토·일 오후 정모, 일요일 레슨 운영", "features": "토·일 오후 정모, 일요일 레슨 운영", "img": "🏸" },
-            { "sport": "배드민턴", "name": "배드민턴 라온클럽", "region": "서울 강북구", "skill": "D조 이상 (입문자는 레슨 수강 시 가능)", "time": "평일(월~금) 저녁 정모, 주차 완비", "features": "평일(월~금) 저녁 정모, 주차 완비", "img": "🏸" },
-            { "sport": "배드민턴", "name": "엔드라인 (남자마감)", "region": "서울 은평구", "skill": "왕초심~D조 이하 (기본 스트로크 가능자)", "time": "월~목 심야 정모, 1:1 맞춤 레슨 운영", "features": "월~목 심야 정모, 1:1 맞춤 레슨 운영", "img": "🏸" },
-            { "sport": "배드민턴", "name": "금요일 야간민턴", "region": "서울 중랑구", "skill": "구력 6개월 이상 (로테이션 가능자)", "time": "금요일 심야 정모, 가입비 면제 기간", "features": "금요일 심야 정모, 가입비 면제 기간", "img": "🏸" },
-            { "sport": "배드민턴", "name": "Team mireu sports", "region": "서울 노원구", "skill": "남녀 D조 이상", "time": "토요일 저녁 정모, 요넥스 노원점 후원", "features": "토요일 저녁 정모, 요넥스 노원점 후원", "img": "🏸" },
-            { "sport": "배드민턴", "name": "TURNPLAY (턴플레이)", "region": "서울 마포구", "skill": "명시 없음 (순환 게임 방식)", "time": "평일·주말 저녁 정모, 회비 무료", "features": "평일·주말 저녁 정모, 회비 무료", "img": "🏸" },
-            { "sport": "배드민턴", "name": "Team 메이커 (Maker)", "region": "서울 종로구", "skill": "2030(D조↑), 40(B조↑), 대회경력자", "time": "셋째 주 일요일 정모, 코치 피드백 제공", "features": "셋째 주 일요일 정모, 코치 피드백 제공", "img": "🏸" },
-            { "sport": "배드민턴", "name": "콕어스 (KOK US)", "region": "서울 영등포구", "skill": "2030 / 초심~A조 (남 12개월↑, 여 6개월↑)", "time": "화·목 저녁, 토·일 오전 정모 / 급수별 매칭", "features": "화·목 저녁, 토·일 오전 정모 / 급수별 매칭", "img": "🏸" },
-            { "sport": "배드민턴", "name": "SCV 배드민턴 클럽", "region": "서울 구로구", "skill": "2030 / 남(로테이션 가능), 여(구력 1개월↑)", "time": "가입비 1만원, 회비 없음 / 평일·주말 정모", "features": "가입비 1만원, 회비 없음 / 평일·주말 정모", "img": "🏸" },
-            { "sport": "배드민턴", "name": "팀 테크니션 (Technician)", "region": "서울 중랑구", "skill": "남(B조↑), 여(C조↑) / 게스트 가능", "time": "일요일 저녁 정모 / 테크니스트 스폰 팀", "features": "일요일 저녁 정모 / 테크니스트 스폰 팀", "img": "🏸" },
-            { "sport": "배드민턴", "name": "NETPL (넷플)", "region": "서울 강동구", "skill": "90~07년생 / 구력 6개월 이상", "time": "화요일 저녁, 토요일 오후 정모 / 리닝 제품 할인", "features": "화요일 저녁, 토요일 오후 정모 / 리닝 제품 할인", "img": "🏸" },
-            { "sport": "배드민턴", "name": "민턴 갤러리", "region": "서울 관악구", "skill": "급수 제한 없음 (완전 초보 환영)", "time": "월·수·금 오전 정모 / 회비 없음, 코치 레슨", "features": "월·수·금 오전 정모 / 회비 없음, 코치 레슨", "img": "🏸" },
-            { "sport": "배드민턴", "name": "미성체육관 모닝민턴", "region": "서울 관악구", "skill": "남(D조↑), 여(초심↑)", "time": "화~금 새벽, 토요일 아침 정모 / 가입비·회비 X", "features": "화~금 새벽, 토요일 아침 정모 / 가입비·회비 X", "img": "🏸" },
-            { "sport": "배드민턴", "name": "Momentum (모멘텀)", "region": "서울 영등포구", "skill": "20세 이상 / 남(C조↑), 여(구력 1년↑)", "time": "월·수·금 저녁 정모 / 가입비·회비·게스트비 X", "features": "월·수·금 저녁 정모 / 가입비·회비·게스트비 X", "img": "🏸" },
-            { "sport": "배드민턴", "name": "TEAM BAERURI (팀 배루리)", "region": "서울 노원구", "skill": "203040 여성 전용 (여복 모임)", "time": "토요일 오후 정모 / 게스트 참여 가능(D조↑)", "features": "토요일 오후 정모 / 게스트 참여 가능(D조↑)", "img": "🏸" },
-            { "sport": "배드민턴", "name": "위너스턴", "region": "서울 관악구", "skill": "2030 / 남(6개월↑), 여(3개월↑)", "time": "토·일 오전 정모 / 반기별 회비 3천원", "features": "토·일 오전 정모 / 반기별 회비 3천원", "img": "🏸" },
-            { "sport": "배드민턴", "name": "2030 초보자 배드민턴", "region": "서울 영등포구", "skill": "2030 초보자 중심", "time": "평일 저녁, 주말 오전 정모 / 월 1회 자체 대회", "features": "평일 저녁, 주말 오전 정모 / 월 1회 자체 대회", "img": "🏸" },
-            { "sport": "배드민턴", "name": "RACKET LAUNCHER", "region": "서울 마포구", "skill": "00~07년생 (입문자 환영)", "time": "배드민턴·탁구 병행, 일일 체험 가능", "features": "배드민턴·탁구 병행, 일일 체험 가능", "img": "🏸" },
-            { "sport": "배드민턴", "name": "셔틀러 (Shuttler)", "region": "서울 송파구", "skill": "92~04년생 / 남녀 구력 6개월↑", "time": "주말(토·일) 정모, 70명 정원 제한 운영", "features": "주말(토·일) 정모, 70명 정원 제한 운영", "img": "🏸" },
-            { "sport": "배드민턴", "name": "피지컬밴. 민턴", "region": "서울 관악구", "skill": "94~05년생 / D조 이하 랠리 가능자", "time": "회비 없음, 화요일 저녁 및 주말 오후 정모", "features": "회비 없음, 화요일 저녁 및 주말 오후 정모", "img": "🏸" },
-            { "sport": "배드민턴", "name": "E'lite 민턴", "region": "서울 관악구", "skill": "20세 이상 / 구력 1년↑ (B조 이하)", "time": "화·목 저녁 및 주말 정모, 로테이션 가능자", "features": "화·목 저녁 및 주말 정모, 로테이션 가능자", "img": "🏸" },
-            { "sport": "배드민턴", "name": "체리콕", "region": "서울 양천구", "skill": "88~05년생 / 남(D조↑), 여(구력 1년↑)", "time": "월·수·금 저녁 및 토요일 오후 정모", "features": "월·수·금 저녁 및 토요일 오후 정모", "img": "🏸" },
-            { "sport": "배드민턴", "name": "열정민턴", "region": "서울 관악구", "skill": "성인 이상 / 남(D조↑), 여(참가자·레슨자)", "time": "번개 정모 수시 진행, 가입비 5천 원", "features": "번개 정모 수시 진행, 가입비 5천 원", "img": "🏸" },
-            { "sport": "배드민턴", "name": "뉴민스", "region": "서울 영등포구", "skill": "2030 / 여(구력 6개월↑), 남(대기 마감)", "time": "초심~C조 위주, 편안한 분위기, 회비 5천 원", "features": "초심~C조 위주, 편안한 분위기, 회비 5천 원", "img": "🏸" },
-            { "sport": "배드민턴", "name": "Team.AWG X SPECTRUM", "region": "서울 구로구", "skill": "만 20세 이상 / 전국대회 초심 본선 이상", "time": "실력·매너 겸비, 스펙트럼 팀스폰 모집 중", "features": "실력·매너 겸비, 스펙트럼 팀스폰 모집 중", "img": "🏸" },
-            { "sport": "배드민턴", "name": "공룡단 배드민턴", "region": "서울 강동구", "skill": "2000년생(00년생) 전용 / 실력 무관", "time": "00년생 친구 사귀기 모임, 매달 마지막 토요일", "features": "00년생 친구 사귀기 모임, 매달 마지막 토요일", "img": "🏸" },
-            { "sport": "배드민턴", "name": "박무현코치와 팀노바스톤", "region": "서울 강서구", "skill": "2030 / 남(D조↑), 여(초심↑)", "time": "박무현 코치 게임 레슨, 화·목 저녁 정모", "features": "박무현 코치 게임 레슨, 화·목 저녁 정모", "img": "🏸" },
-            { "sport": "배드민턴", "name": "Net Play(N.P)", "region": "서울 강북구", "skill": "1987~2003년생 / 남녀 D조 이상 (구력 3년↑)", "time": "수·금 저녁 정모, 회비 8천 원, 초보 불가", "features": "수·금 저녁 정모, 회비 8천 원, 초보 불가", "img": "🏸" },
-            { "sport": "배드민턴", "name": "거위농장", "region": "서울 노원구", "skill": "전국기준 남 C조, 여 D조 이상", "time": "일요일 오전 정모, 셔틀콕 3개 지참", "features": "일요일 오전 정모, 셔틀콕 3개 지참", "img": "🏸" },
-            { "sport": "배드민턴", "name": "행복한셔틀콕(행콕)", "region": "서울 노원구", "skill": "급수 제한 없음 (초보자 위주 모임)", "time": "월·화·목·토·일 정모, 가입비 2천 원", "features": "월·화·목·토·일 정모, 가입비 2천 원", "img": "🏸" },
-            { "sport": "배드민턴", "name": "\"콕끼리\" 배드민턴", "region": "서울 도봉구", "skill": "80, 90, 00년생 / 구력 6개월↑", "time": "월·수·금 저녁 및 일요일 오전 정모", "features": "월·수·금 저녁 및 일요일 오전 정모", "img": "🏸" },
-            { "sport": "배드민턴", "name": "우리동네막체능", "region": "서울 노원구", "skill": "1984~05년생 / D조 이상 (대회경험 많음)", "time": "화·목·토·일 정모, 복식 로테이션 필수", "features": "화·목·토·일 정모, 복식 로테이션 필수", "img": "🏸" },
-            { "sport": "배드민턴", "name": "솔샘 배드민턴", "region": "서울 강북구", "skill": "D조 이상 (입문자는 레슨 시 가능)", "time": "평일 저녁 및 주말 오후 정모, 레슨 운영", "features": "평일 저녁 및 주말 오후 정모, 레슨 운영", "img": "🏸" },
-            { "sport": "배드민턴", "name": "MAKER 배드민턴 클럽", "region": "서울 성북구", "skill": "2030 성북·종로 / 게스트 D조 이상", "time": "평일 저녁 및 토요일 정모, 전 요일 레슨", "features": "평일 저녁 및 토요일 정모, 전 요일 레슨", "img": "🏸" },
-            { "sport": "배드민턴", "name": "IN&OUT 인앤아웃", "region": "서울 강남구", "skill": "1986~2005년생 / 남(1년↑), 여(숏서브 가능)", "time": "평일 아침(08-10시) 정모, 가입비 5천 원", "features": "평일 아침(08-10시) 정모, 가입비 5천 원", "img": "🏸" },
-            { "sport": "배드민턴", "name": "Team.MAD & SPECTRUM", "region": "서울 은평구", "skill": "1986~06년생 / 남(초심 본선↑), 여(D조 1승↑)", "time": "토요일 야간(20-24시) 정모, 코치 레슨", "features": "토요일 야간(20-24시) 정모, 코치 레슨", "img": "🏸" },
-            { "sport": "배드민턴", "name": "새콕달콕", "region": "서울 마포구", "skill": "구력 1년 이상, 대회 유경험자", "time": "토·일 저녁 정모, 자체 어플 활용 매칭", "features": "토·일 저녁 정모, 자체 어플 활용 매칭", "img": "🏸" },
-            { "sport": "배드민턴", "name": "배민치GO", "region": "서울 마포구", "skill": "2030 / 남녀 D조 이상 (대회 인증 필요)", "time": "가입비·회비 없음, 게스트 1회 참석 후 가입", "features": "가입비·회비 없음, 게스트 1회 참석 후 가입", "img": "🏸" },
-            { "sport": "배드민턴", "name": "필턴 Feelton", "region": "서울 성북구", "skill": "2030 (05~93년생) / 남녀 D조 이상", "time": "가입비 3천 원, 소규모 지향, 화목한 분위기", "features": "가입비 3천 원, 소규모 지향, 화목한 분위기", "img": "🏸" },
-            { "sport": "배드민턴", "name": "콕끼오", "region": "서울 노원구", "skill": "05~93년생 / 남(로테이션), 여(구력 1년↑)", "time": "가입비 3천 원, 26년 4월 신규 모집", "features": "가입비 3천 원, 26년 4월 신규 모집", "img": "🏸" },
-            { "sport": "배드민턴", "name": "Team WOW", "region": "서울 마포구", "skill": "2030 / 남녀 초심 수상 이상 (급수 인증)", "time": "반기 회비 1.5만 원, 반기별 자체 대회", "features": "반기 회비 1.5만 원, 반기별 자체 대회", "img": "🏸" },
-            { "sport": "배드민턴", "name": "셔틀콕콕", "region": "서울 도봉구", "skill": "1991~2005년생 / 대회 출전 경험자", "time": "가입비 5천 원, 주말 정모, 일회비 별도", "features": "가입비 5천 원, 주말 정모, 일회비 별도", "img": "🏸" },
-            { "sport": "배드민턴", "name": "We 배드민턴 반포", "region": "서울 서초구", "skill": "1987~2003년생 직장인 / 서브 가능자", "time": "가입비 1.5만 원, 일요일 정모, 혼성복식", "features": "가입비 1.5만 원, 일요일 정모, 혼성복식", "img": "🏸" },
-            { "sport": "배드민턴", "name": "민턴클라쓰", "region": "서울 용산구", "skill": "남성 D조 이상 (4월 이후)", "time": "게스트비 3천 원, 주말 오후 정모, 레슨 코트", "features": "게스트비 3천 원, 주말 오후 정모, 레슨 코트", "img": "🏸" },
-            { "sport": "배드민턴", "name": "잔다르콕", "region": "서울 강북구", "skill": "2030 여성 / 전국 C조 이상 (인증 필요)", "time": "여성 복식 모임, 매월 1·3주 토요일 정모", "features": "여성 복식 모임, 매월 1·3주 토요일 정모", "img": "🏸" },
-            { "sport": "배드민턴", "name": "STEP", "region": "서울 동작구", "skill": "90~06년생 / 구력 6개월↑ 또는 레슨자", "time": "연회비 3천 원, 평일 저녁 및 주말 정모", "features": "연회비 3천 원, 평일 저녁 및 주말 정모", "img": "🏸" },
-            { "sport": "배드민턴", "name": "S.P.B (송파배드민턴)", "region": "서울 송파구", "skill": "1991~2007년생 / 남(입상자), 여(대회 1승↑)", "time": "송파 2030 대표 모임, 평일·주말 정모", "features": "송파 2030 대표 모임, 평일·주말 정모", "img": "🏸" },   
+            // --- 배드민턴 50팀 ---
+            { "sport": "배드민턴", "name": "타락파워민턴 <타파민>", "region": "서울 도봉구", "skill": "20~30대 / 남(구력 1년↑), 여(6개월↑)", "time": "토요일 오전 정모, 번개 수시 진행", "features": "토요일 오전 정모, 번개 수시 진행", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "광운대학교 팡팡", "region": "서울 노원구", "skill": "광운대 부원 전용 (게스트 가능)", "time": "월·수·금 저녁 정모, 게스트비 7천 원", "features": "월·수·금 저녁 정모, 게스트비 7천 원", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "콕끼리콕끼리", "region": "서울 도봉구", "skill": "07~95년생 / 남녀 구력 6개월 이상", "time": "토·일 오전 정모, 월 1회 필참", "features": "토·일 오전 정모, 월 1회 필참", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "Team Delighton", "region": "서울 마포구", "skill": "2030 / 전국 D조 또는 구 C조 이상", "time": "토·일 오후 정모, 일요일 레슨 운영", "features": "토·일 오후 정모, 일요일 레슨 운영", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "배드민턴 라온클럽", "region": "서울 강북구", "skill": "D조 이상 (입문자는 레슨 수강 시 가능)", "time": "평일(월~금) 저녁 정모, 주차 완비", "features": "평일(월~금) 저녁 정모, 주차 완비", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "엔드라인 (남자마감)", "region": "서울 은평구", "skill": "왕초심~D조 이하 (기본 스트로크 가능자)", "time": "월~목 심야 정모, 1:1 맞춤 레슨 운영", "features": "월~목 심야 정모, 1:1 맞춤 레슨 운영", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "금요일 야간민턴", "region": "서울 중랑구", "skill": "구력 6개월 이상 (로테이션 가능자)", "time": "금요일 심야 정모, 가입비 면제 기간", "features": "금요일 심야 정모, 가입비 면제 기간", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "Team mireu sports", "region": "서울 노원구", "skill": "남녀 D조 이상", "time": "토요일 저녁 정모, 요넥스 노원점 후원", "features": "토요일 저녁 정모, 요넥스 노원점 후원", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "TURNPLAY (턴플레이)", "region": "서울 마포구", "skill": "명시 없음 (순환 게임 방식)", "time": "평일·주말 저녁 정모, 회비 무료", "features": "평일·주말 저녁 정모, 회비 무료", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "Team 메이커 (Maker)", "region": "서울 종로구", "skill": "2030(D조↑), 40(B조↑), 대회경력자", "time": "셋째 주 일요일 정모, 코치 피드백 제공", "features": "셋째 주 일요일 정모, 코치 피드백 제공", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "콕어스 (KOK US)", "region": "서울 영등포구", "skill": "2030 / 초심~A조 (남 12개월↑, 여 6개월↑)", "time": "화·목 저녁, 토·일 오전 정모 / 급수별 매칭", "features": "화·목 저녁, 토·일 오전 정모 / 급수별 매칭", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "SCV 배드민턴 클럽", "region": "서울 구로구", "skill": "2030 / 남(로테이션 가능), 여(구력 1개월↑)", "time": "가입비 1만원, 회비 없음 / 평일·주말 정모", "features": "가입비 1만원, 회비 없음 / 평일·주말 정모", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "팀 전술 (Technician)", "region": "서울 중랑구", "skill": "남(B조↑), 여(C조↑) / 게스트 가능", "time": "일요일 저녁 정모 / 테크니스트 스폰 팀", "features": "일요일 저녁 정모 / 테크니스트 스폰 팀", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "NETPL (넷플)", "region": "서울 강동구", "skill": "90~07년생 / 구력 6개월 이상", "time": "화요일 저녁, 토요일 오후 정모 / 리닝 제품 할인", "features": "화요일 저녁, 토요일 오후 정모 / 리닝 제품 할인", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "민턴 갤러리", "region": "서울 관악구", "skill": "급수 제한 없음 (완전 초보 환영)", "time": "월·수·금 오전 정모 / 회비 없음, 코치 레슨", "features": "월·수·금 오전 정모 / 회비 없음, 코치 레슨", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "미성체육관 모닝민턴", "region": "서울 관악구", "skill": "남(D조↑), 여(초심↑)", "time": "화~금 새벽, 토요일 아침 정모 / 가입비·회비 X", "features": "화~금 새벽, 토요일 아침 정모 / 가입비·회비 X", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "Momentum (모멘텀)", "region": "서울 영등포구", "skill": "20세 이상 / 남(C조↑), 여(구력 1년↑)", "time": "월·수·금 저녁 정모 / 가입비·회비·게스트비 X", "features": "월·수·금 저녁 정모 / 가입비·회비·게스트비 X", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "TEAM BAERURI (팀 배루리)", "region": "서울 노원구", "skill": "203040 여성 전용 (여복 모임)", "time": "토요일 오후 정모 / 게스트 참여 가능(D조↑)", "features": "토요일 오후 정모 / 게스트 참여 가능(D조↑)", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "위너스턴", "region": "서울 관악구", "skill": "2030 / 남(6개월↑), 여(3개월↑)", "time": "토·일 오전 정모 / 반기별 회비 3천원", "features": "토·일 오전 정모 / 반기별 회비 3천원", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "2030 초보자 배드민턴", "region": "서울 영등포구", "skill": "2030 초보자 중심", "time": "평일 저녁, 주말 오전 정모 / 월 1회 자체 대회", "features": "평일 저녁, 주말 오전 정모 / 월 1회 자체 대회", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "RACKET LAUNCHER", "region": "서울 마포구", "skill": "00~07년생 (입문자 환영)", "time": "배드민턴·탁구 병행, 일일 체험 가능", "features": "배드민턴·탁구 병행, 일일 체험 가능", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "셔틀러 (Shuttler)", "region": "서울 송파구", "skill": "92~04년생 / 남녀 구력 6개월↑", "time": "주말(토·일) 정모, 70명 정원 제한 운영", "features": "주말(토·일) 정모, 70명 정원 제한 운영", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "피지컬밴. 민턴", "region": "서울 관악구", "skill": "94~05년생 / D조 이하 랠리 가능자", "time": "회비 없음, 화요일 저녁 및 주말 오후 정모", "features": "회비 없음, 화요일 저녁 및 주말 오후 정모", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "E'lite 민턴", "region": "서울 관악구", "skill": "20세 이상 / 구력 1년↑ (B조 이하)", "time": "화·목 저녁 및 주말 정모, 로테이션 가능자", "features": "화·목 저녁 및 주말 정모, 로테이션 가능자", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "체리콕", "region": "서울 양천구", "skill": "88~05년생 / 남(D조↑), 여(구력 1년↑)", "time": "월·수·금 저녁 및 토요일 오후 정모", "features": "월·수·금 저녁 및 토요일 오후 정모", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "열정민턴", "region": "서울 관악구", "skill": "성인 이상 / 남(D조↑), 여(참가자·레슨자)", "time": "번개 정모 수시 진행, 가입비 5천 원", "features": "번개 정모 수시 진행, 가입비 5천 원", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "뉴민스", "region": "서울 영등포구", "skill": "2030 / 여(구력 6개월↑), 남(대기 마감)", "time": "초심~C조 위주, 편안한 분위기, 회비 5천 원", "features": "초심~C조 위주, 편안한 분위기, 회비 5천 원", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "Team.AWG X SPECTRUM", "region": "서울 구로구", "skill": "만 20세 이상 / 전국대회 초심 본선 이상", "time": "실력·매너 겸비, 스펙트럼 팀스폰 모집 중", "features": "실력·매너 겸비, 스펙트럼 팀스폰 모집 중", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "공룡단 배드민턴", "region": "서울 강동구", "skill": "2000년생(00년생) 전용 / 실력 무관", "time": "00년생 친구 사귀기 모임, 매달 마지막 토요일", "features": "00년생 친구 사귀기 모임, 매달 마지막 토요일", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "박무현코치와 팀노바스톤", "region": "서울 강서구", "skill": "2030 / 남(D조↑), 여(초심↑)", "time": "박무현 코치 게임 레슨, 화·목 저녁 정모", "features": "박무현 코치 게임 레슨, 화·목 저녁 정모", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "Net Play(N.P)", "region": "서울 강북구", "skill": "1987~2003년생 / 남녀 D조 이상 (구력 3년↑)", "time": "수·금 저녁 정모, 회비 8천 원, 초보 불가", "features": "수·금 저녁 정모, 회비 8천 원, 초보 불가", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "거위농장", "region": "서울 노원구", "skill": "전국기준 남 C조, 여 D조 이상", "time": "일요일 오전 정모, 셔틀콕 3개 지참", "features": "일요일 오전 정모, 셔틀콕 3개 지참", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "행복한셔틀콕(행콕)", "region": "서울 노원구", "skill": "급수 제한 없음 (초보자 위주 모임)", "time": "월·화·목·토·일 정모, 가입비 2천 원", "features": "월·화·목·토·일 정모, 가입비 2천 원", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "\"콕끼리\" 배드민턴", "region": "서울 도봉구", "skill": "80, 90, 00년생 / 구력 6개월↑", "time": "월·수·금 저녁 및 일요일 오전 정모", "features": "월·수·금 저녁 및 일요일 오전 정모", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "우리동네막체능", "region": "서울 노원구", "skill": "1984~05년생 / D조 이상 (대회경험 많음)", "time": "화·목·토·일 정모, 복식 로테이션 필수", "features": "화·목·토·일 정모, 복식 로테이션 필수", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "솔샘 배드민턴", "region": "서울 강북구", "skill": "D조 이상 (입문자는 레슨 시 가능)", "time": "평일 저녁 및 주말 오후 정모, 레슨 운영", "features": "평일 저녁 및 주말 오후 정모, 레슨 운영", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "MAKER 배드민턴 클럽", "region": "서울 성북구", "skill": "2030 성북·종로 / 게스트 D조 이상", "time": "평일 저녁 및 토요일 정모, 전 요일 레슨", "features": "평일 저녁 및 토요일 정모, 전 요일 레슨", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "IN&OUT 인앤아웃", "region": "서울 강남구", "skill": "1986~2005년생 / 남(1년↑), 여(숏서브 가능)", "time": "평일 아침(08-10시) 정모, 가입비 5천 원", "features": "평일 아침(08-10시) 정모, 가입비 5천 원", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "Team.MAD & SPECTRUM", "region": "서울 은평구", "skill": "1986~06년생 / 남(초심 본선↑), 여(D조 1승↑)", "time": "토요일 야간(20-24시) 정모, 코치 레슨", "features": "토요일 야간(20-24시) 정모, 코치 레슨", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "새콕달콕", "region": "서울 마포구", "skill": "구력 1년 이상, 대회 유경험자", "time": "토·일 저녁 정모, 자체 어플 활용 매칭", "features": "토·일 저녁 정모, 자체 어플 활용 매칭", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "배민치GO", "region": "서울 마포구", "skill": "2030 / 남녀 D조 이상 (대회 인증 필요)", "time": "가입비·회비 없음, 게스트 1회 참석 후 가입", "features": "가입비·회비 없음, 게스트 1회 참석 후 가입", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "필턴 Feelton", "region": "서울 성북구", "skill": "2030 (05~93년생) / 남녀 D조 이상", "time": "가입비 3천 원, 소규모 지향, 화목한 분위기", "features": "가입비 3천 원, 소규모 지향, 화목한 분위기", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "콕끼오", "region": "서울 노원구", "skill": "05~93년생 / 남(로테이션), 여(구력 1년↑)", "time": "가입비 3천 원, 26년 4월 신규 모집", "features": "가입비 3천 원, 26년 4월 신규 모집", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "Team WOW", "region": "서울 마포구", "skill": "2030 / 남녀 초심 수상 이상 (급수 인증)", "time": "반기 회비 1.5만 원, 반기별 자체 대회", "features": "반기 회비 1.5만 원, 반기별 자체 대회", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "셔틀콕콕", "region": "서울 도봉구", "skill": "1991~2005년생 / 대회 출전 경험자", "time": "가입비 5천 원, 주말 정모, 일회비 별도", "features": "가입비 5천 원, 주말 정모, 일회비 별도", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "We 배드민턴 반포", "region": "서울 서초구", "skill": "1987~2003년생 직장인 / 서브 가능자", "time": "가입비 1.5만 원, 일요일 정모, 혼성복식", "features": "가입비 1.5만 원, 일요일 정모, 혼성복식", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "민턴클라쓰", "region": "서울 용산구", "skill": "남성 D조 이상 (4월 이후)", "time": "게스트비 3천 원, 주말 오후 정모, 레슨 코트", "features": "게스트비 3천 원, 주말 오후 정모, 레슨 코트", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "잔다르콕", "region": "서울 강북구", "skill": "2030 여성 / 전국 C조 이상 (인증 필요)", "time": "여성 복식 모임, 매월 1·3주 토요일 정모", "features": "여성 복식 모임, 매월 1·3주 토요일 정모", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "STEP", "region": "서울 동작구", "skill": "90~06년생 / 구력 6개월↑ 또는 레슨자", "time": "연회비 3천 원, 평일 저녁 및 주말 정모", "features": "연회비 3천 원, 평일 저녁 및 주말 정모", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { "sport": "배드민턴", "name": "S.P.B (송파배드민턴)", "region": "서울 송파구", "skill": "1991~2007년생 / 남(입상자), 여(대회 1승↑)", "time": "송파 2030 대표 모임, 평일·주말 정모", "features": "송파 2030 대표 모임, 평일·주말 정모", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },   
 
             // --- 테니스 12팀 ---
-            { sport: '테니스', name: '원바운스 테니스', region: '강남', skill: '초보/중급/지도자', time: '문의 필요', features: '선수 출신 코치 운영, 기술/피지컬 트레이닝', img: '🎾' },
-            { sport: '테니스', name: 'tennis_member_SD', region: '강남/송파', skill: '구력 3년 이상', time: '26년 활동 예정', features: '회원제 멤버십, TS/수도공고 코트', img: '🎾' },
-            { sport: '테니스', name: '테니스투게더-TETOO', region: '강남', skill: '경력 무관', time: '금, 토, 일 교차 수강', features: '6주 수업 과정, 동기들과 함께 성장', img: '🎾' },
-            { sport: '테니스', name: '테라 TENNIS LIFE', region: '용산', skill: '구력 6개월 이상', time: '평일 20:00 - 22:00', features: '이촌 한강공원 정모, 게임 가능자 대상', img: '🎾' },
-            { sport: '테니스', name: '구일테성', region: '성북/중랑', skill: '구력 1년 - 3년', time: '매월 정기 모집', features: '엠브이테니스 용마점, 테린이 성장기', img: '🎾' },
-            { sport: '테니스', name: '테니스이스굿', region: '강서', skill: '구력 6개월 이상', time: '평일 격주 야간, 주말 1회', features: '2030 연령대, 성비 관리, 단식/복식/랠리', img: '🎾' },
-            { sport: '테니스', name: 'Dawn Tennis Club', region: '관악', skill: '실력 무관', time: '이른 아침', features: '미라클 모닝 실천, 연 2회 정기대회', img: '🎾' },
-            { sport: '테니스', name: 'Team_로브테니스', region: '구로', skill: '레슨생/초보', time: '상시 모집', features: '귀뚜라미 테니스 연대관, 필라테스 병행', img: '🎾' },
-            { sport: '테니스', name: '테니스의숲', region: '성동/중구', skill: '구력 3개월 이상', time: '주말 정기모임', features: '서울숲/응봉/삼청 코트, 실력별 운영', img: '🎾' },
-            { sport: '테니스', name: '테럽 (TELUV)', region: '광진', skill: '구력 1년 이상', time: '주말 20:00 - 22:00', features: '뚝섬 한강공원 메인, 84-04년생', img: '🎾' },
-            { sport: '테니스', name: '붐테니스', region: '강동', skill: '남 6년, 여 5년↑', time: '매주 토 18:00 - 22:00', features: '포인트제 리그 운영, 80-00년생', img: '🎾' },
-            { sport: '테니스', name: 'Tennis Up', region: '중랑', skill: '입문자 이상', time: '수 20-22, 토 12-14', features: '26년 3월 신생 모임, 90년생 이후', img: '🎾' },
+            { sport: '테니스', name: '원바운스 테니스', region: '강남', skill: '초보/중급/지도자', time: '문의 필요', features: '선수 출신 코치 운영, 기술/피지컬 트레이닝', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '테니스', name: 'tennis_member_SD', region: '강남/송파', skill: '구력 3년 이상', time: '26년 활동 예정', features: '회원제 멤버십, TS/수도공고 코트', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '테니스', name: '테니스투게더-TETOO', region: '강남', skill: '경력 무관', time: '금, 토, 일 교차 수강', features: '6주 수업 과정, 동기들과 함께 성장', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '테니스', name: '테라 TENNIS LIFE', region: '용산', skill: '구력 6개월 이상', time: '평일 20:00 - 22:00', features: '이촌 한강공원 정모, 게임 가능자 대상', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '테니스', name: '구일테성', region: '성북/중랑', skill: '구력 1년 - 3년', time: '매월 정기 모집', features: '엠브이테니스 용마점, 테린이 성장기', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '테니스', name: '테니스이스굿', region: '강서', skill: '구력 6개월 이상', time: '평일 격주 야간, 주말 1회', features: '2030 연령대, 성비 관리, 단식/복식/랠리', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '테니스', name: 'Dawn Tennis Club', region: '관악', skill: '실력 무관', time: '이른 아침', features: '미라클 모닝 실천, 연 2회 정기대회', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '테니스', name: 'Team_로브테니스', region: '구로', skill: '레슨생/초보', time: '상시 모집', features: '귀뚜라미 테니스 연대관, 필라테스 병행', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '테니스', name: '테니스의숲', region: '성동/중구', skill: '구력 3개월 이상', time: '주말 정기모임', features: '서울숲/응봉/삼청 코트, 실력별 운영', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '테니스', name: '테럽 (TELUV)', region: '광진', skill: '구력 1년 이상', time: '주말 20:00 - 22:00', features: '뚝섬 한강공원 메인, 84-04년생', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '테니스', name: '붐테니스', region: '강동', skill: '남 6년, 여 5년↑', time: '매주 토 18:00 - 22:00', features: '포인트제 리그 운영, 80-00년생', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '테니스', name: 'Tennis Up', region: '중랑', skill: '입문자 이상', time: '수 20-22, 토 12-14', features: '26년 3월 신생 모임, 90년생 이후', img: '🎾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
 
             // --- 러닝 44팀 ---
-            { sport: '러닝', name: '한남반포 치킨런', region: '서초구 (잠수교)', skill: '초보 환영', time: '문의 필요', features: '러닝 후 치맥 모임 (월 1~2회), 속도 경쟁보다 즐거움 추구', img: '🏃' },
-            { sport: '러닝', name: 'URIEL 우이천 러닝 크루', region: '도봉구 (우이천)', skill: '초보, 다이어트, 첫 대회 준비 환영', time: '매주 월요일', features: '매주 월요일 정기런, 매일 번개런 진행, 가입비 5,000원', img: '🏃' },
-            { sport: '러닝', name: '성북천 러닝크루_윈터런', region: '성북구 (성북천, 남산, 한강 등)', skill: '초보부터 풀마라톤 LSD 훈련까지', time: '매주 수요일', features: '80~00년생 제한, 매주 수요일 정기런, 가입비 5,000원', img: '🏃' },
-            { sport: '러닝', name: '러닝인더시티 (RIC)', region: '서대문구 (연세대 대운동장)', skill: '초보 및 입문자 환영', time: '매주 일요일', features: '도심 속 자연 조화 추구, 매주 일요일 정기런, 1회 체험 가능', img: '🏃' },
-            { sport: '러닝', name: '☀️R.U.N.N.I.N.G CREW', region: '서초구 (서울 전역)', skill: '러닝 초보자 환영', time: '문의 필요', features: '스트레스 해소 및 힐링 목적, 내향인(I) 환영, 주말 정기 번개 예정', img: '🏃' },
-            { sport: '러닝', name: '양재천 진짜작은러닝모임', region: '서초구 (양재천)', skill: '누구나 환영 (5km/6\'00" 페이스 기준)', time: '문의 필요', features: '보강 운동(근력/유연성) 병행, 마라톤 단체 참가 및 테마런 진행', img: '🏃' },
-            { sport: '러닝', name: 'KRC 러닝크루', region: '마포구', skill: '누구나 참여 가능', time: '문의 필요', features: '기부 러닝 (1회 참여 시 5,000원 기부), 독서 토론 및 러닝 코칭 병행', img: '🏃' },
-            { sport: '러닝', name: '모내모 러닝', region: '종로구 (광화문 앞, 연세대)', skill: '초보부터 풀코스 러너까지', time: '매주 수요일', features: '90~05년생 제한, 후디스헬스케어 스포츠크루, 매주 수요일 정기런', img: '🏃' },
-            { sport: '러닝', name: 'WDS 양재천 우리동네스포츠', region: '강남구 (양재천, 탄천, 반포 등)', skill: '초보 환영', time: '문의 필요', features: '2030 운동크루 (87년생 이하), 등산/배드민턴 등 다양한 스포츠 병행', img: '🏃' },
-            { sport: '러닝', name: 'Running Curve 러닝크루', region: '강북구 (우이천)', skill: '초보자 환영', time: '문의 필요', features: '국가대표 트레이너 재능기부 및 교육 진행, 부상 없는 러닝 강조', img: '🏃' },
-            { sport: '러닝', name: 'BEST 런앤런 🔥', region: '양천구 (서서울호수공원)', skill: '런린이 (초보) 환영', time: '문의 필요', features: '함께 성장하며 즐겁게 달리기, 가입 후 24시간 내 자기소개 필수', img: '🏃' },
-            { sport: '러닝', name: '걷뛰🏃‍♂️, 걷🚶‍♂️걷🚶‍♂️뛰🏃‍♂️', region: '강서구 (여의도 공원)', skill: '왕초보 (걷기+빠르게 걷기)', time: '문의 필요', features: '달리기가 부담스러운 분들을 위한 가벼운 운동, 인생샷 촬영 서비스', img: '🏃' },
-            { sport: '러닝', name: 'The Run-Way', region: '광진구', skill: '초보 직장인 환영', time: '문의 필요', features: '풀코스 완주 목표, 해외 메이저 마라톤 대회 참가 추진, 직장인 맞춤형', img: '🏃' },
-            { sport: '러닝', name: '런독 러닝클럽 🏃‍♀️🏃💨', region: '중구 (청계천)', skill: '초보 환영 (6~7분 페이스)', time: '문의 필요', features: '기록보다 완주와 안전 중시, 88년생 이하 제한, 꼰대 사절', img: '🏃' },
-            { sport: '러닝', name: '습런 🏃🏃🏃', region: '광진구 (중랑천 군자교 등)', skill: '누구나', time: '문의 필요', features: '자유로운 번개 모임 중심, 중랑천 위주 활동, 소통 중시', img: '🏃' },
-            { sport: '러닝', name: 'GRC 서울가산러닝크루', region: '금천구 (안양천)', skill: '누구나 (완주 목표)', time: '문의 필요', features: '요헤미티 파트너 크루, 89~03년생 제한, 월 회비 2,000원', img: '🏃' },
-            { sport: '러닝', name: 'Beginner 러닝크루[B.R.C]', region: '강서구 (서울식물원, 증미역 한강)', skill: '초보 (6\'30"~7\'30" 페이스)', time: '문의 필요', features: '3km 이하 짧은 거리 위주, 강서/양천 거주자 중심, 89~05년생 제한', img: '🏃' },
-            { sport: '러닝', name: 'JAJURUN🧡', region: '광진구 (자양역)', skill: '그룹별 실력 맞춤 (4~6km)', time: '문의 필요', features: '기록보다 교감과 휴식 중시, 88~02년생 제한, 인생샷 남기기', img: '🏃' },
-            { sport: '러닝', name: '송파구 러닝크루 RTMC', region: '송파구 (탄천, 석촌호수, 올림픽공원 등)', skill: '초보부터 숙련자까지 (페이스 선택)', time: '문의 필요', features: '200명 규모 대형 크루, 따릉이/등산 등 다양한 번개, 운동 후 음료 타임', img: '🏃' },
-            { sport: '러닝', name: '플로우, 🌊 달리다 보면 흘러간다', region: '중랑구 (중랑천)', skill: '초보~고수 (5\'00"~8\'00" 페이스)', time: '문의 필요', features: '88~00년생 제한, 보드게임/카페탐방 등 다양한 친목 활동 병행', img: '🏃' },
-            { sport: '러닝', name: '올공/한강 뛰어요 하이런', region: '올림픽공원, 광나루 한강공원', skill: '5:00~7:00 페이스별 소그룹', time: '문의 필요', features: '88~00년생 제한, 화/목 정기런, 마라톤 참여 및 다양한 번개 활동', img: '🏃' },
-            { sport: '러닝', name: '서울에서 다함께 러닝', region: '여의나루역 3번출구', skill: '런린이 환영, 속도별 그룹 운영', time: '문의 필요', features: '월~금 정기런(5~10km), 등산/볼링/헬스 등 다양한 취미 번개', img: '🏃' },
-            { sport: '러닝', name: '[Run in 9-] 러닝구', region: '강서구 주모임', skill: '초보, 런린이 대환영', time: '문의 필요', features: '90~99년생(01년생까지 가능), 매일 러닝 열림, 등산/액티비티 병행', img: '🏃' },
-            { sport: '러닝', name: '러닝크루 RRC', region: '잠실한강, 올림픽공원, 뚝섬 등', skill: '초보 환영, 페이스별 3그룹', time: '문의 필요', features: '89~00년생 제한, 화/목 20:30 정기런, 게스트 5회 참여 시 정회원', img: '🏃' },
-            { sport: '러닝', name: '냅다뛰다걷다', region: '여의도 또는 반포한강', skill: '기록 무관, 숨차면 걷기 가능', time: '문의 필요', features: '90~00년생 제한, 주말(토/일) 모임, 러닝 후 가벼운 뒷풀이', img: '🏃' },
-            { sport: '러닝', name: '9fiveees (나인파이브즈)', region: '뚝섬 인근', skill: '달리고 싶은 마음이면 충분', time: '문의 필요', features: '1995년생 전용, 목요일 정기런(5km), 매월 9/15/25일 번개런', img: '🏃' },
-            { sport: '러닝', name: '달수런', region: '신림2교 도림천 농구장', skill: '5\'00"~7\'30" 페이스별 (3~5km)', time: '문의 필요', features: '91~04년생 제한, 지친 일상 속 가볍게 하루를 마무리하는 저녁 러닝', img: '🏃' },
-            { sport: '러닝', name: '러너스하이 Runners Hi', region: '태릉입구역 장미공원입구', skill: '5\'30"~7\'00" 페이스별 그룹', time: '문의 필요', features: '목요일 20:00 정기운동, 가입비 3,000원, 클라이밍/보드게임 등 번개', img: '🏃' },
-            { sport: '러닝', name: 'ROR 오목교 안양천', region: '오목교 안양천', skill: '초보 환영, 530~700 페이스', time: '문의 필요', features: '86~05년생 제한, 화/수/목 중 1일 정기런, 6.5~8km 코스', img: '🏃' },
-            { sport: '러닝', name: '뒨도림 (신도림러닝모임)', region: '신도림 집결지 (도림천/안양천)', skill: '초보/취미 (7분 페이스, 4~5km)', time: '문의 필요', features: '87~04년생 제한, 월/수/목 20:00 정기런, 매달 1회 치팅데이', img: '🏃' },
-            { sport: '러닝', name: '26시즌 2월~) 해피런 크루', region: '마포나들목, 경의선 숲길', skill: '3km, 5km 페이스별 그룹', time: '문의 필요', features: '즐거운 러닝 추구, 월 회비 3,000원, 월/목 저녁 및 토요일 오전 모임', img: '🏃' },
-            { sport: '러닝', name: '불광천 러닝모임(BRC)', region: '은평구 응암역 불광천 인근', skill: '초보(3km 별도) 및 고수 환영', time: '문의 필요', features: '89~05년생 인근 거거주자 한정, 최초 가입비 3,000원, 운동 위주 분위기', img: '🏃' },
-            { sport: '러닝', name: '💈 러닝살롱 💈', region: '마포구 서울함공원(망원 한강공원)', skill: '초보 러너 대다수', time: '문의 필요', features: '소셜 살롱 형태의 모임, 화요일 저녁 및 토요일 오전 정기런', img: '🏃' },
-            { sport: '러닝', name: '🏃‍♀️ 응암러닝모임 🏃‍♂️', region: '은평구 응암역 불광천 진입로', skill: '초보 및 신규 환영 (페이스 조율 가능)', time: '문의 필요', features: '89~06년생 제한, 회비 매월 1,000원, 참여왕/개설왕 기프티콘 지급', img: '🏃' },
-            { sport: '러닝', name: 'HAPPY FEET 해피피트', region: '성북구 정릉천, 우이천', skill: '더 멀리, 더 오래 달리기 목표', time: '문의 필요', features: '87~05년생 제한, 가입비 8,000원, 목요일 저녁 정기 모임', img: '🏃' },
-            { sport: '러닝', name: '성북천-With__Run "위드 런"', region: '성북구 성북천, 경복궁, 한강 등', skill: '건강하고 즐거운 모임 추구', time: '매주 월요일', features: '05~88년생 제한, 매주 월요일 20:30 정기런, 가입비 5,000원', img: '🏃' },
-            { sport: '러닝', name: '레이크러너[LRC]', region: '송파구 석촌호수 베이스', skill: '초보 환영, 주말 인터벌 훈련 병행', time: '문의 필요', features: '85~02년생 실명 사용 필수, 마라톤 도전 및 팀 대항전 진행', img: '🏃' },
-            { sport: '러닝', name: '뛰다걷다(안양천러닝🏃‍♂️)', region: '금천구 안양천 다목적광장', skill: '자유 페이스 (힘들면 걷기 가능), 기본 5km', time: '문의 필요', features: '나이 불문 (10대~50대), 기록보다 즐거움 우선, 자율 운영 시스템', img: '🏃' },
-            { sport: '러닝', name: '🌟 늦게 뛰는 런린이들 🌟', region: '금천구 안양천, 한강', skill: '런린이(초보) 환영', time: '문의 필요', features: '90~06년생 제한, 평일 22:00 늦은 밤 러닝 위주, 스트레칭 강조', img: '🏃' },
-            { sport: '러닝', name: '뒨도림- 신도림러닝모임 (V2)', region: '신도림 집결지 (도림천, 안양천)', skill: '초보/취미 (1km당 7분 페이스)', time: '정기런 일정 참조', features: '매주 월/수/목 20:00 정기런, 매달 1회 치팅데이, 87~04년생 제한', img: '🏃' },
-            { sport: '러닝', name: '러너스키친러닝크루 (V2)', region: '강서구 (러너스키친 양식집 인근)', skill: '초보 환영 (부담 없이 즐겁게)', time: '문의 필요', features: '양식집 운영자가 함께 운영, 월/수/금 20:30 모임', img: '🏃' },
-            { sport: '러닝', name: '용답러닝모임 (V2)', region: '용답역 2번 출구 건너편 놀이터', skill: '왕초보/초보 등 누구나', time: '문의 필요', features: '직장인/학생/일회성 모두 환영, 88~06년생 제한, 현재 가입비 무료', img: '🏃' },
-            { sport: '러닝', name: 'Wave Run Crew 🌊 (V2)', region: '잠실 한강공원', skill: '입문자부터 고수까지 (4분~7분대 페이서 보유)', time: '매주 수요일', features: '매주 수요일 20:00 정기런, 풀마라톤 완주자 리더, 90~05년생 제한', img: '🏃' },
-            { sport: '러닝', name: '[GR] 한강 & 신도림 러닝크루 (V2)', region: '도림천역 2번 출구, 여의나루역 2번 출구', skill: '초급(3~5km) / 중급(5~10km)', time: '매주 금요일', features: '매주 금요일 19:00 정기런, 26년도 하반기 10km 마라톤 완주 목표', img: '🏃' },
+            { sport: '러닝', name: '한남반포 치킨런', region: '서초구 (잠수교)', skill: '초보 환영', time: '문의 필요', features: '러닝 후 치맥 모임 (월 1~2회), 속도 경쟁보다 즐거움 추구', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'URIEL 우이천 러닝 크루', region: '도봉구 (우이천)', skill: '초보, 다이어트, 첫 대회 준비 환영', time: '매주 월요일', features: '매주 월요일 정기런, 매일 번개런 진행, 가입비 5,000원', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '성북천 러닝크루_윈터런', region: '성북구 (성북천, 남산, 한강 등)', skill: '초보부터 풀마라톤 LSD 훈련까지', time: '매주 수요일', features: '80~00년생 제한, 매주 수요일 정기런, 가입비 5,000원', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '러닝인더시티 (RIC)', region: '서대문구 (연세대 대운동장)', skill: '초보 및 입문자 환영', time: '매주 일요일', features: '도심 속 자연 조화 추구, 매주 일요일 정기런, 1회 체험 가능', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '☀️R.U.N.N.I.N.G CREW', region: '서초구 (서울 전역)', skill: '러닝 초보자 환영', time: '문의 필요', features: '스트레스 해소 및 힐링 목적, 내향인(I) 환영, 주말 정기 번개 예정', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '양재천 진짜작은러닝모임', region: '서초구 (양재천)', skill: '누구나 환영 (5km/6\'00" 페이스 기준)', time: '문의 필요', features: '보강 운동(근력/유연성) 병행, 마라톤 단체 참가 및 테마런 진행', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'KRC 러닝크루', region: '마포구', skill: '누구나 참여 가능', time: '문의 필요', features: '기부 러닝 (1회 참여 시 5,000원 기부), 독서 토론 및 러닝 코칭 병행', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '모내모 러닝', region: '종로구 (광화문 앞, 연세대)', skill: '초보부터 풀코스 러너까지', time: '매주 수요일', features: '90~05년생 제한, 후디스헬스케어 스포츠크루, 매주 수요일 정기런', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'WDS 양재천 우리동네스포츠', region: '강남구 (양재천, 탄천, 반포 등)', skill: '초보 환영', time: '문의 필요', features: '2030 운동크루 (87년생 이하), 등산/배드민턴 등 다양한 스포츠 병행', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'Running Curve 러닝크루', region: '강북구 (우이천)', skill: '초보자 환영', time: '문의 필요', features: '국가대표 트레이너 재능기부 및 교육 진행, 부상 없는 러닝 강조', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'BEST 런앤런 🔥', region: '양천구 (서서울호수공원)', skill: '런린이 (초보) 환영', time: '문의 필요', features: '함께 성장하며 즐겁게 달리기, 가입 후 24시간 내 자기소개 필수', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '걷뛰🏃‍♂️, 걷🚶‍♂️걷🚶‍♂️뛰🏃‍♂️', region: '강서구 (여의도 공원)', skill: '왕초보 (걷기+빠르게 걷기)', time: '문의 필요', features: '달리기가 부담스러운 분들을 위한 가벼운 운동, 인생샷 촬영 서비스', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'The Run-Way', region: '광진구', skill: '초보 직장인 환영', time: '문의 필요', features: '풀코스 완주 목표, 해외 메이저 마라톤 대회 참가 추진, 직장인 맞춤형', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '런독 러닝클럽 🏃‍♀️🏃💨', region: '중구 (청계천)', skill: '초보 환영 (6~7분 페이스)', time: '문의 필요', features: '기록보다 완주와 안전 중시, 88년생 이하 제한, 꼰대 사절', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '습런 🏃🏃🏃', region: '광진구 (중랑천 군자교 등)', skill: '누구나', time: '문의 필요', features: '자유로운 번개 모임 중심, 중랑천 위주 활동, 소통 중시', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'GRC 서울가산러닝크루', region: '금천구 (안양천)', skill: '누구나 (완주 목표)', time: '문의 필요', features: '요헤미티 파트너 크루, 89~03년생 제한, 월 회비 2,000원', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'Beginner 러닝크루[B.R.C]', region: '강서구 (서울식물원, 증미역 한강)', skill: '초보 (6\'30"~7\'30" 페이스)', time: '문의 필요', features: '3km 이하 짧은 거리 위주, 강서/양천 거주자 중심, 89~05년생 제한', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'JAJURUN🧡', region: '광진구 (자양역)', skill: '그룹별 실력 맞춤 (4~6km)', time: '문의 필요', features: '기록보다 교감과 휴식 중시, 88~02년생 제한, 인생샷 남기기', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '송파구 러닝크루 RTMC', region: '송파구 (탄천, 석촌호수, 올림픽공원 등)', skill: '초보부터 숙련자까지 (페이스 선택)', time: '문의 필요', features: '200명 규모 대형 크루, 따릉이/등산 등 다양한 번개, 운동 후 음료 타임', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '플로우, 🌊 달리다 보면 흘러간다', region: '중랑구 (중랑천)', skill: '초보~고수 (5\'00"~8\'00" 페이스)', time: '문의 필요', features: '88~00년생 제한, 보드게임/카페탐방 등 다양한 친목 활동 병행', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '올공/한강 뛰어요 하이런', region: '올림픽공원, 광나루 한강공원', skill: '5:00~7:00 페이스별 소그룹', time: '문의 필요', features: '88~00년생 제한, 화/목 정기런, 마라톤 참여 및 다양한 번개 활동', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '서울에서 다함께 러닝', region: '여의나루역 3번출구', skill: '런린이 환영, 속도별 그룹 운영', time: '문의 필요', features: '월~금 정기런(5~10km), 등산/볼링/헬스 등 다양한 취미 번개', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '[Run in 9-] 러닝구', region: '강서구 주모임', skill: '초보, 런린이 대환영', time: '문의 필요', features: '90~99년생(01년생까지 가능), 매일 러닝 열림, 등산/액티비티 병행', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '러닝크루 RRC', region: '잠실한강, 올림픽공원, 뚝섬 등', skill: '초보 환영, 페이스별 3그룹', time: '문의 필요', features: '89~00년생 제한, 화/목 20:30 정기런, 게스트 5회 참여 시 정회원', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '냅다뛰다걷다', region: '여의도 또는 반포한강', skill: '기록 무관, 숨차면 걷기 가능', time: '문의 필요', features: '90~00년생 제한, 주말(토/일) 모임, 러닝 후 가벼운 뒷풀이', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '9fiveees (나인파이브즈)', region: '뚝섬 인근', skill: '달리고 싶은 마음이면 충분', time: '문의 필요', features: '1995년생 전용, 목요일 정기런(5km), 매월 9/15/25일 번개런', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '달수런', region: '신림2교 도림천 농구장', skill: '5\'00"~7\'30" 페이스별 (3~5km)', time: '문의 필요', features: '91~04년생 제한, 지친 일상 속 가볍게 하루를 마무리하는 저녁 러닝', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '러너스하이 Runners Hi', region: '태릉입구역 장미공원입구', skill: '5\'30"~7\'00" 페이스별 그룹', time: '문의 필요', features: '목요일 20:00 정기운동, 가입비 3,000원, 클라이밍/보드게임 등 번개', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'ROR 오목교 안양천', region: '오목교 안양천', skill: '초보 환영, 530~700 페이스', time: '문의 필요', features: '86~05년생 제한, 화/수/목 중 1일 정기런, 6.5~8km 코스', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '뒨도림 (신도림러닝모임)', region: '신도림 집결지 (도림천/안양천)', skill: '초보/취미 (7분 페이스, 4~5km)', time: '문의 필요', features: '87~04년생 제한, 월/수/목 20:00 정기런, 매달 1회 치팅데이', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '26시즌 2월~) 해피런 크루', region: '마포나들목, 경의선 숲길', skill: '3km, 5km 페이스별 그룹', time: '문의 필요', features: '즐거운 러닝 추구, 월 회비 3,000원, 월/목 저녁 및 토요일 오전 모임', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '불광천 러닝모임(BRC)', region: '은평구 응암역 불광천 인근', skill: '초보(3km 별도) 및 고수 환영', time: '문의 필요', features: '89~05년생 인근 거거주자 한정, 최초 가입비 3,000원, 운동 위주 분위기', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '💈 러닝살롱 💈', region: '마포구 서울함공원(망원 한강공원)', skill: '초보 러너 대다수', time: '문의 필요', features: '소셜 살롱 형태의 모임, 화요일 저녁 및 토요일 오전 정기런', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '🏃‍♀️ 응암러닝모임 🏃‍♂️', region: '은평구 응암역 불광천 진입로', skill: '초보 및 신규 환영 (페이스 조율 가능)', time: '문의 필요', features: '89~06년생 제한, 회비 매월 1,000원, 참여왕/개설왕 기프티콘 지급', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'HAPPY FEET 해피피트', region: '성북구 정릉천, 우이천', skill: '더 멀리, 더 오래 달리기 목표', time: '문의 필요', features: '87~05년생 제한, 가입비 8,000원, 목요일 저녁 정기 모임', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '성북천-With__Run "위드 런"', region: '성북구 성북천, 경복궁, 한강 등', skill: '건강하고 즐거운 모임 추구', time: '매주 월요일', features: '05~88년생 제한, 매주 월요일 20:30 정기런, 가입비 5,000원', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '레이크러너[LRC]', region: '송파구 석촌호수 베이스', skill: '초보 환영, 주말 인터벌 훈련 병행', time: '문의 필요', features: '85~02년생 실명 사용 필수, 마라톤 도전 및 팀 대항전 진행', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '뛰다걷다(안양천러닝🏃\u200d‍♂️)', region: '금천구 안양천 다목적광장', skill: '자유 페이스 (힘들면 걷기 가능), 기본 5km', time: '문의 필요', features: '나이 불문 (10대~50대), 기록보다 즐거움 우선, 자율 운영 시스템', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '🌟 늦게 뛰는 런린이들 🌟', region: '금천구 안양천, 한강', skill: '런린이(초보) 환영', time: '문의 필요', features: '90~06년생 제한, 평일 22:00 늦은 밤 러닝 위주, 스트레칭 강조', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '뒨도림- 신도림러닝모임 (V2)', region: '신도림 집결지 (도림천, 안양천)', skill: '초보/취미 (1km당 7분 페이스)', time: '정기런 일정 참조', features: '매주 월/수/목 20:00 정기런, 매달 1회 치팅데이, 87~04년생 제한', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '러너스키친러닝크루 (V2)', region: '강서구 (러너스키친 양식집 인근)', skill: '초보 환영 (부담 없이 즐겁게)', time: '문의 필요', features: '양식집 운영자가 함께 운영, 월/수/금 20:30 모임', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '용답러닝모임 (V2)', region: '용답역 2번 출구 건너편 놀이터', skill: '왕초보/초보 등 누구나', time: '문의 필요', features: '직장인/학생/일회성 모두 환영, 88~06년생 제한, 현재 가입비 무료', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: 'Wave Run Crew 🌊 (V2)', region: '잠실 한강공원', skill: '입문자부터 고수까지 (4분~7분대 페이서 보유)', time: '매주 수요일', features: '매주 수요일 20:00 정기런, 풀마라톤 완주자 리더, 90~05년생 제한', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '러닝', name: '[GR] 한강 & 신도림 러닝크루 (V2)', region: '도림천역 2번 출구, 여의나루역 2번 출구', skill: '초급(3~5km) / 중급(5~10km)', time: '매주 금요일', features: '매주 금요일 19:00 정기런, 26년도 하반기 10km 마라톤 완주 목표', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
 
             // --- 탁구 팀 ---
-            { sport: '탁구', name: '구포탁 (서울전체 94년생 탁구)', region: '서초/한빛/꿈의숲/보람찬/호탁구클럽 (서울 전역)', skill: '초보자, 실력자 모두 환영', time: '매월 세 번째 토요일', features: '94년생 개띠 모임, 매월 세 번째 토요일 정기모임, 인스타 기반 운영', img: '🏓' },
-            { sport: '탁구', name: '늘.탁 (신나는 탁구 클럽)', region: '이조안 탁구교실, 디더블유피 탁구장 (양천구)', skill: '초보자 환영 (다이어트용 강도 높은 운동 가능)', time: '특징 참조', features: '남녀노소(82년생까지), 월~목 정기모임, 주말 번개 및 문화생활', img: '🏓' },
-            { sport: '탁구', name: '핑미업 (취미/초보 탁구모임)', region: '고고핑 (화곡역 8번출구 부근, 강서구)', skill: '탁린이, 초보 (오로지 재미 위주)', time: '평일 저녁', features: '98년생 이하, 평일 저녁 위주 모임, 1회성 참여 가능', img: '🏓' },
-            { sport: '탁구', name: 'RACKET LAUNCHER', region: '관악구, 영등포구, 마포구', skill: '입문자 대환영', time: '문의 필요', features: '00년생~07년생, 라켓(배드민턴/탁구) 동아리, 일일 체험 가능', img: '🏓' },
-            { sport: '탁구', name: '스핀메이트 2030', region: '잠실 월드탁구 (송파구 잠실동 222-9)', skill: '왕초보 환영 (라켓 잡는 법 등 가이드 제공), 티어별 리그전', time: '문의 필요', features: '07~93년생, 탁구 외 볼링·스키 등 다양한 스포츠 병행, 친목 위주', img: '🏓' },
-            { sport: '탁구', name: '아작탁구', region: '망원 에너지탁구클럽 (마포구)', skill: '초보부터 고수까지 모두 환영', time: '특징 참조', features: '매주 평일 1회 퇴근 시간대 정모 진행', img: '🏓' },
-            { sport: '탁구', name: '공줍줍탁구단 2030 (초보 탁구모임)', region: '아현역 근처, 구로 근처 (마포구 기반)', skill: '왕초보 (라켓 처음 잡아보는 분들 환영), 20대 위주', time: '매주 토요일', features: '매주 토요일 13~15시, 저렴한 비용(월 1,000원), 순수 운동 및 친목', img: '🏓' },
-            { sport: '탁구', name: '올탁구 2030', region: '성신 올탁구장 (성북구 동소문로 20길 37-23 B1)', skill: '초보부터 고수까지 (레슨 및 원포인트 제공)', time: '문의 필요', features: '07~86년생, 수·금 19~22시, 일 16~19시 정모, 번개 활발', img: '🏓' },
-            { sport: '탁구', name: '탁꾸러기 [2030]', region: '이희재 탁구클럽 (성신여대입구역 3번출구 도보 3분)', skill: '초보자 환영 (기본 강습 가능), 고수 환영', time: '문의 필요', features: '07~88년생, 장비(라켓, 공, 신발) 구비됨, 몸만 와도 참여 가능', img: '🏓' },
+            { sport: '탁구', name: '구포탁 (서울전체 94년생 탁구)', region: '서초/한빛/꿈의숲/보람찬/호탁구클럽 (서울 전역)', skill: '초보자, 실력자 모두 환영', time: '매월 세 번째 토요일', features: '94년생 개띠 모임, 매월 세 번째 토요일 정기모임, 인스타 기반 운영', img: '🏓', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '탁구', name: '늘.탁 (신나는 탁구 클럽)', region: '이조안 탁구교실, 디더블유피 탁구장 (양천구)', skill: '초보자 환영 (다이어트용 강도 높은 운동 가능)', time: '특징 참조', features: '남녀노소(82년생까지), 월~목 정기모임, 주말 번개 및 문화생활', img: '🏓', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '탁구', name: '핑미업 (취미/초보 탁구모임)', region: '고고핑 (화곡역 8번출구 부근, 강서구)', skill: '탁린이, 초보 (오로지 재미 위주)', time: '평일 저녁', features: '98년생 이하, 평일 저녁 위주 모임, 1회성 참여 가능', img: '🏓', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '탁구', name: 'RACKET LAUNCHER', region: '관악구, 영등포구, 마포구', skill: '입문자 대환영', time: '문의 필요', features: '00년생~07년생, 라켓(배드민턴/탁구) 동아리, 일일 체험 가능', img: '🏓', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '탁구', name: '스핀메이트 2030', region: '잠실 월드탁구 (송파구 잠실동 222-9)', skill: '왕초보 환영 (라켓 잡는 법 등 가이드 제공), 티어별 리그전', time: '문의 필요', features: '07~93년생, 탁구 외 볼링·스키 등 다양한 스포츠 병행, 친목 위주', img: '🏓', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '탁구', name: '아작탁구', region: '망원 에너지탁구클럽 (마포구)', skill: '초보부터 고수까지 모두 환영', time: '특징 참조', features: '매주 평일 1회 퇴근 시간대 정모 진행', img: '🏓', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '탁구', name: '공줍줍탁구단 2030 (초보 탁구모임)', region: '아현역 근처, 구로 근처 (마포구 기반)', skill: '왕초보 (라켓 처음 잡아보는 분들 환영), 20대 위주', time: '매주 토요일', features: '매주 토요일 13~15시, 저렴한 비용(월 1,000원), 순수 운동 및 친목', img: '🏓', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '탁구', name: '올탁구 2030', region: '성신 올탁구장 (성북구 동소문로 20길 37-23 B1)', skill: '초보부터 고수까지 (레슨 및 원포인트 제공)', time: '문의 필요', features: '07~86년생, 수·금 19~22시, 일 16~19시 정모, 번개 활발', img: '🏓', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '탁구', name: '탁꾸러기 [2030]', region: '이희재 탁구클럽 (성신여대입구역 3번출구 도보 3분)', skill: '초보자 환영 (기본 강습 가능), 고수 환영', time: '문의 필요', features: '07~88년생, 장비(라켓, 공, 신발) 구비됨, 몸만 와도 참여 가능', img: '🏓', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
 
             // --- 서핑 팀 ---
-            { sport: '서핑', name: '보스 (Boss)', region: '경기도 양평 (양평리조트수상레저)', skill: '신입/초보 대환영, 누구나', time: '문의 필요', features: '장비 무상대여, 서울 30분 거리, 카풀 가능, 수상레저 놀이기구 50% 할인, 겨울 스키장 병행', img: '🏄' },
-            { sport: '서핑', name: '쓰리고 (Three-GO)', region: '가평 마린보이수상레저', skill: '초보자 환영 (국가대표/프로 코치 티칭)', time: '주말', features: '텃세 없음, 장비 무료대여, 카풀 가능, 매주 주말/평일 번개, 비시즌(스키, 캠핑, 볼링) 운영', img: '🏄' },
-            { sport: '서핑', name: '별장 빠지', region: '춘천(베이스), 휘팍(스키), 제주(서핑/골프), 한강(요트)', skill: '초보 가능 (지도자 자격증 레벨1 취득 맛집)', time: '문의 필요', features: '프라이빗 별장 운영, 해외 원정(미국/캐나다/일본), 한강 요트 선상파티, 제주 게스트하우스 운영', img: '🏄' },
-            { sport: '서핑', name: 'Heaven crew', region: '한강 및 수도권 대중교통 이용 가능 빠지', skill: '입문자 100% 케어, 웨린이 환영', time: '문의 필요', features: '무료 보트 투어, 선상 바베큐 가능, 장비 지원, 텃세 없음, 혼자 와도 참여 가능', img: '🏄' },
-            { sport: '서핑', name: '4-SEASONS LEISURE CLUB', region: '양평 쌍용수상레저 (여름), 휘닉스평창 (겨울)', skill: '초보~고수 (실력 없어도 환영)', time: '주말 카풀', features: '사계절 레저 동호회, 매주 주말 카풀 매칭, 02~89년생 나이제한, 30평 규모 시즌방 운영', img: '🏄' },
+            { sport: '서핑', name: '보스 (Boss)', region: '경기도 양평 (양평리조트수상레저)', skill: '신입/초보 대환영, 누구나', time: '문의 필요', features: '장비 무상대여, 서울 30분 거리, 카풀 가능, 수상레저 놀이기구 50% 할인, 겨울 스키장 병행', img: '🏄', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '서핑', name: '쓰리고 (Three-GO)', region: '가평 마린보이수상레저', skill: '초보자 환영 (국가대표/프로 코치 티칭)', time: '주말', features: '텃세 없음, 장비 무료대여, 카풀 가능, 매주 주말/평일 번개, 비시즌(스키, 캠핑, 볼링) 운영', img: '🏄', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '서핑', name: '별장 빠지', region: '춘천(베이스), 휘팍(스키), 제주(서핑/골프), 한강(요트)', skill: '초보 가능 (지도자 자격증 레벨1 취득 맛집)', time: '문의 필요', features: '프라이빗 별장 운영, 해외 원정(미국/캐나다/일본), 한강 요트 선상파티, 제주 게스트하우스 운영', img: '🏄', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '서핑', name: 'Heaven crew', region: '한강 및 수도권 대중교통 이용 가능 빠지', skill: '입문자 100% 케어, 웨린이 환영', time: '문의 필요', features: '무료 보트 투어, 선상 바베큐 가능, 장비 지원, 텃세 없음, 혼자 와도 참여 가능', img: '🏄', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '서핑', name: '4-SEASONS LEISURE CLUB', region: '양평 쌍용수상레저 (여름), 휘닉스평창 (겨울)', skill: '초보~고수 (실력 없어도 환영)', time: '주말 카풀', features: '사계절 레저 동호회, 매주 주말 카풀 매칭, 02~89년생 나이제한, 30평 규모 시즌방 운영', img: '🏄', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
 
             // --- 아이스하키 팀 ---
-            { sport: '아이스하키', name: '레드이글스 A', region: '수원 아이스하우스', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '바이킹스 A', region: '안양빙상장', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '블랙머신', region: '서울 (목동/제니스)', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '어벤져스 HIGH', region: '서울 (제니스)', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '조이플스 렙', region: '서울 (제니스)', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '터뷸런스 A', region: '고양 어울림누리', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '톨피도즈 A', region: '서울 (목동)', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '매버릭스', region: '서울 (목동)', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '바이킹스 V', region: '안양빙상장', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '수원이글스 A', region: '수원 아이스하우스', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '재거스 블랙', region: '분당 올림픽스포츠센터', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '레푸스', region: '고양 어울림누리', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '로켓츠 러너스 A', region: '서울 (제니스/목동)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '톨피도즈 B', region: '서울 (목동)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '조이플스 하우스', region: '서울 (제니스)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '플렉스', region: '서울 (목동)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '빙신스', region: '서울', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '아수라', region: '서울 (목동)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '알브이디 블랙', region: '서울 (제니스)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '레인저스 화이트', region: '서울', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '아레스', region: '서울', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '레드이글스 B', region: '수원 아이스하우스', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒' },
-            { sport: '아이스하키', name: '스킬즈 A', region: '서울 (제니스)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '웨어울브즈 A', region: '고양 어울림누리', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '하이퍽스', region: '서울 (목동/고양)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '의정부위니아', region: '의정부 빙상장', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: 'MGIs', region: '서울', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '앤틀러스', region: '서울 (목동)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '블랙머신 B', region: '서울 (목동/제니스)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '킹콩스타', region: '수원 아이스하우스', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '플라이어스', region: '서울', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '로켓츠 러너스 B', region: '서울 (제니스/목동)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '스킬즈 B', region: '서울 (제니스)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '조이플스 루키', region: '서울 (제니스)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '수원이글스 B', region: '수원 아이스하우스', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒' },
-            { sport: '아이스하키', name: '알브이디 블루', region: '서울 (제니스)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '오르카', region: '고양 어울림누리', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '크랙', region: '서울', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '레푸스 프렌즈', region: '고양 어울림누리', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '파파이즈', region: '서울 (제니스)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '로닌스', region: '서울 (목동)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '재거스 화이트', region: '분당 올림픽스포츠센터', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '터뷸런스 B', region: '고양 어울림누리', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '레인저스 블루', region: '서울', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '웨어울브즈 B', region: '고양 어울림누리', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '타이탄스 Y', region: '서울', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '블랙나이츠', region: '서울 (제니스)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '블랙머신 D', region: '서울 (목동/제니스)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '에픽원', region: '서울 (제니스)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '수원이글스 루키', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '호네츠', region: '서울', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '피키스', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '썬더스', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '탑건', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
-            { sport: '아이스하키', name: '킹콩스타 루키', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒' },
+            { sport: '아이스하키', name: '레드이글스 A', region: '수원 아이스하우스', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '바이킹스 A', region: '안양빙상장', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '블랙머신', region: '서울 (목동/제니스)', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '어벤져스 HIGH', region: '서울 (제니스)', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '조이플스 렙', region: '서울 (제니스)', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '터뷸런스 A', region: '고양 어울림누리', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '톨피도즈 A', region: '서울 (목동)', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '매버릭스', region: '서울 (목동)', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '바이킹스 V', region: '안양빙상장', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '수원이글스 A', region: '수원 아이스하우스', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '재거스 블랙', region: '분당 올림픽스포츠센터', skill: '상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '레푸스', region: '고양 어울림누리', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '로켓츠 러너스 A', region: '서울 (제니스/목동)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '톨피도즈 B', region: '서울 (목동)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '조이플스 하우스', region: '서울 (제니스)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '플렉스', region: '서울 (목동)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '빙신스', region: '서울', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '아수라', region: '서울 (목동)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '알브이디 블랙', region: '서울 (제니스)', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '레인저스 화이트', region: '서울', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '아레스', region: '서울', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '레드이글스 B', region: '수원 아이스하우스', skill: '중상급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 중상급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '스킬즈 A', region: '서울 (제니스)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '웨어울브즈 A', region: '고양 어울림누리', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '하이퍽스', region: '서울 (목동/고양)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '의정부위니아', region: '의정부 빙상장', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: 'MGIs', region: '서울', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '앤틀러스', region: '서울 (목동)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '블랙머신 B', region: '서울 (목동/제니스)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '킹콩스타', region: '수원 아이스하우스', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '플라이어스', region: '서울', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '로켓츠 러너스 B', region: '서울 (제니스/목동)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '스킬즈 B', region: '서울 (제니스)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '조이플스 루키', region: '서울 (제니스)', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '수원이글스 B', region: '수원 아이스하우스', skill: '초중급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초중급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '알브이디 블루', region: '서울 (제니스)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '오르카', region: '고양 어울림누리', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '크랙', region: '서울', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '레푸스 프렌즈', region: '고양 어울림누리', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '파파이즈', region: '서울 (제니스)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '로닌스', region: '서울 (목동)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '재거스 화이트', region: '분당 올림픽스포츠센터', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '터뷸런스 B', region: '고양 어울림누리', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '레인저스 블루', region: '서울', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '웨어울브즈 B', region: '고양 어울림누리', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '타이탄스 Y', region: '서울', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '블랙나이츠', region: '서울 (제니스)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '블랙머신 D', region: '서울 (목동/제니스)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '에픽원', region: '서울 (제니스)', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '수원이글스 루키', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '호네츠', region: '서울', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '피키스', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '썬더스', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '탑건', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '아이스하키', name: '킹콩스타 루키', region: '수원 아이스하우스', skill: '초급', time: '리그 일정 및 대관 시간에 따름', features: 'KAHL 리그 소속 초급팀', img: '🏒', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
 
             // --- 헬스/필라테스 팀 ---
-            { sport: '헬스/필라테스', name: '필라테스 & 요가 모임', region: '서울 노원구', skill: '초보 환영', time: '문의 필요', features: '요가/필라테스 자격증 관심자 집중 멘토링 제공', img: '🏋️' },
-            { sport: '헬스/필라테스', name: '피곤한 현대인을 위한 초보 요가', region: '서울 용산구', skill: 'All-Level (초보 가능)', time: '주말', features: '매주 주말 수업, 남성 참여 가능, 인스타그램 운영', img: '🏋️' },
-            { sport: '헬스/필라테스', name: '필라앤피 : 필라테스&바른자세운동', region: '서울 강서구', skill: '미표기 (자기소개 필요)', time: '문의 필요', features: '봉사/기부 활동 병행, 자립준비청년 무료 참여 가능', img: '🏋️' },
-            { sport: '헬스/필라테스', name: '요가하는 친구들', region: '서울 성동구', skill: '초보 ~ 숙련자 모두', time: '문의 필요', features: '해부학적 원리 기반 수련, 인도 수료 모임장 직강', img: '🏋️' },
-            { sport: '헬스/필라테스', name: '오운완!!!', region: '서울 종로구', skill: '명확한 몸 목표 보유자', time: '매일', features: '매일 운동 인증 및 식단 공유, 월 1회 오프라인 모임', img: '🏋️' },
-            { sport: '헬스/필라테스', name: '홍대, 연남 2030 운동 모임', region: '서울 마포구 (연남동)', skill: '초보 및 경력자 (2030세대)', time: '문의 필요', features: '\'더벨류짐 연남점\' 정기 모임, 웨이트+유산소 WOD 진행', img: '🏋️' },
-            { sport: '헬스/필라테스', name: '은평 헬스 크루', region: '서울 은평구 (응암동)', skill: '헬린이 ~ 헬창 모두', time: '문의 필요', features: '관장이 직접 운영, \'언노운짐 응암점\' 이용(참가비 무료)', img: '🏋️' },
-            { sport: '헬스/필라테스', name: '아침을 여는 미라클 모닝 헬스', region: '서울 서초구', skill: '아침 운동 실천자', time: '문의 필요', features: '새벽 6시 정기 운동, 출근 전 오운완 달성', img: '🏋️' },
-            { sport: '헬스/필라테스', name: '강남 요가&명상 스튜디오', region: '서울 강남구', skill: '초급 ~ 중급', time: '문의 필요', features: '정적인 명상과 힐링 요가 위주, 직장인 스트레스 해소', img: '🏋️' },
-            { sport: '헬스/필라테스', name: '필라테스 스터디 그룹', region: '서울 동작구', skill: '필라테스 강사 및 지망생', time: '문의 필요', features: '이론 공부와 실기 연습 병행하는 전문 스터디', img: '🏋️' },
-            { sport: '헬스/필라테스', name: '주말 등산 & 필라테스', region: '경기 과천시 (관악산 인근)', skill: '활동적인 분 누구나', time: '문의 필요', features: '등산 후 하산하여 스트레칭 및 필라테스 진행', img: '🏋️' },
-            { sport: '헬스/필라테스', name: '야간 헬스 파트너 찾기', region: '서울 송파구', skill: '중급 이상 추천', time: '문의 필요', features: '24시 헬스장 이용자 대상, 파트너 운동 및 보조', img: '🏋️' }
-];
+            { sport: '헬스/필라테스', name: '필라테스 & 요가 모임', region: '서울 노원구', skill: '초보 환영', time: '문의 필요', features: '요가/필라테스 자격증 관심자 집중 멘토링 제공', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '헬스/필라테스', name: '피곤한 현대인을 위한 초보 요가', region: '서울 용산구', skill: 'All-Level (초보 가능)', time: '주말', features: '매주 주말 수업, 남성 참여 가능, 인스타그램 운영', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '헬스/필라테스', name: '필라앤피 : 필라테스&바른자세운동', region: '서울 강서구', skill: '미표기 (자기소개 필요)', time: '문의 필요', features: '봉사/기부 활동 병행, 자립준비청년 무료 참여 가능', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '헬스/필라테스', name: '요가하는 친구들', region: '서울 성동구', skill: '초보 ~ 숙련자 모두', time: '문의 필요', features: '해부학적 원리 기반 수련, 인도 수료 모임장 직강', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '헬스/필라테스', name: '오운완!!!', region: '서울 종로구', skill: '명확한 몸 목표 보유자', time: '매일', features: '매일 운동 인증 및 식단 공유, 월 1회 오프라인 모임', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '헬스/필라테스', name: '홍대, 연남 2030 운동 모임', region: '서울 마포구 (연남동)', skill: '초보 및 경력자 (2030세대)', time: '문의 필요', features: '\'더벨류짐 연남점\' 정기 모임, 웨이트+유산소 WOD 진행', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '헬스/필라테스', name: '은평 헬스 크루', region: '서울 은평구 (응암동)', skill: '헬린이 ~ 헬창 모두', time: '문의 필요', features: '관장이 직접 운영, \'언노운짐 응암점\' 이용(참가비 무료)', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '헬스/필라테스', name: '아침을 여는 미라클 모닝 헬스', region: '서울 서초구', skill: '아침 운동 실천자', time: '문의 필요', features: '새벽 6시 정기 운동, 출근 전 오운완 달성', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '헬스/필라테스', name: '강남 요가&명상 스튜디오', region: '서울 강남구', skill: '초급 ~ 중급', time: '문의 필요', features: '정적인 명상과 힐링 요가 위주, 직장인 스트레스 해소', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '헬스/필라테스', name: '필라테스 스터디 그룹', region: '서울 동작구', skill: '필라테스 강사 및 지망생', time: '문의 필요', features: '이론 공부와 실기 연습 병행하는 전문 스터디', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '헬스/필라테스', name: '주말 등산 & 필라테스', region: '경기 과천시 (관악산 인근)', skill: '활동적인 분 누구나', time: '문의 필요', features: '등산 후 하산하여 스트레칭 및 필라테스 진행', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
+            { sport: '헬스/필라테스', name: '야간 헬스 파트너 찾기', region: '서울 송파구', skill: '중급 이상 추천', time: '문의 필요', features: '24시 헬스장 이용자 대상, 파트너 운동 및 보조', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }
+           ];
 
 let customTeams = [];
 
@@ -602,6 +658,74 @@ async function loadCustomTeams() {
             const target = document.getElementById(pageId);
             if (target) target.classList.add('active');
             if (pageId === 'my-group-page') fetchMyGroups();
+	    if (pageId === 'owner-page')    loadOwnerApplications();
+window.loadOwnerApplications =
+function(){
+
+    const q = query(
+        collection(db,"applications"),
+        where(
+            "ownerPhone",
+            "==",
+            window.userSession.phone
+        )
+    );
+
+    onSnapshot(q,(snapshot)=>{
+
+        const box =
+            document.getElementById(
+                "owner-list"
+            );
+
+        let html = "";
+
+        snapshot.forEach((d)=>{
+
+            const app = d.data();
+
+            html += `
+            <div class="my-group-item">
+
+                <div>
+
+                    <strong>
+                    ${app.teamName}
+                    </strong>
+
+                    <p>
+                    ${app.applicantName}
+                    </p>
+
+                    <p>
+                    ${app.status}
+                    </p>
+
+                </div>
+
+                <button
+                class="join-btn"
+                onclick="
+                approveApplication(
+                '${d.id}'
+                )">
+
+                승인
+
+                </button>
+
+            </div>
+            `;
+        });
+
+        box.innerHTML =
+            html ||
+            "신청자가 없습니다.";
+
+    });
+};
+	    if(pageId === 'owner-page')
+        loadOwnerApplications();
             window.scrollTo(0, 0);
         };
 
@@ -677,7 +801,7 @@ const mergedTeams = [
     ...customTeams
 ];
 
-    const filteredTeams = allTeams.filter(team => {
+    const filteredTeams = mergedTeams.filter(team => {
         return (
         (currentSport === "" || team.sport === currentSport) &&
         (currentRegion === "전체" || team.region.includes(currentRegion)) &&
@@ -699,7 +823,8 @@ const mergedTeams = [
                         <span style="color:#007bff; font-weight:600;">✨ ${t.features}</span>
                     </div>
                     <button class="join-btn"
-                        onclick="event.stopPropagation(); window.applyToTeam('${t.name}')">
+                        onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone || ""}',
+'${t.ownerName || ""}')">
                         가입 신청하기
                     </button>
                 </div>
@@ -835,6 +960,17 @@ const mergedTeams = [
   </div>
 </main>
 
+<main id="owner-page" class="page">
+    <div class="container">
+
+        <h2>신청자 관리</h2>
+
+        <div id="owner-list">
+        </div>
+
+    </div>
+</main>
+
     <!-- 신청 현황 -->
     <main id="my-group-page" class="page">
         <div class="container">
@@ -846,6 +982,7 @@ const mergedTeams = [
     <nav class="bottom-nav">
         <button class="nav-item" onclick="window.showPage('main-page')">🏠<span>탐색</span></button>
         <button class="nav-item" onclick="window.showPage('create-page')">➕<span>등록</span></button>
+	<button class="nav-item"onclick="window.showPage('owner-page')">📋<span>신청관리</span></button>
         <button class="nav-item" onclick="window.showPage('my-group-page')">👥<span>내 모임</span></button>
         <button class="nav-item" onclick="location.reload()">👤<span>로그아웃</span></button>
 
