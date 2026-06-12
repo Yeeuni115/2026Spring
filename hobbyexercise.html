@@ -82,7 +82,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
         const db = getFirestore(app);
 
         // 2. 전역 변수 설정
-        window.userSession = { name: "", phone: "" };
+        window.userSession = { name: "", phone: "",  sport: "", region: "", skill: "" };
         let currentSport = "";
         let currentRegion = "전체";
         let searchKeyword = "";
@@ -98,6 +98,30 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
             window.showPage('main-page');
             document.querySelector('.bottom-nav').style.display = 'flex';
         };
+
+	window.openRecommendModal = function(){
+
+   	 document.getElementById("recommend-modal")
+        .style.display = "block";
+	};
+	window.savePreferences = function(){
+
+   	 window.userSession.sport =
+        document.getElementById("pref-sport").value;
+
+    	window.userSession.region =
+        document.getElementById("pref-region").value;
+
+    	window.userSession.skill =
+        document.getElementById("pref-skill").value;
+
+    	document.getElementById("recommend-modal")
+        .style.display = "none";
+
+    	renderRecommendations();
+
+    	alert("추천 설정 완료!");
+	};
 
         // 4. 취소 함수 (전역 등록)
         window.cancelApply = async function(docId, teamName) {
@@ -216,14 +240,60 @@ window.createTeam = async function () {
 	window.userSession = { name, phone };
         loadCustomTeams();
 	document.getElementById('login-overlay').style.display = 'none';
-
     } catch (e) {
-
         console.error(e);
         alert("등록 실패");
-
     }
 };
+	function getRecommendationScore(team){
+    let score = 0;
+    const user = window.userSession;
+    if(user.sport && team.sport === user.sport)
+        score += 50;
+    if(user.region && team.region.includes(user.region))
+        score += 30;
+    if(user.skill && team.skill.includes(user.skill))
+        score += 20;
+    return score;
+}
+	function getRecommendedTeams(){
+ 	   return allTeams
+
+        .map(team => ({
+            ...team,
+            score: getRecommendationScore(team)
+        }))
+
+        .sort((a,b)=>b.score-a.score)
+        .slice(0,5);
+}
+function renderRecommendations(){
+
+    const list =
+        document.getElementById("recommend-list");
+
+    const teams =
+        getRecommendedTeams();
+
+    if(!list) return;
+
+    if(teams.length === 0){
+
+        list.innerHTML =
+            "<p>추천 결과가 없습니다.</p>";
+
+        return;
+    }
+
+    list.innerHTML = teams.map(team => `
+        <div class="team-card">
+            <h3>${team.name}</h3>
+	    <p>🏅 ${team.sport}</p>
+            <p>📍 ${team.region}</p>
+            <p>⭐ ${team.skill}</p>
+        </div>
+    `).join('');
+}
 
         const allTeams = [
 // --- 풋살 50팀 ---
@@ -869,6 +939,23 @@ const mergedTeams = [
 
     <!-- 메인 페이지 -->
     <main id="main-page" class="page">
+    <div class="container">
+
+        <div class="recommend-box">
+            <h3>🎯 맞춤 추천</h3>
+            <p>선호 정보를 설정하면 추천 정확도가 높아집니다.</p>
+
+            <button onclick="openRecommendModal()">
+                추천 설정하기
+            </button>
+        </div>
+        <h2>🔥 회원님 맞춤 추천</h2>
+        <div id="recommend-list"></div>
+
+        <h2 class="section-title">
+            종목 선택
+        </h2>
+
         <div class="container">
             <h2 style="font-size:2rem; margin-bottom:10px;">스포츠 탐색</h2>
 
@@ -988,5 +1075,70 @@ const mergedTeams = [
 
     </nav>
 
+<div id="recommend-modal" style="display:none;
+     position:fixed;
+     top:0;
+     left:0;
+     width:100%;
+     height:100%;
+     background:rgba(0,0,0,0.5);
+     z-index:9999;
+">
+
+    <div
+    style="
+    background:white;
+    width:300px;
+    margin:100px auto;
+    padding:20px;
+    border-radius:15px;
+    ">
+
+    <div class="modal-content">
+
+        <h2>맞춤 추천 설정</h2>
+
+        <select id="pref-sport">
+            <option value="">종목 선택</option>
+            <option>축구</option>
+            <option>풋살</option>
+            <option>농구</option>
+            <option>야구</option>
+            <option>테니스</option>
+            <option>배드민턴</option>
+            <option>탁구</option>
+            <option>러닝</option>            
+            <option>헬스/필라테스</option>
+            <option>아이스하키</option>
+            <option>서핑</option>
+        </select>
+
+        <select id="pref-region">
+            <option value="">지역 선택</option>
+            <option>서울</option>
+            <option>경기</option>
+            <option>인천</option>
+            <option>강원도</option>
+            <option>충청도</option>
+            <option>경상도</option>
+            <option>전라도</option>
+            <option>제주도</option>
+        </select>
+
+        <select id="pref-skill">
+            <option value="">실력 선택</option>
+            <option>초급</option>
+            <option>중급</option>
+            <option>중상급</option>
+            <option>상급</option>
+        </select>
+
+        <button onclick="savePreferences()">
+            저장
+        </button>
+
+    </div>
+
+</div>
 </body>
 </html>
