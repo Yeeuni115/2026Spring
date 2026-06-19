@@ -107,7 +107,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
             
             window.userSession = { name, phone };
             document.getElementById('login-overlay').style.display = 'none';
-            window.showPage('main-page');
+            window.showPage('intro-page'); // 수정: 로그인 후 가장 먼저 소개 페이지가 보이도록 설정
             document.querySelector('.bottom-nav').style.display = 'flex';
         };
 
@@ -249,9 +249,8 @@ window.createTeam = async function () {
         document.getElementById("new-skill").value = "";
         document.getElementById("new-features").value = "";
 
-	window.userSession = { name, phone };
+        // 수정: 오류를 유발할 수 있는 잘못 복사된 코드 제거
         loadCustomTeams();
-	document.getElementById('login-overlay').style.display = 'none';
     } catch (e) {
         console.error(e);
         alert("등록 실패");
@@ -330,7 +329,7 @@ function renderRecommendations(){
             { sport: '풋살', name: '노원 불암FS', region: '서울', skill: '중급', time: '일요일 아침', features: '체력 중심 훈련과 정기전', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             { sport: '풋살', name: '양천 메이트', region: '서울', skill: '초급', time: '수요일 저녁', features: '동네 친구 감성, 편안한 모임', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             { sport: '풋살', name: '일산 호수FS', region: '경기', skill: '중급', time: '금요일 밤', features: '지역 기반 야간 경기 선호', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
-           
+            
             // --- 축구 20팀 ---
             { sport: '축구', name: '풋플러 FC', region: '서울', skill: '중급', time: '일요일 저녁', features: '정통 필드 축구 전문 매치', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             { sport: '축구', name: 'AMA FC', region: '경기', skill: '중급', time: '토요일 저녁', features: '30대 직장인 위주 매너 팀', img: '⚽', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
@@ -399,7 +398,7 @@ function renderRecommendations(){
             { sport: '야구', name: '김포 썬더스', region: '경기', skill: '3부 (중급)', time: '토요일 오전', features: '토요일 야간 경기 위주, 열정 넘치는 팀', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             { sport: '야구', name: '파주 윙즈', region: '경기', skill: '3.5부 (중급하)', time: '일요일 아침', features: '회비 저렴, 야구 기초부터 알려드림', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             { sport: '야구', name: '서울 타이거즈', region: '서울', skill: '4부 (초급)', time: '매주 토요일 오후', features: '선출 환영, 포지션 경쟁 가능', img: '⚾', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
-           
+            
             // --- 배드민턴 20팀 ---
             { "sport": "배드민턴", "name": "타락파워민턴 <타파민>", "region": "서울 도봉구", "skill": "20~30대 / 남(구력 1년↑), 여(6개월↑)", "time": "토요일 오전 정모, 번개 수시 진행", "features": "토요일 오전 정모, 번개 수시 진행", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             { "sport": "배드민턴", "name": "광운대학교 팡팡", "region": "서울 노원구", "skill": "광운대 부원 전용 (게스트 가능)", "time": "월·수·금 저녁 정모, 게스트비 7천 원", "features": "월·수·금 저녁 정모, 게스트비 7천 원", "img": "🏸", ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
@@ -459,7 +458,7 @@ function renderRecommendations(){
             { sport: '러닝', name: '송파구 러닝크루 RTMC', region: '송파구 (탄천, 석촌호수, 올림픽공원 등)', skill: '초보부터 숙련자까지 (페이스 선택)', time: '문의 필요', features: '200명 규모 대형 크루, 따릉이/등산 등 다양한 번개, 운동 후 음료 타임', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             { sport: '러닝', name: '플로우, 🌊 달리다 보면 흘러간다', region: '중랑구 (중랑천)', skill: '초보~고수 (5\'00"~8\'00" 페이스)', time: '문의 필요', features: '88~00년생 제한, 보드게임/카페탐방 등 다양한 친목 활동 병행', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             { sport: '러닝', name: '올공/한강 뛰어요 하이런', region: '올림픽공원, 광나루 한강공원', skill: '5:00~7:00 페이스별 소그룹', time: '문의 필요', features: '88~00년생 제한, 화/목 정기런, 마라톤 참여 및 다양한 번개 활동', img: '🏃', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
-           
+            
             // --- 탁구 팀 ---
             { sport: '탁구', name: '구포탁 (서울전체 94년생 탁구)', region: '서초/한빛/꿈의숲/보람찬/호탁구클럽 (서울 전역)', skill: '초보자, 실력자 모두 환영', time: '매월 세 번째 토요일', features: '94년생 개띠 모임, 매월 세 번째 토요일 정기모임, 인스타 기반 운영', img: '🏓', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             { sport: '탁구', name: '늘.탁 (신나는 탁구 클럽)', region: '이조안 탁구교실, 디더블유피 탁구장 (양천구)', skill: '초보자 환영 (다이어트용 강도 높은 운동 가능)', time: '특징 참조', features: '남녀노소(82년생까지), 월~목 정기모임, 주말 번개 및 문화생활', img: '🏓', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
@@ -539,7 +538,7 @@ function renderRecommendations(){
             { sport: '헬스/필라테스', name: '필라테스 스터디 그룹', region: '서울 동작구', skill: '필라테스 강사 및 지망생', time: '문의 필요', features: '이론 공부와 실기 연습 병행하는 전문 스터디', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             { sport: '헬스/필라테스', name: '주말 등산 & 필라테스', region: '경기 과천시 (관악산 인근)', skill: '활동적인 분 누구나', time: '문의 필요', features: '등산 후 하산하여 스트레칭 및 필라테스 진행', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' },
             { sport: '헬스/필라테스', name: '야간 헬스 파트너 찾기', region: '서울 송파구', skill: '중급 이상 추천', time: '문의 필요', features: '24시 헬스장 이용자 대상, 파트너 운동 및 보조', img: '🏋️', ownerName: '김ㅇㅇ', ownerPhone: '01012345678' }
-           ];
+            ];
 
 let customTeams = [];
 
@@ -735,7 +734,6 @@ const mergedTeams = [
 </head>
 <body>
 
-    <!-- 로그인 -->
     <div id="login-overlay">
         <div class="login-card">
             <h1>Sporty-Us</h1>
@@ -774,7 +772,6 @@ const mergedTeams = [
     </div>
 </main>
 
-    <!-- 메인 페이지 -->
     <main id="main-page" class="page">
     <div class="container">
 
@@ -783,7 +780,7 @@ const mergedTeams = [
             <p>선호 정보를 설정하면 추천 정확도가 높아집니다.</p>
 
             <button onclick="openRecommendModal()">
-                추천 설정하기
+                추 설정하기
             </button>
         </div>
         <h2>🔥 회원님 맞춤 추천</h2>
@@ -825,7 +822,6 @@ const mergedTeams = [
         </div>
     </main>
 
-    <!-- 필터 페이지 -->
     <main id="filter-page" class="page">
         <div class="container">
             <button onclick="window.showPage('main-page')" style="border:none; background:none; color:#007bff; font-weight:700; margin-bottom:15px; cursor:pointer;">← 돌아가기</button>
@@ -895,7 +891,6 @@ const mergedTeams = [
     </div>
 </main>
 
-    <!-- 신청 현황 -->
     <main id="my-group-page" class="page">
         <div class="container">
             <h2 style="font-size:1.8rem; margin-bottom:30px;">나의 가입 신청 현황</h2>
