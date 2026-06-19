@@ -45,10 +45,11 @@
         .feature-card p { font-size:0.95rem; color:#8b949e; line-height:1.6; word-break:keep-all; }
         .intro-start-btn { margin-top:10px; font-size:1.2rem; padding:20px; }
         
-        /* 하단 네비게이션 */
-        .bottom-nav { position:fixed; bottom:0; left:0; width:100%; background:rgba(15, 20, 31, 0.9); backdrop-filter:blur(20px); border-top:1px solid #232a35; display:none; justify-content:space-around; padding:15px 0; z-index:1000; }
-        .nav-item { border:none; background:none; color:#4a505e; cursor:pointer; display:flex; flex-direction:column; align-items:center; font-size:0.8rem; font-weight:700; gap:4px; transition:color 0.2s;}
+        /* 왼쪽 사이드바 네비게이션 */
+        .side-nav { position:fixed; top:0; left:0; width:90px; height:100vh; background:rgba(15, 20, 31, 0.9); backdrop-filter:blur(20px); border-right:1px solid #232a35; display:none; flex-direction:column; justify-content:center; gap:35px; z-index:1000; }
+        .nav-item { border:none; background:none; color:#4a505e; cursor:pointer; display:flex; flex-direction:column; align-items:center; font-size:0.85rem; font-weight:700; gap:8px; transition:color 0.2s; width:100%; }
         .nav-item:hover { color:#00f2fe; }
+        .container { padding:40px 30px 60px 120px; max-width:900px; margin:0 auto;}
 
         /* 메인 & 카테고리 */
         .section-title { font-size:1.4rem; font-weight:800; margin:30px 0 15px; color:#fff; }
@@ -112,7 +113,7 @@
             window.userSession = { name, phone };
             document.getElementById('login-overlay').style.display = 'none';
             window.showPage('intro-page');
-            document.querySelector('.bottom-nav').style.display = 'flex';
+            document.querySelector('.side-nav').style.display = 'flex';
         };
 
         window.openRecommendModal = () => document.getElementById("recommend-modal").style.display = "block";
@@ -588,7 +589,7 @@
         </div>
     </main>
 
-    <nav class="bottom-nav">
+    <nav class="side-nav">
         <button class="nav-item" onclick="window.showPage('intro-page')">📢<span>소개</span></button>
         <button class="nav-item" onclick="window.showPage('main-page')">🏠<span>탐색</span></button>
         <button class="nav-item" onclick="window.showPage('create-page')">➕<span>등록</span></button>
