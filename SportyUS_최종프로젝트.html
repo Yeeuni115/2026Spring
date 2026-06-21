@@ -154,6 +154,33 @@
         /* 모달 스타일 공통 */
         .custom-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(11, 15, 25, 0.85); z-index:9999; backdrop-filter:blur(8px); }
         .custom-modal-content { background:#151a23; border:1px solid #232a35; width:90%; max-width:400px; margin:100px auto; padding:30px; border-radius:24px; box-shadow:0 20px 40px rgba(0,0,0,0.5); text-align:center; }
+
+        /* ------------------------------------------- */
+        /* 🔥 대시보드 (메인 페이지) 사이드바 레이아웃 */
+        /* ------------------------------------------- */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr; /* 좌측 종목(1.6) : 우측 추천(1) 비율 */
+            gap: 40px;
+            align-items: start; /* 사이드바가 위쪽에 고정되도록 시작점 정렬 */
+        }
+
+        .sidebar-wrapper {
+            position: sticky;
+            top: 95px; /* 스크롤을 내려도 추천창이 화면에 따라오도록 고정 */
+        }
+
+        /* 모바일/작은 화면에서는 세로로 겹치게 처리 */
+        @media (max-width: 800px) {
+            .dashboard-layout {
+                display: flex;
+                flex-direction: column-reverse; /* 🔥 모바일에서는 '종목 탐색'이 먼저 보이도록 역순 배치 */
+                gap: 30px;
+            }
+            .sidebar-wrapper {
+                position: static; /* 모바일에서는 스크롤 고정 해제 */
+            }
+        }
     </style>
     
     <script type="module">
@@ -827,45 +854,59 @@
     </main>
 
     <main id="main-page" class="page">
-        <div class="container">
-            <h2 class="section-title" style="margin-top:0;">🔥 회원님 맞춤 추천</h2>
-            <div class="recommend-box">
-                <h3>🎯 추천 설정</h3><p>선호 정보를 설정하면 추천 정확도가 높아집니다.</p>
-                <button onclick="window.openRecommendModal()">설정하기</button>
-            </div>
-            <div id="recommend-list"></div>
-            
-            <h2 class="section-title">종목 선택</h2>
-            <p class="section-title" style="font-size:1.1rem; color:#8b949e; margin-top:10px;">⚾ 구기종목</p>
-            <div class="category-grid">
-                <div class="item-card" onclick="window.goToFilterPage('축구')">⚽<br>축구</div>
-                <div class="item-card" onclick="window.goToFilterPage('풋살')">👟<br>풋살</div>
-                <div class="item-card" onclick="window.goToFilterPage('농구')">🏀<br>농구</div>
-                <div class="item-card" onclick="window.goToFilterPage('야구')">⚾<br>야구</div>
-            </div>
-            
-            <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🎾 라켓종목</p>
-            <div class="category-grid">
-                <div class="item-card" onclick="window.goToFilterPage('테니스')">🎾<br>테니스</div>
-                <div class="item-card" onclick="window.goToFilterPage('배드민턴')">🏸<br>배드민턴</div>
-                <div class="item-card" onclick="window.goToFilterPage('탁구')">🏓<br>탁구</div>
-            </div>
-            
-            <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🧘 라이프스타일</p>
-            <div class="category-grid">
-                <div class="item-card" onclick="window.goToFilterPage('러닝')">🏃<br>러닝</div>
-                <div class="item-card" onclick="window.goToFilterPage('헬스/필라테스')">🤸<br>헬스/필라테스</div>
-            </div>
-            
-            <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🏒 계절 및 이색 스포츠</p>
-            <div class="category-grid">
-                <div class="item-card" onclick="window.goToFilterPage('아이스하키')">🏒<br>아이스하키</div>
-                <div class="item-card" onclick="window.goToFilterPage('서핑')">🏄<br>서핑</div>
-            </div>
+        <div class="container" style="max-width: 1050px;">
+            <div class="dashboard-layout">
+                
+                <div class="main-column">
+                    <h2 class="section-title" style="margin-top:0;">종목 탐색</h2>
+                    
+                    <p class="section-title" style="font-size:1.1rem; color:#8b949e; margin-top:10px;">⚾ 구기종목</p>
+                    <div class="category-grid">
+                        <div class="item-card" onclick="window.goToFilterPage('축구')">⚽<br>축구</div>
+                        <div class="item-card" onclick="window.goToFilterPage('풋살')">👟<br>풋살</div>
+                        <div class="item-card" onclick="window.goToFilterPage('농구')">🏀<br>농구</div>
+                        <div class="item-card" onclick="window.goToFilterPage('야구')">⚾<br>야구</div>
+                    </div>
+                    
+                    <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🎾 라켓종목</p>
+                    <div class="category-grid">
+                        <div class="item-card" onclick="window.goToFilterPage('테니스')">🎾<br>테니스</div>
+                        <div class="item-card" onclick="window.goToFilterPage('배드민턴')">🏸<br>배드민턴</div>
+                        <div class="item-card" onclick="window.goToFilterPage('탁구')">🏓<br>탁구</div>
+                    </div>
+                    
+                    <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🧘 라이프스타일</p>
+                    <div class="category-grid">
+                        <div class="item-card" onclick="window.goToFilterPage('러닝')">🏃<br>러닝</div>
+                        <div class="item-card" onclick="window.goToFilterPage('헬스/필라테스')">🤸<br>헬스/필라테스</div>
+                    </div>
+                    
+                    <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🏒 계절 및 이색 스포츠</p>
+                    <div class="category-grid">
+                        <div class="item-card" onclick="window.goToFilterPage('아이스하키')">🏒<br>아이스하키</div>
+                        <div class="item-card" onclick="window.goToFilterPage('서핑')">🏄<br>서핑</div>
+                    </div>
 
-            <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🌈 기타 종목</p>
-            <div class="category-grid">
-                <div class="item-card" onclick="window.goToFilterPage('기타')">🎯<br>기타</div>
+                    <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🌈 기타 종목</p>
+                    <div class="category-grid" style="margin-bottom: 0;">
+                        <div class="item-card" onclick="window.goToFilterPage('기타')">🎯<br>기타</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-wrapper">
+                    <h2 class="section-title" style="margin-top:0;">🔥 회원님 맞춤 추천</h2>
+                    
+                    <div class="recommend-box" style="margin-bottom: 20px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <h3 style="margin:0;">🎯 추천 설정</h3>
+                            <button onclick="window.openRecommendModal()" style="padding: 6px 12px; font-size: 0.85rem; border-radius: 8px;">설정 변경</button>
+                        </div>
+                        <p style="margin-bottom:0; font-size:0.85rem;">선호 정보를 설정하면 정확도가 높아집니다.</p>
+                    </div>
+                    
+                    <div id="recommend-list"></div>
+                </div>
+
             </div>
         </div>
     </main>
