@@ -182,25 +182,28 @@
                     <span class="recruiting-badge" style="${t.isSample ? 'background:#30363d; color:#8b949e;' : ''}">
                         ${t.isSample ? '예시 팀 (가상)' : '모집 중'}
                     </span>
-                    <div style="margin-top:30px;">
-                        <h3>${t.name}</h3><p style="font-size:0.85rem; color:#8b949e; font-weight:600;">📍 ${t.region} &nbsp;|&nbsp; #${t.skill}</p>
-                        <div class="detail-info">
-    <div class="info-row"><span class="label">특징</span><span style="color:#00f2fe; font-weight:600;">✨ ${t.features}</span></div>
-    
-    ${t.ownerPhone === window.userSession.phone && !t.isSample ? `
-        <button class="cancel-btn" style="width:100%; margin-top:20px; padding:16px;" onclick="event.stopPropagation(); window.deleteTeam('${t.id}', '${t.name}')">
-            내가 만든 팀 삭제하기
-        </button>
-    ` : `
-        <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}')">
-            ${t.isSample ? '가입해보기 (테스트)' : '실제 가입 신청하기'}
-        </button>
-    `}
-</div>
-                            <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}')">
+                    
+                    <div style="margin-top:35px; display:flex; align-items:center; gap:16px;">
+                        <img src="${t.img || 'https://ui-avatars.com/api/?name=NEW&background=4a505e&color=fff'}" alt="로고" style="width:55px; height:55px; border-radius:14px; object-fit:cover; border:1px solid #30363d;">
+                        <div>
+                            <h3 style="margin:0; font-size:1.4rem;">${t.name}</h3>
+                            <p style="font-size:0.85rem; color:#8b949e; font-weight:600; margin-top:4px;">📍 ${t.region} &nbsp;|&nbsp; #${t.skill}</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-info">
+                        <div class="info-row" style="margin-bottom:12px;"><span class="label">일정</span><span style="color:#e6edf3;">⏰ ${t.time || '상시'}</span></div>
+                        <div class="info-row"><span class="label">특징</span><span style="color:#00f2fe; font-weight:600;">✨ ${t.features}</span></div>
+                        
+                        ${t.ownerPhone === window.userSession.phone && !t.isSample ? `
+                            <button class="cancel-btn" style="width:100%; margin-top:20px; padding:16px;" onclick="event.stopPropagation(); window.deleteTeam('${t.id}', '${t.name}')">
+                                내가 만든 팀 삭제하기
+                            </button>
+                        ` : `
+                            <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}', this)">
                                 ${t.isSample ? '가입해보기 (테스트)' : '실제 가입 신청하기'}
                             </button>
-                        </div>
+                        `}
                     </div>
                 </div>
             `).join('') : `<div style="text-align:center; width:100%; padding:80px; color:#8b949e; font-weight:600;">'${window.currentRegion}' 지역에 데이터가 없습니다.</div>`;
@@ -239,11 +242,43 @@
     }
 };
 
-        window.applyToTeam = async function(teamName, ownerPhone, ownerName) {
+        window.applyToTeam = async function(teamName, ownerPhone, ownerName, btnElement) {
+            // 🔥 중복 클릭 방지: 버튼이 전달되었고 이미 눌린 상태라면 함수 실행 중단
+            if (btnElement) {
+                if (btnElement.disabled) return; 
+                btnElement.disabled = true; // 버튼 비활성화
+                btnElement.innerText = "신청 처리 중...";
+                btnElement.style.background = "#4a505e"; // 로딩 중 색상으로 변경
+            }
+
             try {
-                await addDoc(collection(db, "applications"), { applicantName:window.userSession.name, applicantPhone:window.userSession.phone, teamName, ownerPhone:ownerPhone||"01012341234", ownerName, status:"승인 대기 중", timestamp:serverTimestamp() });
-                alert(`${teamName} 신청 완료!`);
-            } catch(e) { console.error(e); alert("신청 실패"); }
+                await addDoc(collection(db, "applications"), { 
+                    applicantName: window.userSession.name, 
+                    applicantPhone: window.userSession.phone, 
+                    teamName, 
+                    ownerPhone: ownerPhone || "01012341234", 
+                    ownerName, 
+                    status: "승인 대기 중", 
+                    timestamp: serverTimestamp() 
+                });
+                
+                alert(`'${teamName}' 신청이 완료되었습니다!`);
+                
+                // 완료 후 버튼 텍스트 변경 (계속 비활성 유지)
+                if (btnElement) {
+                    btnElement.innerText = "신청 완료 ✅";
+                }
+            } catch(e) { 
+                console.error(e); 
+                alert("신청 중 오류가 발생했습니다."); 
+                
+                // 에러 발생 시 다시 누를 수 있도록 버튼 복구
+                if (btnElement) {
+                    btnElement.disabled = false;
+                    btnElement.innerText = "다시 신청하기";
+                    btnElement.style.background = "linear-gradient(135deg, #00f2fe, #4facfe)";
+                }
+            }
         };
 
         window.cancelApply = async function(docId, teamName) {
@@ -308,7 +343,7 @@
             list.innerHTML = teams.length ? teams.map(t => `<div class="team-card" style="margin-bottom:15px;"><h3>${t.name}</h3><p style="color:#8b949e; margin-top:5px;">🏅 ${t.sport} | 📍 ${t.region} | ⭐ ${t.skill}</p></div>`).join('') : "<p style='color:#8b949e;'>추천 결과가 없습니다.</p>";
         };
 
-        	// 샘플데이터
+	// 샘플데이터
        const allTeams = [
             { sport:'축구', name:'FC 서울라이트', region:'서울', skill:'중급', time:'일요일 오전', features:'2030 직장인 위주, 매너 플레이 필수', img:'https://ui-avatars.com/api/?name=SL&background=e74c3c&color=fff&bold=true', ownerName:'김운영', ownerPhone:'01011112222' },
             { sport:'축구', name:'수원 블루윙즈 (아마)', region:'경기', skill:'상급', time:'토요일 오후', features:'전술 훈련 위주, 지역 리그 출전', img:'https://ui-avatars.com/api/?name=SB&background=3498db&color=fff&bold=true', ownerName:'이운영', ownerPhone:'01011112222' },
