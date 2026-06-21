@@ -105,10 +105,10 @@
         .item-card { background:#151a23; padding:30px 15px; border-radius:20px; text-align:center; cursor:pointer; border:1px solid #232a35; transition:all 0.3s; font-weight:600; color:#fff;}
         .item-card:hover { border-color:#00f2fe; transform:translateY(-3px); background:#1a202c; }
         
-        .recommend-box { background:linear-gradient(145deg, #151a23, #1a202c); padding:24px; border-radius:20px; border:1px solid #232a35; margin-bottom:30px; }
-        .recommend-box h3 { margin-bottom:8px; color:#fff; font-weight:800; }
-        .recommend-box p { color:#8b949e; font-size:0.9rem; margin-bottom:15px;}
-        .recommend-box button { background:transparent; border:1px solid #00f2fe; color:#00f2fe; padding:10px 20px; border-radius:10px; font-weight:700; cursor:pointer; transition:0.3s; }
+        .recommend-box { background:linear-gradient(145deg, #151a23, #1a202c); padding:24px; border-radius:20px; border:1px solid #232a35; margin-bottom:30px; display:flex; flex-direction:column; gap:10px; }
+        .recommend-box h3 { margin-bottom:4px; color:#fff; font-weight:800; }
+        .recommend-box p { color:#8b949e; font-size:0.9rem; margin-bottom:10px;}
+        .recommend-box button { background:transparent; border:1px solid #00f2fe; color:#00f2fe; padding:12px 20px; border-radius:12px; font-weight:800; cursor:pointer; transition:0.3s; }
         .recommend-box button:hover { background:#00f2fe; color:#0b0f19; }
         
         /* 필터 */
@@ -117,17 +117,25 @@
         .region-btn { padding:10px 20px; border-radius:50px; border:1px solid #232a35; background:#151a23; font-size:0.9rem; font-weight:600; cursor:pointer; color:#8b949e; transition:0.3s;}
         .region-btn.active { background:#00f2fe; color:#0b0f19; border-color:#00f2fe; font-weight:800;}
 
-        /* 팀 리스트 카드 */
+        /* 팀 리스트 카드 (검색 & 맞춤 추천 공통) */
         .team-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(420px,1fr)); gap:24px; }
         .team-card { background:#151a23; border-radius:24px; border:1px solid #232a35; padding:32px; position:relative; cursor:pointer; transition:border-color 0.3s; }
         .team-card:hover { border-color:#4facfe; }
         .recruiting-badge { position:absolute; top:20px; left:20px; background:#00f2fe; color:#0b0f19; padding:6px 14px; border-radius:30px; font-size:0.75rem; font-weight:800; }
         .team-card h3 { font-size:1.4rem; font-weight:800; color:#fff; margin-bottom:5px;}
+        
+        /* 상세 정보 아코디언 관련 (팀 카드 & 추천 카드 공통 적용) */
         .detail-info { display:none; margin-top:20px; padding-top:20px; border-top:1px dashed #30363d; font-size:0.9rem; }
-        .team-card.is-expanded .detail-info { display:block; animation:fadeIn 0.3s; }
+        .team-card.is-expanded .detail-info, .recommend-item-card.is-expanded .detail-info { display:block; animation:fadeIn 0.3s; }
         .info-row { display:flex; margin-bottom:8px; gap:8px; }
         .info-row .label { font-weight:700; color:#8b949e; min-width:50px; }
-        .join-btn { width:100%; margin-top:20px; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg, #00f2fe, #4facfe); color:#0b0f19; font-weight:800; cursor:pointer; font-size:1rem; }
+        
+        /* 신청/문의 버튼 그룹 */
+        .action-group { display:flex; gap:10px; margin-top:15px; width:100%; }
+        .join-btn { flex:1; padding:14px; border-radius:14px; border:none; background:linear-gradient(135deg, #00f2fe, #4facfe); color:#0b0f19; font-weight:800; cursor:pointer; font-size:1rem; transition:0.3s; }
+        .join-btn:hover { box-shadow:0 5px 15px rgba(0, 242, 254, 0.3); }
+        .inquire-btn { flex:1; padding:14px; border-radius:14px; border:1px solid #00f2fe; background:transparent; color:#00f2fe; font-weight:800; cursor:pointer; font-size:1rem; transition:0.3s; }
+        .inquire-btn:hover { background:rgba(0, 242, 254, 0.1); }
         
         .my-group-item { background:#151a23; padding:24px; border-radius:20px; border:1px solid #232a35; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center; }
         .my-group-item strong { font-size:1.1rem; display:block; margin-bottom:5px;}
@@ -136,7 +144,15 @@
         .demo-toggle-btn { border:1px solid #4a505e; background:#151a23; color:#8b949e; padding:8px 16px; border-radius:10px; font-size:0.85rem; font-weight:700; cursor:pointer; transition:all 0.2s; }
         .demo-toggle-btn.active { background:#30363d; color:#00f2fe; border-color:#00f2fe; }
 
-        .dark-select { background:#0b0f19; color:#fff; border:1px solid #232a35; padding:14px; border-radius:12px; width:100%; margin-bottom:15px; outline:none;}
+        .dark-select { background:#0b0f19; color:#fff; border:1px solid #232a35; padding:14px; border-radius:12px; width:100%; margin-bottom:15px; outline:none; cursor:pointer;}
+        .dark-textarea { background:#0b0f19; color:#fff; border:1px solid #232a35; padding:14px; border-radius:12px; width:100%; margin-bottom:15px; outline:none; resize:none; font-family:'Pretendard', sans-serif; font-size:0.95rem; }
+        .dark-textarea:focus { border-color:#00f2fe; }
+        
+        select.login-input { text-align: center; text-align-last: center; cursor: pointer; }
+
+        /* 모달 스타일 공통 */
+        .custom-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(11, 15, 25, 0.85); z-index:9999; backdrop-filter:blur(8px); }
+        .custom-modal-content { background:#151a23; border:1px solid #232a35; width:90%; max-width:400px; margin:100px auto; padding:30px; border-radius:24px; box-shadow:0 20px 40px rgba(0,0,0,0.5); text-align:center; }
     </style>
     
     <script type="module">
@@ -156,9 +172,6 @@
         
         // 🔥 핵심: 샘플 데이터 온/오프 상태값 (초기값: 켜짐)
         window.isDemoMode = true; 
-
-        // 공식 등록된 종목 리스트 (여기에 없으면 '기타'로 자동 분류됨)
-        window.standardSports = ['축구', '풋살', '농구', '야구', '테니스', '배드민턴', '탁구', '러닝', '헬스/필라테스', '아이스하키', '서핑'];
 
         window.handleLogin = function() {
             const name = document.getElementById('user-name').value.trim();
@@ -181,14 +194,22 @@
                 btnElement.innerHTML = "🙈 샘플 데이터 꺼짐";
             }
             window.renderTeams(); // 변경 후 다시 리스트 그리기
+            window.renderRecommendations(); // 맞춤 추천 목록도 동기화
         };
 
         window.showPage = function(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(pageId);
             if (target) target.classList.add('active');
-            if (pageId === 'my-group-page') window.fetchMyGroups();
-            if (pageId === 'owner-page') window.loadOwnerApplications();
+            
+            if (pageId === 'my-group-page') {
+                window.fetchMyGroups();
+                window.fetchMyInquiries();
+            }
+            if (pageId === 'owner-page') {
+                window.loadOwnerApplications();
+                window.loadOwnerInquiries();
+            }
             window.scrollTo(0, 0);
         };
 
@@ -216,7 +237,6 @@
         window.renderTeams = function() {
             const results = document.getElementById('team-results');
             
-            // 🔥 샘플데이터가 켜져있으면 allTeams 포함(샘플 뱃지 추가), 꺼져있으면 customTeams(유저등록)만 출력!
             const mergedTeams = window.isDemoMode 
                 ? [...allTeams.map(t => ({...t, isSample: true})), ...window.customTeams] 
                 : [...window.customTeams];
@@ -250,9 +270,14 @@
                                 내가 만든 팀 삭제하기
                             </button>
                         ` : `
-                            <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}', this)">
-                                ${t.isSample ? '가입해보기 (테스트)' : '실제 가입 신청하기'}
-                            </button>
+                            <div class="action-group">
+                                <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}', this)">
+                                    ${t.isSample ? '신청 (테스트)' : '신청하기'}
+                                </button>
+                                <button class="inquire-btn" onclick="event.stopPropagation(); window.openInquiryModal('${t.name}', '${t.ownerPhone||""}')">
+                                    문의하기
+                                </button>
+                            </div>
                         `}
                     </div>
                 </div>
@@ -260,12 +285,10 @@
         };
 
         window.createTeam = async function() {
-            let inputSport = document.getElementById("new-sport").value.trim();
+            const sportSelect = document.getElementById("new-sport");
+            const inputSport = sportSelect.value;
             
-            // 기존 종목에 속하지 않으면 '기타'로 자동 분류
-            if (!window.standardSports.includes(inputSport)) {
-                inputSport = '기타';
-            }
+            if (!inputSport) return alert("종목을 선택해주세요.");
 
             const teamData = { 
                 sport: inputSport, 
@@ -281,7 +304,8 @@
             try {
                 await addDoc(collection(db, "teams"), teamData);
                 alert("동호회 등록 완료!");
-                ["new-name","new-region","new-skill","new-features","new-sport"].forEach(id => document.getElementById(id).value = "");
+                ["new-name","new-region","new-skill","new-features"].forEach(id => document.getElementById(id).value = "");
+                sportSelect.value = ""; // 종목 선택 초기화
                 window.loadCustomTeams();
             } catch(e) { console.error(e); alert("등록 실패"); }
         };
@@ -295,14 +319,15 @@
                 window.customTeams.push(data);
             });
             window.renderTeams();
+            window.renderRecommendations();
         };
 
         window.deleteTeam = async function(docId, teamName) {
             if (!confirm(`'${teamName}' 동호회를 정말 삭제하시겠습니까?`)) return;
             try {
-                await deleteDoc(doc(db, "teams", docId)); // teams 컬렉션에서 해당 문서 삭제
+                await deleteDoc(doc(db, "teams", docId));
                 alert("동호회가 삭제되었습니다.");
-                window.loadCustomTeams(); // 삭제 후 목록 새로고침
+                window.loadCustomTeams();
             } catch(e) { 
                 console.error(e); 
                 alert("삭제 중 오류가 발생했습니다."); 
@@ -310,12 +335,11 @@
         };
 
         window.applyToTeam = async function(teamName, ownerPhone, ownerName, btnElement) {
-            // 🔥 중복 클릭 방지: 버튼이 전달되었고 이미 눌린 상태라면 함수 실행 중단
             if (btnElement) {
                 if (btnElement.disabled) return; 
-                btnElement.disabled = true; // 버튼 비활성화
-                btnElement.innerText = "신청 처리 중...";
-                btnElement.style.background = "#4a505e"; // 로딩 중 색상으로 변경
+                btnElement.disabled = true;
+                btnElement.innerText = "처리 중...";
+                btnElement.style.background = "#4a505e";
             }
 
             try {
@@ -329,17 +353,11 @@
                     timestamp: serverTimestamp() 
                 });
                 
-                alert(`'${teamName}' 신청이 완료되었습니다!`);
-                
-                // 완료 후 버튼 텍스트 변경 (계속 비활성 유지)
-                if (btnElement) {
-                    btnElement.innerText = "신청 완료 ✅";
-                }
+                alert(`'${teamName}' 가입 신청이 완료되었습니다!`);
+                if (btnElement) btnElement.innerText = "신청 완료 ✅";
             } catch(e) { 
                 console.error(e); 
                 alert("신청 중 오류가 발생했습니다."); 
-                
-                // 에러 발생 시 다시 누를 수 있도록 버튼 복구
                 if (btnElement) {
                     btnElement.disabled = false;
                     btnElement.innerText = "다시 신청하기";
@@ -354,12 +372,13 @@
             catch(e) { console.error(e); alert("취소 중 오류가 발생했습니다."); }
         };
 
+        // --- 가입 신청 목록 조회 (마이페이지 & 팀장페이지) ---
         window.fetchMyGroups = function() {
             const list = document.getElementById('my-group-list');
             const q = query(collection(db, "applications"), where("applicantPhone", "==", window.userSession.phone));
             onSnapshot(q, (qs) => {
                 let html = "";
-                if (qs.empty) html = `<div style="text-align:center; padding:50px; color:#8b949e;">신청 내역이 없습니다.</div>`;
+                if (qs.empty) html = `<div style="text-align:center; padding:30px; color:#8b949e;">신청 내역이 없습니다.</div>`;
                 else qs.forEach(d => {
                     const data = d.data();
                     html += `<div class="my-group-item"><div><strong style="color:#fff;">${data.teamName}</strong><p style="font-size:0.85rem; color:#00f2fe; font-weight:700; margin-top:5px;">상태: ${data.status}</p></div><button class="cancel-btn" onclick="window.cancelApply('${d.id}', '${data.teamName}')">취소</button></div>`;
@@ -386,6 +405,110 @@
             catch(e) { console.error(e); }
         };
 
+        // --- 문의하기 기능 (작성, 마이페이지 조회, 팀장페이지 조회/답장) ---
+        window.currentInquiryTeam = "";
+        window.currentInquiryOwnerPhone = "";
+        
+        window.openInquiryModal = function(teamName, ownerPhone) {
+            window.currentInquiryTeam = teamName;
+            window.currentInquiryOwnerPhone = ownerPhone;
+            document.getElementById('inquiry-target-name').innerText = teamName + " 팀에게 문의하기";
+            document.getElementById('inquiry-text').value = '';
+            document.getElementById('inquiry-modal').style.display = 'block';
+        };
+
+        window.submitInquiry = async function() {
+            const text = document.getElementById('inquiry-text').value.trim();
+            if(!text) return alert("문의 내용을 입력해주세요.");
+            try {
+                await addDoc(collection(db, "inquiries"), {
+                    senderName: window.userSession.name,
+                    senderPhone: window.userSession.phone,
+                    teamName: window.currentInquiryTeam,
+                    ownerPhone: window.currentInquiryOwnerPhone || "01012341234",
+                    message: text,
+                    reply: "",
+                    status: "답변 대기",
+                    timestamp: serverTimestamp()
+                });
+                alert("문의가 접수되었습니다!");
+                document.getElementById('inquiry-modal').style.display = 'none';
+            } catch(e) { alert("문의 전송 중 오류 발생"); }
+        };
+
+        window.fetchMyInquiries = function() {
+            const list = document.getElementById('my-inquiry-list');
+            const q = query(collection(db, "inquiries"), where("senderPhone", "==", window.userSession.phone));
+            onSnapshot(q, (qs) => {
+                let html = "";
+                if (qs.empty) html = `<div style="text-align:center; padding:30px; color:#8b949e;">문의 내역이 없습니다.</div>`;
+                else qs.forEach(d => {
+                    const data = d.data();
+                    html += `<div class="my-group-item" style="flex-direction:column; align-items:flex-start;">
+                        <div style="width:100%; display:flex; justify-content:space-between;">
+                            <strong style="color:#fff;">${data.teamName} <span style="font-size:0.8rem; color:#8b949e; font-weight:normal;">에 문의함</span></strong>
+                            <span style="font-size:0.85rem; color:${data.status === '답변 완료' ? '#00f2fe' : '#8b949e'}; font-weight:700;">${data.status}</span>
+                        </div>
+                        <p style="color:#e6edf3; font-size:0.95rem; margin-top:10px; background:#0b0f19; padding:12px; border-radius:10px; width:100%; text-align:left;">Q. ${data.message}</p>
+                        ${data.reply ? `<p style="color:#00f2fe; font-size:0.95rem; margin-top:10px; background:rgba(0,242,254,0.05); padding:12px; border-radius:10px; width:100%; text-align:left;">A. ${data.reply}</p>` : ''}
+                    </div>`;
+                });
+                list.innerHTML = html;
+            });
+        };
+
+        window.loadOwnerInquiries = function() {
+            const list = document.getElementById('owner-inquiry-list');
+            const q = query(collection(db, "inquiries"), where("ownerPhone", "==", window.userSession.phone));
+            onSnapshot(q, (qs) => {
+                let html = "";
+                if (qs.empty) html = `<div style="text-align:center; padding:30px; color:#8b949e;">받은 문의가 없습니다.</div>`;
+                else qs.forEach(d => {
+                    const data = d.data();
+                    const safeMsg = data.message.replace(/'/g, "\\'"); // 싱글쿼트 이스케이프 처리
+                    
+                    html += `<div class="my-group-item" style="flex-direction:column; align-items:flex-start;">
+                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <strong style="color:#fff;">${data.teamName}</strong>
+                                <span style="font-size:0.85rem; color:#8b949e;"> from ${data.senderName}</span>
+                            </div>
+                            <span style="font-size:0.85rem; color:${data.status === '답변 완료' ? '#00f2fe' : '#8b949e'}; font-weight:700;">${data.status}</span>
+                        </div>
+                        <p style="color:#e6edf3; font-size:0.95rem; margin-top:10px; background:#0b0f19; padding:12px; border-radius:10px; width:100%; text-align:left;">Q. ${data.message}</p>
+                        ${data.reply ? 
+                            `<p style="color:#00f2fe; font-size:0.95rem; margin-top:10px; background:rgba(0,242,254,0.05); padding:12px; border-radius:10px; width:100%; text-align:left;">A. ${data.reply}</p>` 
+                            : `<button class="inquire-btn" style="margin-top:10px; padding:10px; width:auto; font-size:0.9rem;" onclick="window.openReplyModal('${d.id}', '${data.senderName}', '${safeMsg}')">답장 작성하기</button>`
+                        }
+                    </div>`;
+                });
+                list.innerHTML = html;
+            });
+        };
+
+        window.currentReplyId = "";
+        window.openReplyModal = function(id, sender, msg) {
+            window.currentReplyId = id;
+            document.getElementById('reply-target-name').innerText = sender + "님의 문의";
+            document.getElementById('reply-target-msg').innerText = "Q. " + msg;
+            document.getElementById('reply-text').value = '';
+            document.getElementById('reply-modal').style.display = 'block';
+        };
+
+        window.submitReply = async function() {
+            const text = document.getElementById('reply-text').value.trim();
+            if(!text) return alert("답변 내용을 입력하세요.");
+            try {
+                await updateDoc(doc(db, "inquiries", window.currentReplyId), {
+                    reply: text,
+                    status: "답변 완료"
+                });
+                alert("답변이 전송되었습니다!");
+                document.getElementById('reply-modal').style.display = 'none';
+            } catch(e) { alert("오류 발생"); }
+        };
+
+        // --- 맞춤 추천 ---
         window.openRecommendModal = () => document.getElementById("recommend-modal").style.display = "block";
         window.savePreferences = function() {
             window.userSession.sport = document.getElementById("pref-sport").value;
@@ -399,7 +522,12 @@
         window.renderRecommendations = function() {
             const list = document.getElementById("recommend-list");
             if(!list) return;
-            const teams = allTeams.map(team => {
+
+            const mergedForRec = window.isDemoMode 
+                ? [...allTeams.map(t => ({...t, isSample: true})), ...window.customTeams] 
+                : [...window.customTeams];
+
+            const teams = mergedForRec.map(team => {
                 let score = 0; const user = window.userSession;
                 if(user.sport && team.sport === user.sport) score += 50;
                 if(user.region && team.region.includes(user.region)) score += 30;
@@ -407,10 +535,37 @@
                 return {...team, score};
             }).sort((a,b)=>b.score-a.score).slice(0,5);
 
-            list.innerHTML = teams.length ? teams.map(t => `<div class="team-card" style="margin-bottom:15px;"><h3>${t.name}</h3><p style="color:#8b949e; margin-top:5px;">🏅 ${t.sport} | 📍 ${t.region} | ⭐ ${t.skill}</p></div>`).join('') : "<p style='color:#8b949e;'>추천 결과가 없습니다.</p>";
+            list.innerHTML = teams.length ? teams.map(t => `
+                <div class="recommend-item-card" onclick="this.classList.toggle('is-expanded')" style="background:#151a23; padding:18px 22px; border-radius:16px; border:1px solid #232a35; margin-bottom:12px; transition:0.3s; cursor:pointer;" onmouseover="this.style.borderColor='#00f2fe'" onmouseout="this.style.borderColor='#232a35'">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong style="color:#fff; font-size:1.1rem;">${t.name} ${t.isSample ? '<span style="font-size:0.75rem; color:#8b949e; margin-left:5px;">(테스트)</span>' : ''}</strong>
+                        <span style="color:#8b949e; font-size:0.9rem; font-weight:600;">${t.sport} · ${t.region} · ${t.skill}</span>
+                    </div>
+                    
+                    <div class="detail-info" style="margin-top:15px; padding-top:15px; text-align:left;">
+                        <div class="info-row" style="margin-bottom:12px;"><span class="label">일정</span><span style="color:#e6edf3;">⏰ ${t.time || '상시'}</span></div>
+                        <div class="info-row"><span class="label">특징</span><span style="color:#00f2fe; font-weight:600;">✨ ${t.features}</span></div>
+                        
+                        ${t.ownerPhone === window.userSession.phone && !t.isSample ? `
+                            <button class="cancel-btn" style="width:100%; margin-top:15px; padding:14px;" onclick="event.stopPropagation(); window.deleteTeam('${t.id}', '${t.name}')">
+                                내가 만든 팀 삭제하기
+                            </button>
+                        ` : `
+                            <div class="action-group">
+                                <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}', this)">
+                                    ${t.isSample ? '신청 (테스트)' : '신청하기'}
+                                </button>
+                                <button class="inquire-btn" onclick="event.stopPropagation(); window.openInquiryModal('${t.name}', '${t.ownerPhone||""}')">
+                                    문의하기
+                                </button>
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `).join('') : "<p style='color:#8b949e; text-align:center; padding:20px 0;'>추천 결과가 없습니다.</p>";
         };
 
-        // 샘플데이터 (기타 종목 15개 추가 완료)
+        // 샘플데이터 (기타 종목 포함)
         const allTeams = [
             { sport:'축구', name:'FC 서울라이트', region:'서울', skill:'중급', time:'일요일 오전', features:'2030 직장인 위주, 매너 플레이 필수', img:'https://ui-avatars.com/api/?name=SL&background=e74c3c&color=fff&bold=true', ownerName:'김운영', ownerPhone:'01011112222' },
             { sport:'축구', name:'수원 블루윙즈 (아마)', region:'경기', skill:'상급', time:'토요일 오후', features:'전술 훈련 위주, 지역 리그 출전', img:'https://ui-avatars.com/api/?name=SB&background=3498db&color=fff&bold=true', ownerName:'이운영', ownerPhone:'01011112222' },
@@ -578,7 +733,7 @@
             { sport:'서핑', name:'울산 진하 서퍼스', region:'경상도', skill:'초급', time:'토요일 아침', features:'가족 동반 차박 캠핑과 서핑을 동시에 즐기는 모임', img:'https://ui-avatars.com/api/?name=JH&background=111111&color=fff&bold=true', ownerName:'신서퍼', ownerPhone:'01056785678' },
             { sport:'서핑', name:'제주 곽지 에메랄드', region:'제주도', skill:'상급', time:'바람 부는 날', features:'에메랄드 바다에서 롱보드 댄싱 즐기는 스웨거들', img:'https://ui-avatars.com/api/?name=GE&background=2980b9&color=fff&bold=true', ownerName:'안서퍼', ownerPhone:'01056785678' },
             
-            // 👇 추가된 '기타' 종목 샘플 데이터 15개
+            // 기타 종목 샘플 데이터 15개
             { sport:'기타', name:'성수 볼더링 크루', region:'서울', skill:'초급', time:'수요일 저녁', features:'실내 클라이밍 지구력 및 볼더링 스터디', img:'https://ui-avatars.com/api/?name=BC&background=e74c3c&color=fff&bold=true', ownerName:'김기타', ownerPhone:'01000001111' },
             { sport:'기타', name:'안암 스트라이크', region:'서울', skill:'중급', time:'금요일 밤', features:'고려대 인근 볼링장 주 1회 정기전', img:'https://ui-avatars.com/api/?name=AS&background=3498db&color=fff&bold=true', ownerName:'이기타', ownerPhone:'01000001111' },
             { sport:'기타', name:'수원 물개스', region:'경기', skill:'상급', time:'매일 새벽', features:'새벽 마스터즈 수영반, 핀수영 병행', img:'https://ui-avatars.com/api/?name=SM&background=2c3e50&color=fff&bold=true', ownerName:'박기타', ownerPhone:'01000001111' },
@@ -630,15 +785,15 @@
 
     <main id="main-page" class="page">
         <div class="container">
-            <div class="recommend-box">
-                <h3>🎯 맞춤 추천</h3><p>선호 정보를 설정하면 추천 정확도가 높아집니다.</p>
-                <button onclick="window.openRecommendModal()">추천 설정하기</button>
-            </div>
             <h2 class="section-title" style="margin-top:0;">🔥 회원님 맞춤 추천</h2>
+            <div class="recommend-box">
+                <h3>🎯 추천 설정</h3><p>선호 정보를 설정하면 추천 정확도가 높아집니다.</p>
+                <button onclick="window.openRecommendModal()">설정하기</button>
+            </div>
             <div id="recommend-list"></div>
             
             <h2 class="section-title">종목 선택</h2>
-            <p class="section-title" style="font-size:1.1rem; color:#8b949e; margin-top:10px;">⚽ 구기종목</p>
+            <p class="section-title" style="font-size:1.1rem; color:#8b949e; margin-top:10px;">⚾ 구기종목</p>
             <div class="category-grid">
                 <div class="item-card" onclick="window.goToFilterPage('축구')">⚽<br>축구</div>
                 <div class="item-card" onclick="window.goToFilterPage('풋살')">👟<br>풋살</div>
@@ -653,7 +808,7 @@
                 <div class="item-card" onclick="window.goToFilterPage('탁구')">🏓<br>탁구</div>
             </div>
             
-            <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🏃 라이프스타일</p>
+            <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🧘 라이프스타일</p>
             <div class="category-grid">
                 <div class="item-card" onclick="window.goToFilterPage('러닝')">🏃<br>러닝</div>
                 <div class="item-card" onclick="window.goToFilterPage('헬스/필라테스')">🤸<br>헬스/필라테스</div>
@@ -665,7 +820,7 @@
                 <div class="item-card" onclick="window.goToFilterPage('서핑')">🏄<br>서핑</div>
             </div>
 
-            <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🎯 기타 종목</p>
+            <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🌈 기타 종목</p>
             <div class="category-grid">
                 <div class="item-card" onclick="window.goToFilterPage('기타')">🎯<br>기타</div>
             </div>
@@ -699,7 +854,23 @@
         <div class="container">
             <h2 class="section-title">동호회 등록</h2>
             <input id="new-name" class="login-input" placeholder="팀 이름">
-            <input id="new-sport" class="login-input" placeholder="종목 (예: 농구)">
+            
+            <select id="new-sport" class="login-input">
+                <option value="" disabled selected>종목 선택</option>
+                <option value="축구">축구</option>
+                <option value="풋살">풋살</option>
+                <option value="농구">농구</option>
+                <option value="야구">야구</option>
+                <option value="테니스">테니스</option>
+                <option value="배드민턴">배드민턴</option>
+                <option value="탁구">탁구</option>
+                <option value="러닝">러닝</option>
+                <option value="헬스/필라테스">헬스/필라테스</option>
+                <option value="아이스하키">아이스하키</option>
+                <option value="서핑">서핑</option>
+                <option value="기타">기타</option>
+            </select>
+
             <input id="new-region" class="login-input" placeholder="지역 (예: 서울 강남구)">
             <input id="new-skill" class="login-input" placeholder="실력 수준 (예: 중급)">
             <input id="new-features" class="login-input" placeholder="팀 소개 (간략히)">
@@ -709,8 +880,11 @@
 
     <main id="owner-page" class="page">
         <div class="container">
-            <h2 class="section-title">신청자 관리</h2>
+            <h2 class="section-title">가입 신청 관리</h2>
             <div id="owner-list"></div>
+            
+            <h2 class="section-title" style="margin-top:40px;">문의 관리</h2>
+            <div id="owner-inquiry-list"></div>
         </div>
     </main>
 
@@ -718,6 +892,9 @@
         <div class="container">
             <h2 class="section-title">나의 가입 신청 현황</h2>
             <div id="my-group-list"></div>
+            
+            <h2 class="section-title" style="margin-top:40px;">나의 문의 내역</h2>
+            <div id="my-inquiry-list"></div>
         </div>
     </main>
 
@@ -725,27 +902,52 @@
         <button class="nav-item" onclick="window.showPage('intro-page')">📢<span>소개</span></button>
         <button class="nav-item" onclick="window.showPage('main-page')">🏠<span>탐색</span></button>
         <button class="nav-item" onclick="window.showPage('create-page')">➕<span>등록</span></button>
-        <button class="nav-item" onclick="window.showPage('owner-page')">📋<span>신청관리</span></button>
+        <button class="nav-item" onclick="window.showPage('owner-page')">📋<span>관리</span></button>
         <button class="nav-item" onclick="window.showPage('my-group-page')">👥<span>내 모임</span></button>
         <button class="nav-item" onclick="location.reload()">👤<span>로그아웃</span></button>
     </nav>
 
-    <div id="recommend-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(11, 15, 25, 0.85); z-index:9999; backdrop-filter:blur(8px);">
-        <div style="background:#151a23; border:1px solid #232a35; width:90%; max-width:340px; margin:150px auto; padding:30px; border-radius:24px; box-shadow:0 20px 40px rgba(0,0,0,0.5);">
-            <div class="modal-content">
-                <h2 style="color:#fff; font-weight:800; margin-bottom:20px; text-align:center;">맞춤 추천 설정</h2>
-                <select id="pref-sport" class="dark-select">
-                    <option value="">종목 선택</option><option>축구</option><option>풋살</option><option>농구</option><option>야구</option><option>테니스</option><option>배드민턴</option><option>탁구</option><option>러닝</option><option>헬스/필라테스</option><option>아이스하키</option><option>서핑</option><option>기타</option>
-                </select>
-                <select id="pref-region" class="dark-select">
-                    <option value="">지역 선택</option><option>서울</option><option>경기</option><option>인천</option><option>강원도</option><option>충청도</option><option>경상도</option><option>전라도</option><option>제주도</option>
-                </select>
-                <select id="pref-skill" class="dark-select">
-                    <option value="">실력 선택</option><option>초급</option><option>중급</option><option>중상급</option><option>상급</option>
-                </select>
-                <button class="login-btn" style="margin-top:10px;" onclick="window.savePreferences()">저장</button>
+    <div id="recommend-modal" class="custom-modal">
+        <div class="custom-modal-content">
+            <h2 style="color:#fff; font-weight:800; margin-bottom:20px;">맞춤 추천 설정</h2>
+            <select id="pref-sport" class="dark-select">
+                <option value="">종목 선택</option><option>축구</option><option>풋살</option><option>농구</option><option>야구</option><option>테니스</option><option>배드민턴</option><option>탁구</option><option>러닝</option><option>헬스/필라테스</option><option>아이스하키</option><option>서핑</option><option>기타</option>
+            </select>
+            <select id="pref-region" class="dark-select">
+                <option value="">지역 선택</option><option>서울</option><option>경기</option><option>인천</option><option>강원도</option><option>충청도</option><option>경상도</option><option>전라도</option><option>제주도</option>
+            </select>
+            <select id="pref-skill" class="dark-select">
+                <option value="">실력 선택</option><option>초급</option><option>중급</option><option>중상급</option><option>상급</option>
+            </select>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="login-btn" style="background:#30363d; color:#8b949e; flex:1;" onclick="document.getElementById('recommend-modal').style.display='none'">닫기</button>
+                <button class="login-btn" style="flex:1;" onclick="window.savePreferences()">저장</button>
             </div>
         </div>
     </div>
+
+    <div id="inquiry-modal" class="custom-modal">
+        <div class="custom-modal-content">
+            <h2 id="inquiry-target-name" style="color:#fff; font-weight:800; margin-bottom:20px; font-size:1.3rem;">팀에게 문의하기</h2>
+            <textarea id="inquiry-text" class="dark-textarea" rows="4" placeholder="가입 전 궁금한 사항을 자유롭게 남겨주세요."></textarea>
+            <div style="display:flex; gap:10px;">
+                <button class="login-btn" style="background:#30363d; color:#8b949e; flex:1;" onclick="document.getElementById('inquiry-modal').style.display='none'">취소</button>
+                <button class="login-btn" style="flex:1;" onclick="window.submitInquiry()">보내기</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reply-modal" class="custom-modal">
+        <div class="custom-modal-content">
+            <h2 id="reply-target-name" style="color:#fff; font-weight:800; margin-bottom:10px; font-size:1.3rem;">문의 답장하기</h2>
+            <p id="reply-target-msg" style="color:#8b949e; font-size:0.95rem; margin-bottom:20px; text-align:left; background:#0b0f19; padding:12px; border-radius:10px;"></p>
+            <textarea id="reply-text" class="dark-textarea" rows="4" placeholder="답변 내용을 작성해주세요."></textarea>
+            <div style="display:flex; gap:10px;">
+                <button class="login-btn" style="background:#30363d; color:#8b949e; flex:1;" onclick="document.getElementById('reply-modal').style.display='none'">취소</button>
+                <button class="login-btn" style="flex:1;" onclick="window.submitReply()">답변 등록</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
