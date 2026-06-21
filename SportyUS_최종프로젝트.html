@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
+     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sporty-Us | 스포츠 동호회 포털</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&family=Pretendard:wght@400;600;700&display=swap');
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Pretendard', sans-serif; }
         
-       /* 다크 & 스포티 배경 설정 */
+        /* 다크 & 스포티 배경 설정 */
         body { 
             background-color: #0b0f19; 
             color: #ffffff;
@@ -17,33 +20,26 @@
             background-size: 24px 24px; 
         }
 
-        /* 페이지 노출 제어 (오류 방지를 위해 !important 추가) */
+        /* 페이지 노출 제어 */
         .page { display:none !important; opacity:0; }
         .page.active { display:block !important; opacity:1; animation:fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
         
-        /* 로그인 레이어 */
+        /* 로그인 레이어 (기존 디자인 유지) */
         #login-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(11, 15, 25, 0.9); display:flex; align-items:center; justify-content:center; z-index:9999; backdrop-filter:blur(10px); }
-        .login-card { background:rgba(21, 26, 35, 0.85); border:1px solid #232a35; padding:48px 36px; border-radius:32px; box-shadow:0 20px 50px rgba(0,0,0,0.5); width:90%; max-width:420px; text-align:center; }
+        .login-card { background:rgba(21, 26, 35, 0.85); border:1px solid #232a35; padding:48px 36px; border-radius:32px; box-shadow:0 20px 50px rgba(0,0,0,0.5); width:90%; max-width:420px; text-align:center; position:relative; z-index:2; }
         .login-card h1 { 
-    font-family: 'Oswald', sans-serif; 
-    font-size: 3.8rem; /* 로그인 카드의 크기에 맞춰 시원하게 확대 */
-    font-weight: 900; 
-    color: #ffffff;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 5px;
-    
-    /* 스포티한 레이어드 3D & 네온 텍스트 효과 */
-    text-shadow: 
-        3px 3px 0px #00f2fe,
-        -3px -3px 0px #4facfe,
-        0 10px 20px rgba(0, 0, 0, 0.8);
-        
-    /* 속도감을 주는 기울임 효과 */
-    transform: skewX(-5deg); 
-    display: inline-block; /* transform이 정상 작동하도록 설정 */
-}
+            font-family: 'Oswald', sans-serif; 
+            font-size: 3.8rem; 
+            font-weight: 900; 
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-shadow: 3px 3px 0px #00f2fe, -3px -3px 0px #4facfe, 0 10px 20px rgba(0, 0, 0, 0.8);
+            transform: skewX(-5deg); 
+            display: inline-block; 
+        }
         .login-input { width:100%; padding:18px; border-radius:16px; background:#0b0f19; border:1px solid #232a35; color:#fff; margin-bottom:14px; font-size:1rem; text-align:center; outline:none; transition:all 0.3s; }
         .login-input::placeholder { color:#4a505e; }
         .login-input:focus, #search-input:focus { border-color:#00f2fe; box-shadow:0 0 15px rgba(0, 242, 254, 0.2); }
@@ -53,31 +49,37 @@
         .login-btn:hover { transform:translateY(-3px); box-shadow:0 10px 25px rgba(0, 242, 254, 0.3); }
         .login-subtitle { font-size:0.95rem; color:#8b949e; margin-top:10px; margin-bottom:35px; font-weight:500; }
         
+        /* ------------------------------------------- */
+        /* 🔥 추가된 부분: 네온 배경 아이콘 디자인 */
+        /* ------------------------------------------- */
+        .neon-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; }
+        
+        .neon-icon { 
+            position: absolute; 
+            /* 🔥 핵심: 선 굵기를 얇게 조절 (기본 400 -> 200으로 변경. 숫자가 작을수록 얇아집니다) */
+            font-variation-settings: 'wght' 200; 
+            opacity: 0.85; 
+            user-select: none; 
+        }
+
+        /* 크기(font-size) 확대 및 빛 번짐(text-shadow) 자연스럽게 상향 조절 */
+        .neon-icon.soccer { top: 12%; left: 8%; color: #b8e986; text-shadow: 0 0 15px #b8e986, 0 0 35px #b8e986; font-size: 150px; transform: rotate(-15deg); }
+        .neon-icon.basketball { top: 45%; left: 18%; color: #ff7a45; text-shadow: 0 0 15px #ff7a45, 0 0 35px #ff7a45; font-size: 180px; transform: rotate(10deg); }
+        .neon-icon.baseball { bottom: 15%; left: 10%; color: #ffffff; text-shadow: 0 0 15px #ffffff, 0 0 35px rgba(255, 255, 255, 0.6); font-size: 120px; transform: rotate(-20deg); }
+        .neon-icon.volleyball { top: 12%; right: 15%; color: #ffe066; text-shadow: 0 0 15px #ffe066, 0 0 35px #ffe066; font-size: 160px; transform: rotate(20deg); }
+        .neon-icon.tennis { top: 48%; right: 12%; color: #4facfe; text-shadow: 0 0 15px #4facfe, 0 0 35px #4facfe; font-size: 170px; transform: rotate(-10deg); }
+        .neon-icon.hockey { bottom: 12%; right: 12%; color: #00f2fe; text-shadow: 0 0 15px #00f2fe, 0 0 35px #00f2fe; font-size: 170px; transform: rotate(15deg); }
+
         /* 상단 네비게이션 바 */
         .top-nav { position:fixed; top:0; left:0; width:100%; height:75px; background:rgba(15, 20, 31, 0.95); backdrop-filter:blur(20px); border-bottom:1px solid #232a35; display:none; flex-direction:row; justify-content:center; align-items:center; gap:25px; z-index:1000; }
         .nav-item { border:none; background:none; color:#e6edf3; cursor:pointer; display:flex; flex-direction:row; align-items:center; font-size:0.95rem; font-weight:800; gap:6px; transition:all 0.2s; }
         .nav-item:hover { color:#00f2fe; transform:translateY(-2px); }
         
-        /* 🔥 상단 메뉴바에 가려지지 않게 최상단 여백 넉넉히 확보 (130px) */
         .container { padding:130px 30px 80px; max-width:900px; margin:0 auto; }
 
         /* 메인 & 카테고리 */
         .intro-hero { text-align:center; margin-bottom:40px; }
-        .intro-title { 
-    font-family: 'Oswald', sans-serif; 
-    font-size: 4.5rem; /* 크기를 좀 더 시원하게 키움 */
-    font-weight: 900; 
-    color: #ffffff;
-    text-transform: uppercase;
-    /* 스포티한 3D & 네온 텍스트 효과 */
-    text-shadow: 
-        3px 3px 0px #00f2fe,
-        -3px -3px 0px #4facfe,
-        0 10px 20px rgba(0, 0, 0, 0.8);
-    letter-spacing: 2px;
-    margin-bottom: 15px;
-    transform: skewX(-5deg); /* 살짝 기울여서 속도감 부여 */
-}
+        .intro-title { font-family: 'Oswald', sans-serif; font-size: 4.5rem; font-weight: 900; color: #ffffff; text-transform: uppercase; text-shadow: 3px 3px 0px #00f2fe, -3px -3px 0px #4facfe, 0 10px 20px rgba(0, 0, 0, 0.8); letter-spacing: 2px; margin-bottom: 15px; transform: skewX(-5deg); }
         .intro-subtitle { font-size:1.1rem; color:#8b949e; font-weight:600; }
         .feature-card { background:#151a23; padding:30px 25px; border-radius:24px; border:1px solid #232a35; margin-bottom:20px; }
         .feature-card h3 { font-size:1.3rem; color:#fff; margin-bottom:12px; font-weight:700;}
@@ -94,8 +96,8 @@
         .recommend-box p { color:#8b949e; font-size:0.9rem; margin-bottom:15px;}
         .recommend-box button { background:transparent; border:1px solid #00f2fe; color:#00f2fe; padding:10px 20px; border-radius:10px; font-weight:700; cursor:pointer; transition:0.3s; }
         .recommend-box button:hover { background:#00f2fe; color:#0b0f19; }
-		
-		/* 필터 */
+        
+        /* 필터 */
         .region-filter-container { display:flex; gap:10px; overflow-x:auto; padding:10px 0 25px; white-space:nowrap; -ms-overflow-style:none; scrollbar-width:none; }
         .region-filter-container::-webkit-scrollbar { display:none; }
         .region-btn { padding:10px 20px; border-radius:50px; border:1px solid #232a35; background:#151a23; font-size:0.9rem; font-weight:600; cursor:pointer; color:#8b949e; transition:0.3s;}
@@ -116,6 +118,7 @@
         .my-group-item { background:#151a23; padding:24px; border-radius:20px; border:1px solid #232a35; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center; }
         .my-group-item strong { font-size:1.1rem; display:block; margin-bottom:5px;}
         .cancel-btn { background:transparent; color:#ff453a; border:1px solid #ff453a; padding:8px 16px; border-radius:10px; font-size:0.8rem; font-weight:700; cursor:pointer;}
+    </style>
         
         /* 🔥 토글 버튼 디자인 (데모 모드) */
         .demo-toggle-btn { border:1px solid #4a505e; background:#151a23; color:#8b949e; padding:8px 16px; border-radius:10px; font-size:0.85rem; font-weight:700; cursor:pointer; transition:all 0.2s; }
@@ -547,6 +550,14 @@
 </head>
 <body>
     <div id="login-overlay">
+		<div class="neon-bg">
+            <span class="material-symbols-outlined neon-icon soccer">sports_soccer</span>
+            <span class="material-symbols-outlined neon-icon basketball">sports_basketball</span>
+            <span class="material-symbols-outlined neon-icon baseball">sports_baseball</span>
+            <span class="material-symbols-outlined neon-icon volleyball">sports_volleyball</span>
+            <span class="material-symbols-outlined neon-icon tennis">sports_tennis</span>
+            <span class="material-symbols-outlined neon-icon hockey">sports_hockey</span>
+        </div>
         <div class="login-card">
             <h1>Sporty-Us</h1><p class="login-subtitle">당신의 일상이 더 스포티해지는 법</p>
             <input type="text" id="user-name" class="login-input" placeholder="이름 입력">
