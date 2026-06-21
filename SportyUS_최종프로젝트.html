@@ -179,6 +179,10 @@
             if (!name || !phone) return alert("입력 정보를 확인하세요!");
             window.userSession = { name, phone };
             document.getElementById('login-overlay').style.display = 'none';
+            
+            // 🔥 버그 수정: 다른 계정으로 로그인 시 즉시 DB에서 팀 목록을 불러오도록 추가!
+            window.loadCustomTeams(); 
+            
             window.showPage('intro-page');
             document.querySelector('.top-nav').style.display = 'flex';
         };
