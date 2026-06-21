@@ -185,7 +185,18 @@
                     <div style="margin-top:30px;">
                         <h3>${t.name}</h3><p style="font-size:0.85rem; color:#8b949e; font-weight:600;">📍 ${t.region} &nbsp;|&nbsp; #${t.skill}</p>
                         <div class="detail-info">
-                            <div class="info-row"><span class="label">특징</span><span style="color:#00f2fe; font-weight:600;">✨ ${t.features}</span></div>
+    <div class="info-row"><span class="label">특징</span><span style="color:#00f2fe; font-weight:600;">✨ ${t.features}</span></div>
+    
+    ${t.ownerPhone === window.userSession.phone && !t.isSample ? `
+        <button class="cancel-btn" style="width:100%; margin-top:20px; padding:16px;" onclick="event.stopPropagation(); window.deleteTeam('${t.id}', '${t.name}')">
+            내가 만든 팀 삭제하기
+        </button>
+    ` : `
+        <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}')">
+            ${t.isSample ? '가입해보기 (테스트)' : '실제 가입 신청하기'}
+        </button>
+    `}
+</div>
                             <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}')">
                                 ${t.isSample ? '가입해보기 (테스트)' : '실제 가입 신청하기'}
                             </button>
@@ -206,11 +217,27 @@
         };
 
         window.loadCustomTeams = async function() {
-            const snapshot = await getDocs(collection(db, "teams"));
-            window.customTeams = [];
-            snapshot.forEach(doc => window.customTeams.push(doc.data()));
-            window.renderTeams();
-        };
+    const snapshot = await getDocs(collection(db, "teams"));
+    window.customTeams = [];
+    snapshot.forEach(doc => {
+        const data = doc.data();
+        data.id = doc.id; 
+        window.customTeams.push(data);
+    });
+    window.renderTeams();
+};
+
+	window.deleteTeam = async function(docId, teamName) {
+    if (!confirm(`'${teamName}' 동호회를 정말 삭제하시겠습니까?`)) return;
+    try {
+        await deleteDoc(doc(db, "teams", docId)); // teams 컬렉션에서 해당 문서 삭제
+        alert("동호회가 삭제되었습니다.");
+        window.loadCustomTeams(); // 삭제 후 목록 새로고침
+    } catch(e) { 
+        console.error(e); 
+        alert("삭제 중 오류가 발생했습니다."); 
+    }
+};
 
         window.applyToTeam = async function(teamName, ownerPhone, ownerName) {
             try {
