@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-     <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sporty-Us | 스포츠 동호회 포털</title>
     
@@ -100,7 +100,7 @@
         .feature-card p { font-size:0.95rem; color:#8b949e; line-height:1.6; word-break:keep-all; }
 
         .section-title { font-size:1.4rem; font-weight:800; margin:30px 0 15px; color:#fff; }
-        .category-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; }
+        .category-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin-bottom: 20px; }
         #selected-sport-title { margin-bottom:20px; font-weight:800; font-size:2rem;}
         .item-card { background:#151a23; padding:30px 15px; border-radius:20px; text-align:center; cursor:pointer; border:1px solid #232a35; transition:all 0.3s; font-weight:600; color:#fff;}
         .item-card:hover { border-color:#00f2fe; transform:translateY(-3px); background:#1a202c; }
@@ -110,8 +110,8 @@
         .recommend-box p { color:#8b949e; font-size:0.9rem; margin-bottom:15px;}
         .recommend-box button { background:transparent; border:1px solid #00f2fe; color:#00f2fe; padding:10px 20px; border-radius:10px; font-weight:700; cursor:pointer; transition:0.3s; }
         .recommend-box button:hover { background:#00f2fe; color:#0b0f19; }
-		
-		/* 필터 */
+        
+        /* 필터 */
         .region-filter-container { display:flex; gap:10px; overflow-x:auto; padding:10px 0 25px; white-space:nowrap; -ms-overflow-style:none; scrollbar-width:none; }
         .region-filter-container::-webkit-scrollbar { display:none; }
         .region-btn { padding:10px 20px; border-radius:50px; border:1px solid #232a35; background:#151a23; font-size:0.9rem; font-weight:600; cursor:pointer; color:#8b949e; transition:0.3s;}
@@ -156,6 +156,9 @@
         
         // 🔥 핵심: 샘플 데이터 온/오프 상태값 (초기값: 켜짐)
         window.isDemoMode = true; 
+
+        // 공식 등록된 종목 리스트 (여기에 없으면 '기타'로 자동 분류됨)
+        window.standardSports = ['축구', '풋살', '농구', '야구', '테니스', '배드민턴', '탁구', '러닝', '헬스/필라테스', '아이스하키', '서핑'];
 
         window.handleLogin = function() {
             const name = document.getElementById('user-name').value.trim();
@@ -257,7 +260,24 @@
         };
 
         window.createTeam = async function() {
-            const teamData = { sport:document.getElementById("new-sport").value, name:document.getElementById("new-name").value, region:document.getElementById("new-region").value, skill:document.getElementById("new-skill").value, features:document.getElementById("new-features").value, ownerName:window.userSession.name, ownerPhone:window.userSession.phone, createdAt:serverTimestamp() };
+            let inputSport = document.getElementById("new-sport").value.trim();
+            
+            // 기존 종목에 속하지 않으면 '기타'로 자동 분류
+            if (!window.standardSports.includes(inputSport)) {
+                inputSport = '기타';
+            }
+
+            const teamData = { 
+                sport: inputSport, 
+                name: document.getElementById("new-name").value, 
+                region: document.getElementById("new-region").value, 
+                skill: document.getElementById("new-skill").value, 
+                features: document.getElementById("new-features").value, 
+                ownerName: window.userSession.name, 
+                ownerPhone: window.userSession.phone, 
+                createdAt: serverTimestamp() 
+            };
+            
             try {
                 await addDoc(collection(db, "teams"), teamData);
                 alert("동호회 등록 완료!");
@@ -267,27 +287,27 @@
         };
 
         window.loadCustomTeams = async function() {
-    const snapshot = await getDocs(collection(db, "teams"));
-    window.customTeams = [];
-    snapshot.forEach(doc => {
-        const data = doc.data();
-        data.id = doc.id; 
-        window.customTeams.push(data);
-    });
-    window.renderTeams();
-};
+            const snapshot = await getDocs(collection(db, "teams"));
+            window.customTeams = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                data.id = doc.id; 
+                window.customTeams.push(data);
+            });
+            window.renderTeams();
+        };
 
-	window.deleteTeam = async function(docId, teamName) {
-    if (!confirm(`'${teamName}' 동호회를 정말 삭제하시겠습니까?`)) return;
-    try {
-        await deleteDoc(doc(db, "teams", docId)); // teams 컬렉션에서 해당 문서 삭제
-        alert("동호회가 삭제되었습니다.");
-        window.loadCustomTeams(); // 삭제 후 목록 새로고침
-    } catch(e) { 
-        console.error(e); 
-        alert("삭제 중 오류가 발생했습니다."); 
-    }
-};
+        window.deleteTeam = async function(docId, teamName) {
+            if (!confirm(`'${teamName}' 동호회를 정말 삭제하시겠습니까?`)) return;
+            try {
+                await deleteDoc(doc(db, "teams", docId)); // teams 컬렉션에서 해당 문서 삭제
+                alert("동호회가 삭제되었습니다.");
+                window.loadCustomTeams(); // 삭제 후 목록 새로고침
+            } catch(e) { 
+                console.error(e); 
+                alert("삭제 중 오류가 발생했습니다."); 
+            }
+        };
 
         window.applyToTeam = async function(teamName, ownerPhone, ownerName, btnElement) {
             // 🔥 중복 클릭 방지: 버튼이 전달되었고 이미 눌린 상태라면 함수 실행 중단
@@ -390,8 +410,8 @@
             list.innerHTML = teams.length ? teams.map(t => `<div class="team-card" style="margin-bottom:15px;"><h3>${t.name}</h3><p style="color:#8b949e; margin-top:5px;">🏅 ${t.sport} | 📍 ${t.region} | ⭐ ${t.skill}</p></div>`).join('') : "<p style='color:#8b949e;'>추천 결과가 없습니다.</p>";
         };
 
-	// 샘플데이터
-       const allTeams = [
+        // 샘플데이터 (기타 종목 15개 추가 완료)
+        const allTeams = [
             { sport:'축구', name:'FC 서울라이트', region:'서울', skill:'중급', time:'일요일 오전', features:'2030 직장인 위주, 매너 플레이 필수', img:'https://ui-avatars.com/api/?name=SL&background=e74c3c&color=fff&bold=true', ownerName:'김운영', ownerPhone:'01011112222' },
             { sport:'축구', name:'수원 블루윙즈 (아마)', region:'경기', skill:'상급', time:'토요일 오후', features:'전술 훈련 위주, 지역 리그 출전', img:'https://ui-avatars.com/api/?name=SB&background=3498db&color=fff&bold=true', ownerName:'이운영', ownerPhone:'01011112222' },
             { sport:'축구', name:'인천 마린스', region:'인천', skill:'초급', time:'수요일 야간', features:'축구 입문자 대환영, 기초 체력 훈련', img:'https://ui-avatars.com/api/?name=IM&background=2c3e50&color=fff&bold=true', ownerName:'박운영', ownerPhone:'01011112222' },
@@ -450,7 +470,7 @@
             { sport:'야구', name:'강남 플라이볼', region:'서울', skill:'초급', time:'수요일 밤', features:'실내 연습장 위주 스크린 야구 병행', img:'https://ui-avatars.com/api/?name=GF&background=d35400&color=fff&bold=true', ownerName:'한야구', ownerPhone:'01044445555' },
             { sport:'야구', name:'성남 히어로즈', region:'경기', skill:'중상급', time:'일요일 오후', features:'강견 외야수 우대, 빠른 발야구', img:'https://ui-avatars.com/api/?name=SH&background=8e44ad&color=fff&bold=true', ownerName:'오야구', ownerPhone:'01044445555' },
             { sport:'야구', name:'부천 슬라이더', region:'경기', skill:'중급', time:'토요일 밤', features:'변화구 연습, 투수 집중 육성 시스템', img:'https://ui-avatars.com/api/?name=BS&background=16a085&color=fff&bold=true', ownerName:'서야구', ownerPhone:'01044445555' },
-            { 포츠:'야구', name:'창원 다이노스 팬팀', region:'경상도', skill:'초급', time:'주말 야간', features:'프로야구 응원과 사회인 야구를 동시에', img:'https://ui-avatars.com/api/?name=CD&background=111111&color=fff&bold=true', ownerName:'신야구', ownerPhone:'01044445555' },
+            { sport:'야구', name:'창원 다이노스 팬팀', region:'경상도', skill:'초급', time:'주말 야간', features:'프로야구 응원과 사회인 야구를 동시에', img:'https://ui-avatars.com/api/?name=CD&background=111111&color=fff&bold=true', ownerName:'신야구', ownerPhone:'01044445555' },
             { sport:'야구', name:'전주 스틸러스', region:'전라도', skill:'상급', time:'일요일 오전', features:'4부 리그 폭격기, 내야 사령관 모집', img:'https://ui-avatars.com/api/?name=JS&background=e74c3c&color=fff&bold=true', ownerName:'안야구', ownerPhone:'01044445555' },
             { sport:'테니스', name:'강남 에이스 테니스', region:'서울', skill:'초급', time:'화/목 아침', features:'출근 전 가벼운 랠리, 테린이 완전 환영', img:'https://ui-avatars.com/api/?name=AT&background=e74c3c&color=fff&bold=true', ownerName:'김테니', ownerPhone:'01055556666' },
             { sport:'테니스', name:'분당 스매시', region:'경기', skill:'중상급', time:'토요일 오후', features:'단식 매치 선호, NTRP 3.5 이상 권장', img:'https://ui-avatars.com/api/?name=BS&background=3498db&color=fff&bold=true', ownerName:'이테니', ownerPhone:'01055556666' },
@@ -463,7 +483,7 @@
             { sport:'테니스', name:'여의도 타이브레이크', region:'서울', skill:'중급', time:'목요일 저녁', features:'금융권 직장인 위주, 퇴근 후 스트레스 해소', img:'https://ui-avatars.com/api/?name=TB&background=c0392b&color=fff&bold=true', ownerName:'장테니', ownerPhone:'01055556666' },
             { sport:'테니스', name:'일산 러브포티', region:'경기', skill:'초급', time:'화요일 낮', features:'주부/프리랜서 환영, 햇살 좋은 낮 코트', img:'https://ui-avatars.com/api/?name=LF&background=34495e&color=fff&bold=true', ownerName:'임테니', ownerPhone:'01055556666' },
             { sport:'테니스', name:'성수 랠리클럽', region:'서울', skill:'중급', time:'금요일 밤', features:'실내 테니스장 메인, 힙한 분위기의 소셜 모임', img:'https://ui-avatars.com/api/?name=RC&background=d35400&color=fff&bold=true', ownerName:'한테니', ownerPhone:'01055556666' },
-            { sport:'테니스', name:'수원 듀스', region:'경기', skill:'상급', 시기:'주말 아침', features:'치열한 랭킹전 운영, 실력 증명 시 가입 가능', img:'https://ui-avatars.com/api/?name=SD&background=8e44ad&color=fff&bold=true', ownerName:'오테니', ownerPhone:'01055556666' },
+            { sport:'테니스', name:'수원 듀스', region:'경기', skill:'상급', time:'주말 아침', features:'치열한 랭킹전 운영, 실력 증명 시 가입 가능', img:'https://ui-avatars.com/api/?name=SD&background=8e44ad&color=fff&bold=true', ownerName:'오테니', ownerPhone:'01055556666' },
             { sport:'테니스', name:'용산 베이스라인', region:'서울', skill:'초급', time:'수요일 아침', features:'테니스 라켓 쥐는 법부터 시작하는 병아리반', img:'https://ui-avatars.com/api/?name=BL&background=16a085&color=fff&bold=true', ownerName:'서테니', ownerPhone:'01055556666' },
             { sport:'테니스', name:'구미 윔블던', region:'경상도', skill:'중상급', time:'토요일 밤', features:'아마추어 토너먼트 상시 개최, 열정 넘침', img:'https://ui-avatars.com/api/?name=GW&background=111111&color=fff&bold=true', ownerName:'신테니', ownerPhone:'01055556666' },
             { sport:'테니스', name:'전주 백핸드', region:'전라도', skill:'중급', time:'일요일 아침', features:'투핸드/원핸드 정보 교류, 안정적인 폼 지향', img:'https://ui-avatars.com/api/?name=BH&background=2980b9&color=fff&bold=true', ownerName:'안테니', ownerPhone:'01055556666' },
@@ -556,7 +576,24 @@
             { sport:'서핑', name:'양양 카풀 멤버스', region:'서울', skill:'초중급', time:'금요일 심야 출발', features:'차량 지원 가능자 회비 면제, 서울-양양 왕복 크루', img:'https://ui-avatars.com/api/?name=CM&background=8e44ad&color=fff&bold=true', ownerName:'오서퍼', ownerPhone:'01056785678' },
             { sport:'서핑', name:'동해 망상 크러쉬', region:'강원도', skill:'중상급', time:'주말 풀타임', features:'빠른 테이크오프 훈련, 실력자와 초보의 멘토링', img:'https://ui-avatars.com/api/?name=MS&background=16a085&color=fff&bold=true', ownerName:'서서퍼', ownerPhone:'01056785678' },
             { sport:'서핑', name:'울산 진하 서퍼스', region:'경상도', skill:'초급', time:'토요일 아침', features:'가족 동반 차박 캠핑과 서핑을 동시에 즐기는 모임', img:'https://ui-avatars.com/api/?name=JH&background=111111&color=fff&bold=true', ownerName:'신서퍼', ownerPhone:'01056785678' },
-            { sport:'서핑', name:'제주 곽지 에메랄드', region:'제주도', skill:'상급', time:'바람 부는 날', features:'에메랄드 바다에서 롱보드 댄싱 즐기는 스웨거들', img:'https://ui-avatars.com/api/?name=GE&background=2980b9&color=fff&bold=true', ownerName:'안서퍼', ownerPhone:'01056785678' }
+            { sport:'서핑', name:'제주 곽지 에메랄드', region:'제주도', skill:'상급', time:'바람 부는 날', features:'에메랄드 바다에서 롱보드 댄싱 즐기는 스웨거들', img:'https://ui-avatars.com/api/?name=GE&background=2980b9&color=fff&bold=true', ownerName:'안서퍼', ownerPhone:'01056785678' },
+            
+            // 👇 추가된 '기타' 종목 샘플 데이터 15개
+            { sport:'기타', name:'성수 볼더링 크루', region:'서울', skill:'초급', time:'수요일 저녁', features:'실내 클라이밍 지구력 및 볼더링 스터디', img:'https://ui-avatars.com/api/?name=BC&background=e74c3c&color=fff&bold=true', ownerName:'김기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'안암 스트라이크', region:'서울', skill:'중급', time:'금요일 밤', features:'고려대 인근 볼링장 주 1회 정기전', img:'https://ui-avatars.com/api/?name=AS&background=3498db&color=fff&bold=true', ownerName:'이기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'수원 물개스', region:'경기', skill:'상급', time:'매일 새벽', features:'새벽 마스터즈 수영반, 핀수영 병행', img:'https://ui-avatars.com/api/?name=SM&background=2c3e50&color=fff&bold=true', ownerName:'박기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'팔당 사이클링', region:'경기', skill:'중상급', time:'주말 아침', features:'한강 자전거길 왕복, 팩라이딩 필수', img:'https://ui-avatars.com/api/?name=PC&background=9b59b6&color=fff&bold=true', ownerName:'최기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'부평 주짓떼로', region:'인천', skill:'초급', time:'월/목 야간', features:'도복 대여 가능, 부상 없는 롤링 위주', img:'https://ui-avatars.com/api/?name=BJ&background=e67e22&color=fff&bold=true', ownerName:'정기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'춘천 하이큐', region:'강원도', skill:'중급', time:'토요일 오후', features:'아마추어 9인제 배구단, 세터 포지션 환영', img:'https://ui-avatars.com/api/?name=CH&background=2ecc71&color=fff&bold=true', ownerName:'강기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'제주 블루홀 다이브', region:'제주도', skill:'상급', time:'상시 오픈', features:'프리다이빙 자격증 소지자 한정 펀다이빙', img:'https://ui-avatars.com/api/?name=JB&background=1abc9c&color=fff&bold=true', ownerName:'조기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'강남 펀치라인', region:'서울', skill:'초급', time:'화/목 밤', features:'정통 복싱 기초 스텝 및 미트 치기', img:'https://ui-avatars.com/api/?name=GP&background=f1c40f&color=fff&bold=true', ownerName:'윤기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'대전 스쿼시 붐', region:'충청도', skill:'중상급', time:'평일 점심', features:'짧고 굵은 유산소 끝판왕 스쿼시 모임', img:'https://ui-avatars.com/api/?name=DS&background=c0392b&color=fff&bold=true', ownerName:'장기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'부산 터치다운', region:'경상도', skill:'상급', time:'일요일 낮', features:'플래그 풋볼 및 미식축구, 룰 스터디 포함', img:'https://ui-avatars.com/api/?name=BT&background=34495e&color=fff&bold=true', ownerName:'임기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'광주 요트클럽', region:'전라도', skill:'초급', time:'주말 랜덤', features:'딩기요트 입문자 환영, 세일링의 매력', img:'https://ui-avatars.com/api/?name=GY&background=d35400&color=fff&bold=true', ownerName:'한기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'안양 인라인 파크', region:'경기', skill:'중급', time:'금요일 심야', features:'중앙공원 인라인/롤러 야간 스케이팅', img:'https://ui-avatars.com/api/?name=AI&background=8e44ad&color=fff&bold=true', ownerName:'오기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'마포 머리치기', region:'서울', skill:'중급', time:'수요일 저녁', features:'검도 유단자 및 초보 통합 도장 교류회', img:'https://ui-avatars.com/api/?name=MM&background=16a085&color=fff&bold=true', ownerName:'서기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'평창 스노우보더스', region:'강원도', skill:'상급', time:'겨울 시즌 한정', features:'그라운드 트릭 스터디, 시즌방 공유', img:'https://ui-avatars.com/api/?name=PS&background=111111&color=fff&bold=true', ownerName:'신기타', ownerPhone:'01000001111' },
+            { sport:'기타', name:'홍대 보드라이더', region:'서울', skill:'초급', time:'토요일 오후', features:'크루저보드, 롱보드 스텝 밟기 및 시티라이딩', img:'https://ui-avatars.com/api/?name=HB&background=2980b9&color=fff&bold=true', ownerName:'안기타', ownerPhone:'01000001111' }
         ];
     </script>
 </head>
@@ -601,7 +638,7 @@
             <div id="recommend-list"></div>
             
             <h2 class="section-title">종목 선택</h2>
-            <p class="section-title" style="font-size:1.1rem; color:#8b949e; margin-top:10px;">⚾ 구기종목</p>
+            <p class="section-title" style="font-size:1.1rem; color:#8b949e; margin-top:10px;">⚽ 구기종목</p>
             <div class="category-grid">
                 <div class="item-card" onclick="window.goToFilterPage('축구')">⚽<br>축구</div>
                 <div class="item-card" onclick="window.goToFilterPage('풋살')">👟<br>풋살</div>
@@ -616,7 +653,7 @@
                 <div class="item-card" onclick="window.goToFilterPage('탁구')">🏓<br>탁구</div>
             </div>
             
-            <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🧘 라이프스타일</p>
+            <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🏃 라이프스타일</p>
             <div class="category-grid">
                 <div class="item-card" onclick="window.goToFilterPage('러닝')">🏃<br>러닝</div>
                 <div class="item-card" onclick="window.goToFilterPage('헬스/필라테스')">🤸<br>헬스/필라테스</div>
@@ -626,6 +663,11 @@
             <div class="category-grid">
                 <div class="item-card" onclick="window.goToFilterPage('아이스하키')">🏒<br>아이스하키</div>
                 <div class="item-card" onclick="window.goToFilterPage('서핑')">🏄<br>서핑</div>
+            </div>
+
+            <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🎯 기타 종목</p>
+            <div class="category-grid">
+                <div class="item-card" onclick="window.goToFilterPage('기타')">🎯<br>기타</div>
             </div>
         </div>
     </main>
@@ -693,7 +735,7 @@
             <div class="modal-content">
                 <h2 style="color:#fff; font-weight:800; margin-bottom:20px; text-align:center;">맞춤 추천 설정</h2>
                 <select id="pref-sport" class="dark-select">
-                    <option value="">종목 선택</option><option>축구</option><option>풋살</option><option>농구</option><option>야구</option><option>테니스</option><option>배드민턴</option><option>탁구</option><option>러닝</option><option>헬스/필라테스</option><option>아이스하키</option><option>서핑</option>
+                    <option value="">종목 선택</option><option>축구</option><option>풋살</option><option>농구</option><option>야구</option><option>테니스</option><option>배드민턴</option><option>탁구</option><option>러닝</option><option>헬스/필라테스</option><option>아이스하키</option><option>서핑</option><option>기타</option>
                 </select>
                 <select id="pref-region" class="dark-select">
                     <option value="">지역 선택</option><option>서울</option><option>경기</option><option>인천</option><option>강원도</option><option>충청도</option><option>경상도</option><option>전라도</option><option>제주도</option>
