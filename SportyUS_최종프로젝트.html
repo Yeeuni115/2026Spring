@@ -160,25 +160,26 @@
         /* ------------------------------------------- */
         .dashboard-layout {
             display: grid;
-            grid-template-columns: 1.6fr 1fr; /* 좌측 종목(1.6) : 우측 추천(1) 비율 */
+            /* 종목 영역을 대폭 넓히고(2.4), 추천 영역을 좁게(1) 설정하여 시선 분산 방지 */
+            grid-template-columns: 2.4fr 1fr; 
             gap: 40px;
-            align-items: start; /* 사이드바가 위쪽에 고정되도록 시작점 정렬 */
+            align-items: start; 
         }
 
         .sidebar-wrapper {
             position: sticky;
-            top: 95px; /* 스크롤을 내려도 추천창이 화면에 따라오도록 고정 */
+            top: 95px; 
         }
 
         /* 모바일/작은 화면에서는 세로로 겹치게 처리 */
-        @media (max-width: 800px) {
+        @media (max-width: 850px) {
             .dashboard-layout {
                 display: flex;
-                flex-direction: column-reverse; /* 🔥 모바일에서는 '종목 탐색'이 먼저 보이도록 역순 배치 */
+                flex-direction: column-reverse; 
                 gap: 30px;
             }
             .sidebar-wrapper {
-                position: static; /* 모바일에서는 스크롤 고정 해제 */
+                position: static; 
             }
         }
     </style>
@@ -198,7 +199,6 @@
         window.customTeams = [];
         window.isDemoMode = true; 
 
-        // 🔥 새롭게 통합된 비밀번호 기반 로그인 및 회원가입 로직
         window.handleLogin = async function() {
             const name = document.getElementById('user-name').value.trim();
             const phone = document.getElementById('user-phone').value.trim();
@@ -211,12 +211,10 @@
             btn.disabled = true;
 
             try {
-                // 'users' 컬렉션에서 해당 전화번호로 가입된 데이터가 있는지 검색
                 const q = query(collection(db, "users"), where("phone", "==", phone));
                 const querySnapshot = await getDocs(q);
 
                 if (!querySnapshot.empty) {
-                    // [기존 유저인 경우 - 로그인 처리]
                     const userData = querySnapshot.docs[0].data();
                     
                     if (userData.password !== password) {
@@ -230,7 +228,6 @@
                     window.userSession = { name: userData.name, phone: userData.phone };
                     
                 } else {
-                    // [신규 유저인 경우 - 자동 회원가입 처리]
                     await addDoc(collection(db, "users"), {
                         name: name,
                         phone: phone,
@@ -241,7 +238,6 @@
                     window.userSession = { name: name, phone: phone };
                 }
 
-                // 로그인 성공 후 화면 전환
                 document.getElementById('login-overlay').style.display = 'none';
                 window.loadCustomTeams(); 
                 window.showPage('intro-page');
@@ -603,11 +599,12 @@
                 return {...team, score};
             }).sort((a,b)=>b.score-a.score).slice(0,5);
 
+            /* 🔥 카드 패딩 및 폰트 사이즈를 사이드바 공간에 맞춰 더 컴팩트하게 조절 */
             list.innerHTML = teams.length ? teams.map(t => `
-                <div class="recommend-item-card" onclick="this.classList.toggle('is-expanded')" style="background:#151a23; padding:18px 22px; border-radius:16px; border:1px solid #232a35; margin-bottom:12px; transition:0.3s; cursor:pointer;" onmouseover="this.style.borderColor='#00f2fe'" onmouseout="this.style.borderColor='#232a35'">
+                <div class="recommend-item-card" onclick="this.classList.toggle('is-expanded')" style="background:#151a23; padding:15px 16px; border-radius:14px; border:1px solid #232a35; margin-bottom:10px; transition:0.3s; cursor:pointer;" onmouseover="this.style.borderColor='#00f2fe'" onmouseout="this.style.borderColor='#232a35'">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <strong style="color:#fff; font-size:1.1rem;">${t.name} ${t.isSample ? '<span style="font-size:0.75rem; color:#8b949e; margin-left:5px;">(테스트)</span>' : ''}</strong>
-                        <span style="color:#8b949e; font-size:0.9rem; font-weight:600;">${t.sport} · ${t.region} · ${t.skill}</span>
+                        <strong style="color:#fff; font-size:1rem;">${t.name} ${t.isSample ? '<span style="font-size:0.7rem; color:#8b949e; margin-left:5px;">(테스트)</span>' : ''}</strong>
+                        <span style="color:#8b949e; font-size:0.8rem; font-weight:600;">${t.sport} · ${t.region}</span>
                     </div>
                     
                     <div class="detail-info" style="margin-top:15px; padding-top:15px; text-align:left;">
@@ -620,10 +617,10 @@
                             </button>
                         ` : `
                             <div class="action-group">
-                                <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}', this)">
-                                    ${t.isSample ? '신청 (테스트)' : '신청하기'}
+                                <button class="join-btn" style="padding:10px; font-size:0.9rem;" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}', this)">
+                                    ${t.isSample ? '신청(테스트)' : '신청하기'}
                                 </button>
-                                <button class="inquire-btn" onclick="event.stopPropagation(); window.openInquiryModal('${t.name}', '${t.ownerPhone||""}')">
+                                <button class="inquire-btn" style="padding:10px; font-size:0.9rem;" onclick="event.stopPropagation(); window.openInquiryModal('${t.name}', '${t.ownerPhone||""}')">
                                     문의하기
                                 </button>
                             </div>
@@ -894,14 +891,14 @@
                 </div>
 
                 <div class="sidebar-wrapper">
-                    <h2 class="section-title" style="margin-top:0;">🔥 회원님 맞춤 추천</h2>
+                    <h2 class="section-title" style="margin-top:0; font-size:1.2rem; color:#e6edf3;">🔥 맞춤 추천</h2>
                     
-                    <div class="recommend-box" style="margin-bottom: 20px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                            <h3 style="margin:0;">🎯 추천 설정</h3>
-                            <button onclick="window.openRecommendModal()" style="padding: 6px 12px; font-size: 0.85rem; border-radius: 8px;">설정 변경</button>
+                    <div class="recommend-box" style="margin-bottom: 15px; padding: 18px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <h3 style="margin:0; font-size:1rem;">🎯 추천 설정</h3>
+                            <button onclick="window.openRecommendModal()" style="padding: 5px 10px; font-size: 0.8rem; border-radius: 8px;">설정 변경</button>
                         </div>
-                        <p style="margin-bottom:0; font-size:0.85rem;">선호 정보를 설정하면 정확도가 높아집니다.</p>
+                        <p style="margin-bottom:0; font-size:0.8rem;">선호 정보를 설정하면 정확도가 높아집니다.</p>
                     </div>
                     
                     <div id="recommend-list"></div>
