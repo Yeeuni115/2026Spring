@@ -334,12 +334,12 @@
             window.renderTeams();
         };
 
-        // 🔥 renderTeams 시 openChatLink도 함께 넘기도록 수정
         window.renderTeams = function() {
             const results = document.getElementById('team-results');
             
+            // 🔥 직접 등록한 팀(customTeams)이 항상 배열의 앞(상단)에 오도록 수정
             const mergedTeams = window.isDemoMode 
-                ? [...allTeams.map(t => ({...t, isSample: true})), ...window.customTeams] 
+                ? [...window.customTeams, ...allTeams.map(t => ({...t, isSample: true}))] 
                 : [...window.customTeams];
 
             const filteredTeams = mergedTeams.filter(team => 
@@ -385,7 +385,6 @@
             `).join('') : `<div style="text-align:center; width:100%; padding:80px; color:#8b949e; font-weight:600;">'${window.currentRegion}' 지역에 데이터가 없습니다.</div>`;
         };
 
-        // 🔥 팀 등록 시 openChatLink 함께 DB에 추가
         window.createTeam = async function() {
             const sportSelect = document.getElementById("new-sport");
             const inputSport = sportSelect.value;
@@ -437,7 +436,6 @@
             }
         };
 
-        // 🔥 신청 시 팀의 오픈채팅 링크를 가져와서 application DB에 저장
         window.applyToTeam = async function(teamName, ownerPhone, ownerName, openChatLink, btnElement) {
             if (btnElement) {
                 if (btnElement.disabled) return; 
@@ -477,7 +475,6 @@
             catch(e) { console.error(e); alert("취소 중 오류가 발생했습니다."); }
         };
 
-        // 🔥 내 가입 신청 현황 (승인 시 연락 수단 노출)
         window.fetchMyGroups = function() {
             const list = document.getElementById('my-group-list');
             const q = query(collection(db, "applications"), where("applicantPhone", "==", window.userSession.phone));
@@ -490,7 +487,6 @@
                     
                     let contactUI = '';
                     if (isApproved) {
-                        // 오픈채팅 링크가 있으면 우선 노출, 없으면 전화번호 노출
                         if (data.openChatLink) {
                             const linkUrl = data.openChatLink.startsWith('http') ? data.openChatLink : 'https://' + data.openChatLink;
                             contactUI = `
@@ -524,7 +520,6 @@
             });
         };
 
-        // 🔥 오너 입장 신청 리스트 (승인 완료 시 지원자 연락처 문자 버튼 활성화)
         window.loadOwnerApplications = function() {
             const q = query(collection(db,"applications"), where("ownerPhone","==",window.userSession.phone));
             onSnapshot(q, (snapshot) => {
@@ -673,13 +668,13 @@
             alert("추천 설정 완료!");
         };
 
-        // 🔥 맞춤 추천 렌더링 시 openChatLink도 함께 넘기도록 수정
         window.renderRecommendations = function() {
             const list = document.getElementById("recommend-list");
             if(!list) return;
 
+            // 🔥 직접 등록한 팀이 맞춤 추천에서도 우선 정렬되도록 배열 병합 순서 및 Sort 기준 수정
             const mergedForRec = window.isDemoMode 
-                ? [...allTeams.map(t => ({...t, isSample: true})), ...window.customTeams] 
+                ? [...window.customTeams, ...allTeams.map(t => ({...t, isSample: true}))] 
                 : [...window.customTeams];
 
             const teams = mergedForRec.map(team => {
@@ -688,7 +683,10 @@
                 if(user.region && team.region.includes(user.region)) score += 30;
                 if(user.skill && team.skill.includes(user.skill)) score += 20;
                 return {...team, score};
-            }).sort((a,b)=>b.score-a.score).slice(0,5);
+            }).sort((a, b) => {
+                if (b.score !== a.score) return b.score - a.score; // 점수 높은 순
+                return (a.isSample ? 1 : 0) - (b.isSample ? 1 : 0); // 점수가 같으면 직접 등록한 팀이 상단에 배치
+            }).slice(0, 5);
 
             list.innerHTML = teams.length ? teams.map(t => `
                 <div class="recommend-item-card" onclick="this.classList.toggle('is-expanded')" style="background:#151a23; padding:15px 16px; border-radius:14px; border:1px solid #232a35; margin-bottom:10px; transition:0.3s; cursor:pointer;" onmouseover="this.style.borderColor='#00f2fe'" onmouseout="this.style.borderColor='#232a35'">
@@ -1048,7 +1046,6 @@
             <input id="new-region" class="login-input" placeholder="지역 (예: 서울 강남구)">
             <input id="new-skill" class="login-input" placeholder="실력 수준 (예: 중급)">
             <input id="new-features" class="login-input" placeholder="팀 소개 (간략히)">
-            
             <input id="new-chat-link" class="login-input" placeholder="오픈채팅 링크 (선택 사항)">
             
             <button class="login-btn" onclick="window.createTeam()">등록하기</button>
