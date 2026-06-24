@@ -50,6 +50,23 @@
         .login-btn:disabled { background: #4a505e; cursor: not-allowed; box-shadow: none; color: #8b949e; transform: none; }
         .login-subtitle { font-size:0.95rem; color:#8b949e; margin-top:10px; margin-bottom:35px; font-weight:500; }
         
+        /* 🔥 오늘 날짜 뱃지 스타일 */
+        .date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            color: #00f2fe;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
+            letter-spacing: 0.5px;
+        }
+
         /* ------------------------------------------- */
         /* 🔥 네온 배경 아이콘 디자인 (전역 고정 레이어) */
         /* ------------------------------------------- */
@@ -184,6 +201,18 @@
         window.customTeams = [];
         window.isDemoMode = true; 
 
+        // 🔥 날짜 업데이트 함수 추가
+        window.updateTodayDate = function() {
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            const formattedDate = today.toLocaleDateString('ko-KR', options);
+            const dateEl = document.getElementById('today-date-text');
+            if (dateEl) dateEl.innerText = formattedDate;
+        };
+
+        // 로드 시 날짜 적용
+        document.addEventListener('DOMContentLoaded', window.updateTodayDate);
+
         window.handleLogin = async function() {
             const name = document.getElementById('user-name').value.trim();
             const phone = document.getElementById('user-phone').value.trim();
@@ -225,6 +254,7 @@
 
                 document.getElementById('login-overlay').style.display = 'none';
                 window.loadCustomTeams(); 
+                window.updateTodayDate(); // 로그인 시 날짜 한 번 더 확실히 렌더링
                 window.showPage('intro-page');
                 document.querySelector('.top-nav').style.display = 'flex';
 
@@ -947,9 +977,10 @@
             <div class="dashboard-layout">
                 
                 <div class="main-column">
+
                     <h2 class="section-title" style="margin-top:0;">종목 탐색</h2>
                     
-                    <p class="section-title" style="font-size:1.1rem; color:#8b949e; margin-top:10px;">⚾ 구기종목</p>
+                    <p class="section-title" style="font-size:1.1rem; color:#8b949e; margin-top:10px;">⚽ 구기종목</p>
                     <div class="category-grid">
                         <div class="item-card" onclick="window.goToFilterPage('축구')">⚽<br>축구</div>
                         <div class="item-card" onclick="window.goToFilterPage('풋살')">👟<br>풋살</div>
@@ -976,13 +1007,18 @@
                         <div class="item-card" onclick="window.goToFilterPage('서핑')">🏄<br>서핑</div>
                     </div>
 
-                    <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🌈 기타 종목</p>
+                    <p class="section-title" style="font-size:1.1rem; color:#8b949e;">🎯 기타 종목</p>
                     <div class="category-grid" style="margin-bottom: 0;">
                         <div class="item-card" onclick="window.goToFilterPage('기타')">🎯<br>기타</div>
                     </div>
                 </div>
 
                 <div class="sidebar-wrapper">
+                    <div class="date-badge" id="today-date-badge" style="width: 100%; justify-content: center;">
+                        <span class="material-symbols-outlined" style="font-size:1.2rem;">calendar_month</span>
+                        <span id="today-date-text"></span>
+                    </div>
+
                     <h2 class="section-title" style="margin-top:0; font-size:1.2rem; color:#e6edf3;">🔥 맞춤 추천</h2>
                     
                     <div class="recommend-box" style="margin-bottom: 15px; padding: 18px;">
@@ -1056,8 +1092,8 @@
             </select>
 
             <input id="new-features" class="login-input" placeholder="팀 소개 (간략히)">
-            <input id="new-time" class="login-input" placeholder="활동 일정 (예: 토요일 오전)">
             <input id="new-chat-link" class="login-input" placeholder="오픈채팅 링크 (선택 사항)">
+            <input id="new-time" class="login-input" placeholder="활동 일정 (예: 토요일 오전)">
             
             <button class="login-btn" onclick="window.createTeam()">등록하기</button>
         </div>
