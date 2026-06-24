@@ -337,7 +337,6 @@
         window.renderTeams = function() {
             const results = document.getElementById('team-results');
             
-            // 🔥 직접 등록한 팀(customTeams)이 항상 배열의 앞(상단)에 오도록 수정
             const mergedTeams = window.isDemoMode 
                 ? [...window.customTeams, ...allTeams.map(t => ({...t, isSample: true}))] 
                 : [...window.customTeams];
@@ -385,6 +384,7 @@
             `).join('') : `<div style="text-align:center; width:100%; padding:80px; color:#8b949e; font-weight:600;">'${window.currentRegion}' 지역에 데이터가 없습니다.</div>`;
         };
 
+        // 🔥 팀 등록 시 활동 일정(time)도 함께 DB에 추가되도록 수정
         window.createTeam = async function() {
             const sportSelect = document.getElementById("new-sport");
             const inputSport = sportSelect.value;
@@ -398,6 +398,7 @@
                 skill: document.getElementById("new-skill").value, 
                 features: document.getElementById("new-features").value, 
                 openChatLink: document.getElementById("new-chat-link").value.trim(),
+                time: document.getElementById("new-time").value.trim(), // 🔥 일정 필드 추가
                 ownerName: window.userSession.name, 
                 ownerPhone: window.userSession.phone, 
                 createdAt: serverTimestamp() 
@@ -406,7 +407,7 @@
             try {
                 await addDoc(collection(db, "teams"), teamData);
                 alert("동호회 등록 완료!");
-                ["new-name","new-region","new-skill","new-features", "new-chat-link"].forEach(id => document.getElementById(id).value = "");
+                ["new-name","new-region","new-skill","new-features", "new-chat-link", "new-time"].forEach(id => document.getElementById(id).value = ""); // 🔥 new-time 초기화 목록 추가
                 sportSelect.value = ""; 
                 window.loadCustomTeams();
             } catch(e) { console.error(e); alert("등록 실패"); }
@@ -541,8 +542,8 @@
                     html += `<div class="my-group-item" style="align-items:center;">
                         <div>
                             <strong style="color:#fff;">${app.teamName}</strong>
-                            <p style="color:#8b949e; font-size:0.9rem; margin-top:4px;">지원자: ${app.applicantName}</p>
-                            <p style="color:${isApproved ? '#00f2fe' : '#f1c40f'}; font-size:0.85rem; font-weight:700; margin-top:4px;">상태: ${app.status}</p>
+                            <p style="color:#8b949e;">지원자: ${app.applicantName}</p>
+                            <p style="color:${isApproved ? '#00f2fe' : '#f1c40f'}; font-size:0.85rem; font-weight:700;">${app.status}</p>
                         </div>
                         ${actionUI}
                     </div>`;
@@ -672,7 +673,6 @@
             const list = document.getElementById("recommend-list");
             if(!list) return;
 
-            // 🔥 직접 등록한 팀이 맞춤 추천에서도 우선 정렬되도록 배열 병합 순서 및 Sort 기준 수정
             const mergedForRec = window.isDemoMode 
                 ? [...window.customTeams, ...allTeams.map(t => ({...t, isSample: true}))] 
                 : [...window.customTeams];
@@ -684,8 +684,8 @@
                 if(user.skill && team.skill.includes(user.skill)) score += 20;
                 return {...team, score};
             }).sort((a, b) => {
-                if (b.score !== a.score) return b.score - a.score; // 점수 높은 순
-                return (a.isSample ? 1 : 0) - (b.isSample ? 1 : 0); // 점수가 같으면 직접 등록한 팀이 상단에 배치
+                if (b.score !== a.score) return b.score - a.score; 
+                return (a.isSample ? 1 : 0) - (b.isSample ? 1 : 0); 
             }).slice(0, 5);
 
             list.innerHTML = teams.length ? teams.map(t => `
@@ -767,7 +767,7 @@
             { sport:'야구', name:'서울 홈런왕', region:'서울', skill:'초급', time:'일요일 아침', features:'캐치볼부터 친절하게 알려드리는 야린이 팀', img:'https://ui-avatars.com/api/?name=HR&background=e74c3c&color=fff&bold=true', ownerName:'김야구', ownerPhone:'01044445555' },
             { sport:'야구', name:'수원 다이아몬즈', region:'경기', skill:'중상급', time:'토요일 오후', features:'사회인 야구 3부 리그 출전, 투수 급구', img:'https://ui-avatars.com/api/?name=SD&background=3498db&color=fff&bold=true', ownerName:'이야구', ownerPhone:'01044445555' },
             { sport:'야구', name:'인천 마린보이즈', region:'인천', skill:'중급', time:'일요일 낮', features:'바닷가 근처 구장 사용, 화끈한 타격전', img:'https://ui-avatars.com/api/?name=IM&background=2c3e50&color=fff&bold=true', ownerName:'박야구', ownerPhone:'01044445555' },
-            { sport:'야구', name:'춘천 베어스', region:'강원도', skill:'상급', time:'토요일 아침', features:'선출 환영, 전국 대회 우승 목표 진지한 팀', img:'https://ui-avatars.com/api/?name=CB&background=9b59b6&color=fff&bold=true', ownerName:'최야구', ownerPhone:'01044445555' },
+            { sport:'야구', name:'춘천 베어스', region:'강원도', skill:'상급', time:'토요일 아침', features:'선출 환영, 전국 대회 우승 목표진지한 팀', img:'https://ui-avatars.com/api/?name=CB&background=9b59b6&color=fff&bold=true', ownerName:'최야구', ownerPhone:'01044445555' },
             { sport:'야구', name:'세종 타이거즈', region:'충청도', skill:'초급', time:'주말 랜덤', features:'가족 동반 가능, 유니폼 저렴하게 맞춤', img:'https://ui-avatars.com/api/?name=ST&background=e67e22&color=fff&bold=true', ownerName:'정야구', ownerPhone:'01044445555' },
             { sport:'야구', name:'부산 라이온즈', region:'경상도', skill:'중급', time:'일요일 오후', features:'응원가 부르며 즐겁게 야구하는 텐션 높은 팀', img:'https://ui-avatars.com/api/?name=BL&background=2ecc71&color=fff&bold=true', ownerName:'강야구', ownerPhone:'01044445555' },
             { sport:'야구', name:'익산 이글스', region:'전라도', skill:'중상급', time:'토요일 야간', features:'야간 경기 위주, 끈적한 수비 야구 지향', img:'https://ui-avatars.com/api/?name=IE&background=1abc9c&color=fff&bold=true', ownerName:'조야구', ownerPhone:'01044445555' },
@@ -1047,6 +1047,8 @@
             <input id="new-skill" class="login-input" placeholder="실력 수준 (예: 중급)">
             <input id="new-features" class="login-input" placeholder="팀 소개 (간략히)">
             <input id="new-chat-link" class="login-input" placeholder="오픈채팅 링크 (선택 사항)">
+            
+            <input id="new-time" class="login-input" placeholder="활동 일정 (예: 토요일 오전)">
             
             <button class="login-btn" onclick="window.createTeam()">등록하기</button>
         </div>
