@@ -57,7 +57,7 @@
             position: fixed; 
             top: 0; left: 0; width: 100%; height: 100%; 
             overflow: hidden; 
-            z-index: 0; /* 숨겨지지 않도록 확실하게 0으로 고정 */
+            z-index: 0; 
             pointer-events: none; 
         }
         .neon-icon { 
@@ -79,7 +79,6 @@
         .nav-item { border:none; background:none; color:#e6edf3; cursor:pointer; display:flex; flex-direction:row; align-items:center; font-size:0.95rem; font-weight:800; gap:6px; transition:all 0.2s; }
         .nav-item:hover { color:#00f2fe; transform:translateY(-2px); }
         
-        /* 상단 메뉴바에 가려지지 않게 여백 확보 및 확실하게 상위로 노출 */
         .container { padding:130px 30px 80px; max-width:900px; margin:0 auto; position:relative; z-index:2; }
 
         /* 메인 & 카테고리 */
@@ -125,7 +124,7 @@
         .recruiting-badge { position:absolute; top:20px; left:20px; background:#00f2fe; color:#0b0f19; padding:6px 14px; border-radius:30px; font-size:0.75rem; font-weight:800; }
         .team-card h3 { font-size:1.4rem; font-weight:800; color:#fff; margin-bottom:5px;}
         
-        /* 상세 정보 아코디언 관련 (팀 카드 & 추천 카드 공통 적용) */
+        /* 상세 정보 아코디언 관련 */
         .detail-info { display:none; margin-top:20px; padding-top:20px; border-top:1px dashed #30363d; font-size:0.9rem; }
         .team-card.is-expanded .detail-info, .recommend-item-card.is-expanded .detail-info { display:block; animation:fadeIn 0.3s; }
         .info-row { display:flex; margin-bottom:8px; gap:8px; }
@@ -155,32 +154,18 @@
         .custom-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(11, 15, 25, 0.85); z-index:9999; backdrop-filter:blur(8px); }
         .custom-modal-content { background:#151a23; border:1px solid #232a35; width:90%; max-width:400px; margin:100px auto; padding:30px; border-radius:24px; box-shadow:0 20px 40px rgba(0,0,0,0.5); text-align:center; }
 
-        /* ------------------------------------------- */
-        /* 🔥 대시보드 (메인 페이지) 사이드바 레이아웃 */
-        /* ------------------------------------------- */
+        /* 대시보드 사이드바 레이아웃 */
         .dashboard-layout {
             display: grid;
-            /* 종목 영역을 대폭 넓히고(2.4), 추천 영역을 좁게(1) 설정하여 시선 분산 방지 */
             grid-template-columns: 2.4fr 1fr; 
             gap: 40px;
             align-items: start; 
         }
+        .sidebar-wrapper { position: sticky; top: 95px; }
 
-        .sidebar-wrapper {
-            position: sticky;
-            top: 95px; 
-        }
-
-        /* 모바일/작은 화면에서는 세로로 겹치게 처리 */
         @media (max-width: 850px) {
-            .dashboard-layout {
-                display: flex;
-                flex-direction: column-reverse; 
-                gap: 30px;
-            }
-            .sidebar-wrapper {
-                position: static; 
-            }
+            .dashboard-layout { display: flex; flex-direction: column-reverse; gap: 30px; }
+            .sidebar-wrapper { position: static; }
         }
     </style>
     
@@ -251,7 +236,6 @@
             }
         };
 
-        // 🔥 비밀번호 변경 기능 로직 추가
         window.openPasswordChangeModal = function() {
             document.getElementById('pw-change-name').value = '';
             document.getElementById('pw-change-phone').value = '';
@@ -271,7 +255,6 @@
             btn.disabled = true;
 
             try {
-                // 이름과 전화번호가 모두 일치하는 유저 찾기
                 const q = query(collection(db, "users"), where("phone", "==", phone), where("name", "==", name));
                 const querySnapshot = await getDocs(q);
 
@@ -282,16 +265,12 @@
                     return;
                 }
 
-                // 일치하는 유저의 비밀번호 업데이트
                 const userDoc = querySnapshot.docs[0];
-                await updateDoc(doc(db, "users", userDoc.id), {
-                    password: newPassword
-                });
+                await updateDoc(doc(db, "users", userDoc.id), { password: newPassword });
 
                 alert("비밀번호가 성공적으로 변경되었습니다. 새 비밀번호로 로그인해주세요!");
                 document.getElementById('password-change-modal').style.display = 'none';
 
-                // 편의를 위해 로그인 인풋에 변경된 값 자동 입력
                 document.getElementById('user-name').value = name;
                 document.getElementById('user-phone').value = phone;
                 document.getElementById('user-password').value = newPassword;
@@ -355,6 +334,7 @@
             window.renderTeams();
         };
 
+        // 🔥 renderTeams 시 openChatLink도 함께 넘기도록 수정
         window.renderTeams = function() {
             const results = document.getElementById('team-results');
             
@@ -392,7 +372,7 @@
                             </button>
                         ` : `
                             <div class="action-group">
-                                <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}', this)">
+                                <button class="join-btn" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}', '${t.openChatLink||""}', this)">
                                     ${t.isSample ? '신청 (테스트)' : '신청하기'}
                                 </button>
                                 <button class="inquire-btn" onclick="event.stopPropagation(); window.openInquiryModal('${t.name}', '${t.ownerPhone||""}')">
@@ -405,6 +385,7 @@
             `).join('') : `<div style="text-align:center; width:100%; padding:80px; color:#8b949e; font-weight:600;">'${window.currentRegion}' 지역에 데이터가 없습니다.</div>`;
         };
 
+        // 🔥 팀 등록 시 openChatLink 함께 DB에 추가
         window.createTeam = async function() {
             const sportSelect = document.getElementById("new-sport");
             const inputSport = sportSelect.value;
@@ -417,6 +398,7 @@
                 region: document.getElementById("new-region").value, 
                 skill: document.getElementById("new-skill").value, 
                 features: document.getElementById("new-features").value, 
+                openChatLink: document.getElementById("new-chat-link").value.trim(),
                 ownerName: window.userSession.name, 
                 ownerPhone: window.userSession.phone, 
                 createdAt: serverTimestamp() 
@@ -425,7 +407,7 @@
             try {
                 await addDoc(collection(db, "teams"), teamData);
                 alert("동호회 등록 완료!");
-                ["new-name","new-region","new-skill","new-features"].forEach(id => document.getElementById(id).value = "");
+                ["new-name","new-region","new-skill","new-features", "new-chat-link"].forEach(id => document.getElementById(id).value = "");
                 sportSelect.value = ""; 
                 window.loadCustomTeams();
             } catch(e) { console.error(e); alert("등록 실패"); }
@@ -455,7 +437,8 @@
             }
         };
 
-        window.applyToTeam = async function(teamName, ownerPhone, ownerName, btnElement) {
+        // 🔥 신청 시 팀의 오픈채팅 링크를 가져와서 application DB에 저장
+        window.applyToTeam = async function(teamName, ownerPhone, ownerName, openChatLink, btnElement) {
             if (btnElement) {
                 if (btnElement.disabled) return; 
                 btnElement.disabled = true;
@@ -470,6 +453,7 @@
                     teamName, 
                     ownerPhone: ownerPhone || "01012341234", 
                     ownerName, 
+                    openChatLink: openChatLink || "", 
                     status: "승인 대기 중", 
                     timestamp: serverTimestamp() 
                 });
@@ -493,6 +477,7 @@
             catch(e) { console.error(e); alert("취소 중 오류가 발생했습니다."); }
         };
 
+        // 🔥 내 가입 신청 현황 (승인 시 연락 수단 노출)
         window.fetchMyGroups = function() {
             const list = document.getElementById('my-group-list');
             const q = query(collection(db, "applications"), where("applicantPhone", "==", window.userSession.phone));
@@ -501,12 +486,45 @@
                 if (qs.empty) html = `<div style="text-align:center; padding:30px; color:#8b949e;">신청 내역이 없습니다.</div>`;
                 else qs.forEach(d => {
                     const data = d.data();
-                    html += `<div class="my-group-item"><div><strong style="color:#fff;">${data.teamName}</strong><p style="font-size:0.85rem; color:#00f2fe; font-weight:700; margin-top:5px;">상태: ${data.status}</p></div><button class="cancel-btn" onclick="window.cancelApply('${d.id}', '${data.teamName}')">취소</button></div>`;
+                    const isApproved = data.status === '승인 완료';
+                    
+                    let contactUI = '';
+                    if (isApproved) {
+                        // 오픈채팅 링크가 있으면 우선 노출, 없으면 전화번호 노출
+                        if (data.openChatLink) {
+                            const linkUrl = data.openChatLink.startsWith('http') ? data.openChatLink : 'https://' + data.openChatLink;
+                            contactUI = `
+                                <div style="margin-top:15px; padding:12px; background:rgba(0, 242, 254, 0.05); border:1px solid #00f2fe; border-radius:12px; width:100%; text-align:center;">
+                                    <p style="font-size:0.8rem; color:#8b949e; margin-bottom:8px;">🎉 가입 승인! 채팅방에 입장해주세요.</p>
+                                    <a href="${linkUrl}" target="_blank" style="display:inline-block; padding:10px 16px; background:#fee500; color:#191919; font-weight:800; border-radius:12px; text-decoration:none; font-size:0.95rem; width:100%;">💬 카카오톡 오픈채팅 입장</a>
+                                </div>
+                            `;
+                        } else {
+                            contactUI = `
+                                <div style="margin-top:15px; padding:12px; background:rgba(0, 242, 254, 0.05); border:1px solid #00f2fe; border-radius:12px; width:100%; text-align:center;">
+                                    <p style="font-size:0.8rem; color:#8b949e; margin-bottom:8px;">🎉 가입 승인! 팀 대표에게 연락해주세요.</p>
+                                    <a href="tel:${data.ownerPhone}" style="display:inline-block; color:#00f2fe; font-weight:800; font-size:1.1rem; text-decoration:none;">📞 ${data.ownerPhone}</a>
+                                </div>
+                            `;
+                        }
+                    }
+
+                    html += `<div class="my-group-item" style="flex-direction:column; align-items:flex-start;">
+                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <strong style="color:#fff;">${data.teamName}</strong>
+                                <p style="font-size:0.85rem; color:${isApproved ? '#00f2fe' : '#f1c40f'}; font-weight:700; margin-top:5px;">상태: ${data.status}</p>
+                            </div>
+                            <button class="cancel-btn" onclick="window.cancelApply('${d.id}', '${data.teamName}')">취소</button>
+                        </div>
+                        ${contactUI}
+                    </div>`;
                 });
                 list.innerHTML = html;
             });
         };
 
+        // 🔥 오너 입장 신청 리스트 (승인 완료 시 지원자 연락처 문자 버튼 활성화)
         window.loadOwnerApplications = function() {
             const q = query(collection(db,"applications"), where("ownerPhone","==",window.userSession.phone));
             onSnapshot(q, (snapshot) => {
@@ -514,7 +532,25 @@
                 let html = "";
                 snapshot.forEach(d => {
                     const app = d.data();
-                    html += `<div class="my-group-item"><div><strong style="color:#fff;">${app.teamName}</strong><p style="color:#8b949e;">${app.applicantName}</p><p style="color:#00f2fe; font-size:0.85rem; font-weight:700;">${app.status}</p></div><button class="join-btn" style="width:auto; margin-top:0;" onclick="window.approveApplication('${d.id}')">승인</button></div>`;
+                    const isApproved = app.status === '승인 완료';
+                    
+                    const actionUI = isApproved ? `
+                        <div style="text-align:right;">
+                            <p style="font-size:0.8rem; color:#8b949e; margin-bottom:4px;">지원자 연락처 (문자 발송)</p>
+                            <a href="sms:${app.applicantPhone}" style="color:#00f2fe; font-weight:800; text-decoration:none; font-size:1rem;">✉️ ${app.applicantPhone}</a>
+                        </div>
+                    ` : `
+                        <button class="join-btn" style="width:auto; margin-top:0; padding:10px 20px;" onclick="window.approveApplication('${d.id}')">승인하기</button>
+                    `;
+
+                    html += `<div class="my-group-item" style="align-items:center;">
+                        <div>
+                            <strong style="color:#fff;">${app.teamName}</strong>
+                            <p style="color:#8b949e; font-size:0.9rem; margin-top:4px;">지원자: ${app.applicantName}</p>
+                            <p style="color:${isApproved ? '#00f2fe' : '#f1c40f'}; font-size:0.85rem; font-weight:700; margin-top:4px;">상태: ${app.status}</p>
+                        </div>
+                        ${actionUI}
+                    </div>`;
                 });
                 box.innerHTML = html || "<p style='color:#8b949e; text-align:center;'>신청자가 없습니다.</p>";
             });
@@ -637,6 +673,7 @@
             alert("추천 설정 완료!");
         };
 
+        // 🔥 맞춤 추천 렌더링 시 openChatLink도 함께 넘기도록 수정
         window.renderRecommendations = function() {
             const list = document.getElementById("recommend-list");
             if(!list) return;
@@ -653,7 +690,6 @@
                 return {...team, score};
             }).sort((a,b)=>b.score-a.score).slice(0,5);
 
-            /* 🔥 카드 패딩 및 폰트 사이즈를 사이드바 공간에 맞춰 더 컴팩트하게 조절 */
             list.innerHTML = teams.length ? teams.map(t => `
                 <div class="recommend-item-card" onclick="this.classList.toggle('is-expanded')" style="background:#151a23; padding:15px 16px; border-radius:14px; border:1px solid #232a35; margin-bottom:10px; transition:0.3s; cursor:pointer;" onmouseover="this.style.borderColor='#00f2fe'" onmouseout="this.style.borderColor='#232a35'">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -671,7 +707,7 @@
                             </button>
                         ` : `
                             <div class="action-group">
-                                <button class="join-btn" style="padding:10px; font-size:0.9rem;" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}', this)">
+                                <button class="join-btn" style="padding:10px; font-size:0.9rem;" onclick="event.stopPropagation(); window.applyToTeam('${t.name}', '${t.ownerPhone||""}', '${t.ownerName||""}', '${t.openChatLink||""}', this)">
                                     ${t.isSample ? '신청(테스트)' : '신청하기'}
                                 </button>
                                 <button class="inquire-btn" style="padding:10px; font-size:0.9rem;" onclick="event.stopPropagation(); window.openInquiryModal('${t.name}', '${t.ownerPhone||""}')">
@@ -685,7 +721,7 @@
         };
 
         const allTeams = [
-            { sport:'축구', name:'FC 서울라이트', region:'서울', skill:'중급', time:'일요일 오전', features:'2030 직장인 위주, 매너 플레이 필수', img:'https://ui-avatars.com/api/?name=SL&background=e74c3c&color=fff&bold=true', ownerName:'김운영', ownerPhone:'01011112222' },
+            { sport:'축구', name:'FC 서울라이트', region:'서울', skill:'중급', time:'일요일 오전', features:'2030 직장인 위주, 매너 플레이 필수', img:'https://ui-avatars.com/api/?name=SL&background=e74c3c&color=fff&bold=true', ownerName:'김운영', ownerPhone:'01011112222', openChatLink:'open.kakao.com/o/sample1' },
             { sport:'축구', name:'수원 블루윙즈 (아마)', region:'경기', skill:'상급', time:'토요일 오후', features:'전술 훈련 위주, 지역 리그 출전', img:'https://ui-avatars.com/api/?name=SB&background=3498db&color=fff&bold=true', ownerName:'이운영', ownerPhone:'01011112222' },
             { sport:'축구', name:'인천 마린스', region:'인천', skill:'초급', time:'수요일 야간', features:'축구 입문자 대환영, 기초 체력 훈련', img:'https://ui-avatars.com/api/?name=IM&background=2c3e50&color=fff&bold=true', ownerName:'박운영', ownerPhone:'01011112222' },
             { sport:'축구', name:'강원 일레븐', region:'강원도', skill:'중상급', time:'일요일 오후', features:'강릉/춘천/원주 연합팀, 원정 경기 다수', img:'https://ui-avatars.com/api/?name=GE&background=27ae60&color=fff&bold=true', ownerName:'최운영', ownerPhone:'01011112222' },
@@ -700,7 +736,7 @@
             { sport:'축구', name:'블랙 쉐도우', region:'경기', skill:'중상급', time:'화요일 야간', features:'야간 전술 훈련 전문, 실력자 다수 포진', img:'https://ui-avatars.com/api/?name=BS&background=111111&color=fff&bold=true', ownerName:'서운영', ownerPhone:'01011112222' },
             { sport:'축구', name:'화랑 유스', region:'경상도', skill:'초급', time:'일요일 오전', features:'경주 베이스, 20대 초반 입문자들', img:'https://ui-avatars.com/api/?name=HY&background=f39c12&color=fff&bold=true', ownerName:'신운영', ownerPhone:'01011112222' },
             { sport:'축구', name:'빛고을 FC', region:'전라도', skill:'중급', time:'수/금 저녁', features:'광주 지역 탄탄한 조직력, 정기전 다수', img:'https://ui-avatars.com/api/?name=BG&background=c0392b&color=fff&bold=true', ownerName:'안운영', ownerPhone:'01011112222' },
-            { sport:'풋살', name:'언더독 FS', region:'서울', skill:'중급', time:'매주 목요일 밤', features:'스트릿 풋살 감성, 빠른 패스워크', img:'https://ui-avatars.com/api/?name=UD&background=e74c3c&color=fff&bold=true', ownerName:'김풋살', ownerPhone:'01022223333' },
+            { sport:'풋살', name:'언더독 FS', region:'서울', skill:'중급', time:'매주 목요일 밤', features:'스트릿 풋살 감성, 빠른 패스워크', img:'https://ui-avatars.com/api/?name=UD&background=e74c3c&color=fff&bold=true', ownerName:'김풋살', ownerPhone:'01022223333', openChatLink:'open.kakao.com/o/sample2' },
             { sport:'풋살', name:'판타스틱4', region:'경기', skill:'초급', time:'주말 낮', features:'풋살 처음 하시는 분들을 위한 친목 모임', img:'https://ui-avatars.com/api/?name=F4&background=3498db&color=fff&bold=true', ownerName:'이풋살', ownerPhone:'01022223333' },
             { sport:'풋살', name:'인천 네온스', region:'인천', skill:'중상급', time:'금요일 심야', features:'심야 풋살의 로망, 고강도 체력전', img:'https://ui-avatars.com/api/?name=IN&background=9b59b6&color=fff&bold=true', ownerName:'박풋살', ownerPhone:'01022223333' },
             { sport:'풋살', name:'춘천 닭갈비 FS', region:'강원도', skill:'중급', time:'토요일 오후', features:'재미 위주, 경기 후 닭갈비 회식 필수', img:'https://ui-avatars.com/api/?name=CC&background=e67e22&color=fff&bold=true', ownerName:'최풋살', ownerPhone:'01022223333' },
@@ -1012,6 +1048,9 @@
             <input id="new-region" class="login-input" placeholder="지역 (예: 서울 강남구)">
             <input id="new-skill" class="login-input" placeholder="실력 수준 (예: 중급)">
             <input id="new-features" class="login-input" placeholder="팀 소개 (간략히)">
+            
+            <input id="new-chat-link" class="login-input" placeholder="오픈채팅 링크 (선택 사항)">
+            
             <button class="login-btn" onclick="window.createTeam()">등록하기</button>
         </div>
     </main>
