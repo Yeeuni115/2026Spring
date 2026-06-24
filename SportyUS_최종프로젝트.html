@@ -251,6 +251,60 @@
             }
         };
 
+        // 🔥 비밀번호 변경 기능 로직 추가
+        window.openPasswordChangeModal = function() {
+            document.getElementById('pw-change-name').value = '';
+            document.getElementById('pw-change-phone').value = '';
+            document.getElementById('pw-change-new').value = '';
+            document.getElementById('password-change-modal').style.display = 'block';
+        };
+
+        window.submitPasswordChange = async function() {
+            const name = document.getElementById('pw-change-name').value.trim();
+            const phone = document.getElementById('pw-change-phone').value.trim();
+            const newPassword = document.getElementById('pw-change-new').value.trim();
+            const btn = document.getElementById('pw-change-btn');
+
+            if (!name || !phone || !newPassword) return alert("이름, 전화번호, 새 비밀번호를 모두 입력해주세요.");
+
+            btn.innerText = "변경 중...";
+            btn.disabled = true;
+
+            try {
+                // 이름과 전화번호가 모두 일치하는 유저 찾기
+                const q = query(collection(db, "users"), where("phone", "==", phone), where("name", "==", name));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    alert("일치하는 회원 정보가 없습니다. 이름과 전화번호를 확인해주세요.");
+                    btn.innerText = "변경하기";
+                    btn.disabled = false;
+                    return;
+                }
+
+                // 일치하는 유저의 비밀번호 업데이트
+                const userDoc = querySnapshot.docs[0];
+                await updateDoc(doc(db, "users", userDoc.id), {
+                    password: newPassword
+                });
+
+                alert("비밀번호가 성공적으로 변경되었습니다. 새 비밀번호로 로그인해주세요!");
+                document.getElementById('password-change-modal').style.display = 'none';
+
+                // 편의를 위해 로그인 인풋에 변경된 값 자동 입력
+                document.getElementById('user-name').value = name;
+                document.getElementById('user-phone').value = phone;
+                document.getElementById('user-password').value = newPassword;
+
+            } catch (error) {
+                console.error("비밀번호 변경 에러:", error);
+                alert("서버와 통신 중 오류가 발생했습니다.");
+            } finally {
+                btn.innerText = "변경하기";
+                btn.disabled = false;
+            }
+        };
+
         window.toggleDemoMode = function(btnElement) {
             window.isDemoMode = !window.isDemoMode;
             if(window.isDemoMode) {
@@ -831,10 +885,13 @@
             <h1>Sporty-Us</h1><p class="login-subtitle">당신의 일상이 더 스포티해지는 법</p>
             <input type="text" id="user-name" class="login-input" placeholder="이름 입력">
             <input type="tel" id="user-phone" class="login-input" placeholder="전화번호 입력 (- 제외)">
-            
             <input type="password" id="user-password" class="login-input" placeholder="비밀번호 입력">
             
             <button class="login-btn" id="login-btn" onclick="window.handleLogin()">로그인 / 시작하기</button>
+            
+            <div style="margin-top:15px;">
+                <a href="#" onclick="window.openPasswordChangeModal(); return false;" style="color:#00f2fe; font-size:0.9rem; text-decoration:none; font-weight:600;">비밀번호 변경 / 재설정</a>
+            </div>
         </div>
     </div>
     
@@ -1026,6 +1083,21 @@
             <div style="display:flex; gap:10px;">
                 <button class="login-btn" style="background:#30363d; color:#8b949e; flex:1;" onclick="document.getElementById('reply-modal').style.display='none'">취소</button>
                 <button class="login-btn" style="flex:1;" onclick="window.submitReply()">답변 등록</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="password-change-modal" class="custom-modal">
+        <div class="custom-modal-content">
+            <h2 style="color:#fff; font-weight:800; margin-bottom:20px; font-size:1.4rem;">비밀번호 변경</h2>
+            <p style="color:#8b949e; font-size:0.85rem; margin-bottom:20px;">가입 시 입력했던 이름과 전화번호를 입력해주세요.</p>
+            <input type="text" id="pw-change-name" class="login-input" placeholder="가입한 이름">
+            <input type="tel" id="pw-change-phone" class="login-input" placeholder="가입한 전화번호 (- 제외)">
+            <input type="password" id="pw-change-new" class="login-input" placeholder="새 비밀번호">
+            
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="login-btn" style="background:#30363d; color:#8b949e; flex:1;" onclick="document.getElementById('password-change-modal').style.display='none'">취소</button>
+                <button class="login-btn" id="pw-change-btn" style="flex:1;" onclick="window.submitPasswordChange()">변경하기</button>
             </div>
         </div>
     </div>
